@@ -1,0 +1,786 @@
+% Use only LaTeX2e, calling the article.cls class and 12-point type.
+
+\documentclass[12pt]{article}
+     \sloppy 
+
+% Users of the {thebibliography} environment or BibTeX should use the
+% scicite.sty package, downloadable from *Science* at
+% www.sciencemag.org/about/authors/prep/TeX_help/ .
+% This package should properly format in-text
+% reference calls and reference-list numbers.
+\usepackage[none]{hyphenat}
+
+\usepackage{scicite}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext}
+%\usepackage[mathscr]{euscript}
+\usepackage{mathrsfs}
+\usepackage{float}
+
+
+
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+% Use times if you have the font installed; otherwise, comment out the
+% following line.
+
+\usepackage{times}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The preamble here sets up a lot of new/revised commands and
+% environments.  It's annoying, but please do *not* try to strip these
+% out into a separate .sty file (which could lead to the loss of some
+% information when we convert the file to other formats).  Instead, keep
+% them in the preamble of your main LaTeX source file.
+
+
+% The following parameters seem to provide a reasonable page setup.
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
+
+
+\newcommand{\tto}{\longrightarrow}
+\newcommand{\rank}{\operatorname{rank}}
+%The next command sets up an environment for the abstract to your paper.
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+\newtheorem{definicion}{D{\footnotesize EFINICI\'ON}}
+% If your reference list includes text notes as well as references,
+% include the following line; otherwise, comment it out.
+
+\renewcommand\refname{Referencias}
+\fancyhf{} % sets both header and footer to nothing
+\renewcommand{\headrulewidth}{0pt}
+
+% The following lines set up an environment for the last note in the
+% reference list, which commonly includes acknowledgments of funding,
+% help, etc.  It's intended for users of BibTeX or the {thebibliography}
+% environment.  Users who are hand-coding their references at the end
+% using a list environment such as {enumerate} can simply add another
+% item at the end, and it will be numbered automatically.
+
+\newcounter{lastnote}
+\newenvironment{scilastnote}{%
+\setcounter{lastnote}{\value{enumiv}}%
+\addtocounter{lastnote}{+1}%
+\begin{list}%
+{\arabic{lastnote}.}
+{\setlength{\leftmargin}{.22in}}
+{\setlength{\labelsep}{.5em}}}
+{\end{list}}
+
+
+% Include your paper's title here
+
+
+\title{IMPLEMENTACI\'ON DE UN CRIPTOSISTEMA DE CLAVE P\'UBLICA BASADO EN UNA VARIEDAD ALGEBRAICA Y ESTUDIO DE SU ESPACIO DE CLAVE} 
+
+
+
+\author
+{Jos\'e Angel Contreras Gedler$^{1\ast}$\\
+\\
+\normalsize{$^{1}$Fundaci\'on CENDITEL}\\
+\normalsize{M\'erida, Venezuela}\\
+\\
+\normalsize{$^\ast$ E-mail:  jancontreras@cenditel.gob.ve}
+}
+
+% Include the date command, but leave its argument blank.
+
+\date{}
+
+
+
+%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
+
+
+
+\begin{document} 
+\pagestyle{fancy}
+\headheight=60pt %para cambiar el tamaño del encabezado
+\fancyhead[L] %la "L" indica a la izquierda
+{
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\multirow{3}{50mm}{\includegraphics[width=45mm]{CLIC.png}} & {\tiny Centro Nacional de Desarrollo e Investigaci\'on en Tecnolog\'ias Libres (CENDITEL)}\\
+& {\tiny Revista Electr\'onica Conocimiento Libre y Licenciamiento (CLIC) M\'erida – Venezuela}\\
+& {\tiny ISSN: 2244-7423}\\
+\end{tabular}
+\end{table}
+}
+\begin{center}
+
+
+{\large IMPLEMENTACI\'ON DE UN CRIPTOSISTEMA DE CLAVE P\'UBLICA BASADO EN UNA VARIEDAD ALGEBRAICA Y ESTUDIO DE SU ESPACIO DE CLAVE}
+\vspace*{1.2cm}
+
+
+
+Jos\'e Angel Contreras Gedler\\
+
+\normalsize{Fundaci\'on CENDITEL}\\
+\normalsize{M\'erida, Venezuela}\\
+
+\normalsize{ jancontreras@cenditel.gob.ve}
+
+
+
+\end{center}
+\begin{sciabstract}
+  RESUMEN-  En el siguiente trabajo se estudia un criptosistema de clave p\'ublica basado en la b\'usqueda de secciones de una variedad algebraica  sobre un campo finito. La busqueda de secciones lleva a la resoluci\'on de un sistema de ecuaciones no lineales, dependientes de varias variables. Se presenta una implementaci\'on demostrativa de un software del criptosistema. Se establecen adem\'as las estimaciones de la longitud de las claves privada y p\'ublica (tama\~no del espacio de claves), y tambi\'en se calcula la complejidad de los algoritmos de cifrado y descifrado.
+\\ \\
+Palabras claves: Criptograf\'ia de Clave P\'ublica, Variedades Algebraicas, Criptografía poscu\'antica
+\end{sciabstract}
+
+
+\section*{Introducci\'on}
+\noindent
+
+En 1994, gracias a los trabajos de Shor \cite{shor}, qued\'o demostrado que los algoritmos de factorizaci\'on de n\'umeros enteros y de logaritmo discreto podr\'ian ser resueltos de manera efectiva mediante computadores cu\'anticos. Esto significa que los  criptosistemas RSA y de curvas el\'ipticas, entre otros, ya no ser\'ian seguros si un computador cu\'antico es construido. Por esto, es pertinente la b\'usqueda de criptosistemas de clave p\'ublica basados en problemas matem\'aticos m\'as complejos. En el presente trabajo  se estudia un criptosistema de clave p\'ublica, cuya estabilidad est\'a basada en un problema con complejidad NP-completo en geometr\'ia algebraica.
+
+
+El objetivo de este problema es la b\'usqueda de secciones en el fibrado vectorial de una variedad  algebraica. Lo llamaremos problema de b\'usqueda  de secciones de una variedad  algebraica.
+
+
+El problema de b\'usqueda de secciones puede ser reducido a la resoluci\'on de un sistema de ecuaciones no lineales sobre un campo finito $\mathbb{F}_p$, con $p$ primo. Dado que este problema tiene complejidad NP-completo, podemos decir que un criptosistema basado en este problema ser\'ia resistente a ataques sobre la base de la computaci\'on cu\'antica. En adelante llamaremos a este criptosistema como Criptosostema de Variedad Algebraica (CVA).
+
+
+La primera versi\'on del CVA fue publicada en 2004 \cite{akiyama}. En dicha versi\'on el algoritmo de cifrado utilizaba un polinomio que dependía s\'olo de una variable, esto permiti\'o la realizaci\'on de algunos ataques sobre este criptosistema. En la presente se propone utilizar polinomios de tres variables.
+
+
+\section*{Formulaci\'on te\'orica del problema}
+\noindent
+
+ Sea $\mathbb{F}_p$ un campo finito con $p$ elementos. Una variedad algebraica sobre $\mathbb{F}_p$ se define como el conjunto de soluciones de ecuaciones algebraicas que tiene dos grados de libertad. Para construir nuestro criptosistema usaremos una variedad algebraica af\'in $X$, en el espacio af\'in  $\mathbb{A}^3$, definida  de manera natural mediante la ecuación $X (x, y, t) = 0$ sobre $\mathbb{F}_p$. En nuestro caso, no reviste mayor importancia si $X$ es suave, en el sentido de poseer puntos singulares, pero el polinomio $X (x, y, t)$ debe ser irreducible. Sobre $X$ pueden definirse ciertas curvas, por ejemplo si tomamos otra variedad $Y$,  la intersecci\'on $X \cap Y$ ser\'a una curva sobre $X$. Algunas curvas pueden ser encontradas f\'acilmente, pero encontrar todas las curvas sobre $X$ no es una tarea sencilla. En realidad, no existe algoritmo realizable que resuelva esto. 
+
+Un tipo particular de curvas sobre la variedad $X$ son las curvas parametrizadas, definidas de la siguiente manera:
+
+$$(x, y, t) = (u_x (t), u_y (t), t)$$
+
+Donde $u_x (t)$, $u_y (t)$ son polinomios en $t$ sobre  $\mathbb{F}_p$. Si definimos la relación 
+
+\begin{eqnarray*}
+\omega\tto\mathbb{A}^{1}\\
+\omega(x, y, t)=t
+\end{eqnarray*}
+
+entonces, la curva parametrizada define la relaci\'on inversa
+
+$$\tau:\mathbb{A}^{1} \tto  X$$
+tal que $\omega \circ\tau = id_{\mathbb{A}^{1}}$ (relaci\'on id\'entica sobre $\mathbb{A}^{1}$). La funci\'on $\omega$ se llama fibra de $X$ en $\mathbb{A}^{1}$ y $\tau$  es llamada secci\'on de $\omega$.
+
+
+Si reescribimos $X (x, y, t)=X(x(t),y(t),t)$ como un polinomio del anillo $ \mathbb{F}_p[t]$, podemos ver a $X$ como una curva sobre el campo $\mathbb{F}_p$. Luego, una secci\'on ser\'a un punto racional sobre esta curva. Encontrar los puntos racionales sobre una curva es un problema para el cual no existe algoritmo que lo resuelva en tiempo polinomial.
+
+
+
+\begin{definicion}
+Sea $X(x, y, t) = 0$  una variedad algebraica sobre $ \mathbb{F}_p$. El problema  de encontrar curvas parametrizadas $(x, y, t) = (u_x (t), u_y (t), t)$ sobre $X$ se llama Problema de B\'usqueda de Secciones en $X$.
+\end{definicion}
+
+La variedad algeraica est\'a definida por el polinomio $X (x, y, t)$, el objetivo del problema de b\'usqueda de secciones es encontrar dos polinomios $u_x(t)$ y $u_y(t)$ sobre $\mathbb{F}_p(t)$, tales que  $Х (u_x(t), u_y(t),t) = 0$
+ 
+ 
+ Este problema conduce a la resoluci\'on de un sistema de ecuaciones polinomiales. Veamos un m\'etodo general para encontrar la soluci\'on a tal sistema.
+ 
+ 
+Supongamos que tenemos la ecuaci\'on
+\begin{equation}\label{uno}
+X(x, y, t) = \sum_{(i,j,k)\in\Gamma_X} \eta_{i,j,k} x^i y^j t^k = 0
+\end{equation}
+
+donde $\Gamma_X$  es el conjunto de \'indices $(i, j, k)$ del polinomio $X (x, y, t)$.
+
+Escojamos $r_x$ y $r_y$, satisfaciendo
+$$\deg u_x(t) < r_x \hbox{    и    } \deg u_y (t) < r_y$$
+
+y sustituyamos los polinomios 
+
+\begin{eqnarray*}
+u_x (t) &=& \alpha_0 + \alpha_1 t + \cdots +\alpha_{r_x - 1} t^{r_x  -1}\\
+u_y (t) &=& \beta_0 + \beta_1 t + \cdots+ \beta_{r_y - 1}t^{r_y - 1}
+\end{eqnarray*}
+
+en \ref{uno}. Como resultado tenemos
+$$X(u_x (t), u_y (t), t) =\sum_{(i,j,k)\in\Gamma_X}\eta_{i,j,k} u_x (t)^i u_y (t)^j t^k =\sum_i c_i t^i$$
+
+donde los $c_i$  son polinomios en $\beta_j$ y $\alpha_i$ .
+
+
+Si escribimos
+
+$$r = \max\{i \deg u_x (t) + j \deg u_y (t) + k|(i, j, k) \in \Gamma_X\},$$
+
+
+obtenemos el sistema de ecuaciones
+$$\begin{cases}
+c_0( \alpha_0 , \cdots, \alpha_{r_x-1}, \beta_0 ,\cdots , \beta_{r_y -1} ) = 0\\
+\vdots\\
+c_r (\alpha_0 , \cdots , \alpha_{r_x -1} , \beta_0 , \cdots , \beta_{r_y -1}) = 0
+ \end{cases}$$
+ 
+La soluci\'on de este sistema define una secci\'on de la variedad  $X$. As\'i, vimos que la b\'usqueda de secciones conduce a la resoluci\'on de un sistema de ecuaciones no lineales en varias variables. Como es sabido, la resoluci\'on de tal sistema es un problema que tiene complejidad NP-completo. 
+
+
+
+\section*{Descripci\'on del Criptosistema}
+
+En la propuesta original del criptosistema \cite{akiyama}, se utilizan como clave  p\'ublica una variedad algebraica $X$ sobre $\mathbb{F}_p$ y como clave privada dos secciones sobre $X$, adem\'as el texto plano se inserta en un polinomio $m(t)$. Para el proceso de descifrado es necesario definir un polinomio divisor $f(t)$ de grado superior a $m(t)$. 
+
+El criptsistema tuvo varios ataques \cite{ataque1},\cite{ataque2}, \cite{ataque3}, que hicieron evidente la debilidad precisamente en la forma de los  polinomios $m$ y $f$. Para evitar dichos ataques basta con incrementar la dependencia de los polinomios a tres variables. Aunque esto dificulta significativamente la realizaci\'on de los ataques, durante el proceso de descifrado se presentaba un problema con las secciones que conforman la llave privada, por lo que en la presente, utilizamos s\'olo una secci\'on de la variedad.
+
+ 
+ 
+
+\paragraph*{Generaci\'on de las Claves}
+
+Sea $X$ una Variedad algebraica, definida mediante el polinomio $X=X(x,y,t)$ sobre el campo finito primo $\mathbb{F}_p$. 
+
+
+\textbf{Clave privada}: $D : (x, y, t) = (u_x (t), u_y (t), t)$ secci\'on de la variedad.
+
+\textbf{Clave p\'ublica}: Superficie
+$$X(x, y, t) = \sum_{(i,j)\in\Lambda_X} c_{ij} (t)x^i y^j $$
+
+
+El texto plano se inserta en un polinomio del tipo:
+
+ $$m(x, y, t) =\sum_{(i,j)\in\Lambda_m} m_{ij} (t)x^i y^j$$
+
+Adem\'as, de manera aleatoria definimos el polinimio divisor 
+
+$$f(x, y, t) =\sum_{(i,j)\in\Lambda_f} f_{ij} (t)x^i y^j$$
+
+de manera que los conjuntos $\Lambda_m$ , $\Lambda_X$ и $\Lambda_f$ satisfagan la siguiente relaci\'on:
+
+$\Lambda_m\subset\Lambda_X \Lambda_f = \{(i_X + i_f , j_X + j_f )|(i_X , j_X ) \in\Lambda_X$ и $(i_f , j_f ) \in\Lambda_f \}$
+$$
+\begin{cases}
+\deg_x X(x, y, t) < \deg_x m(x, y, t) < deg_x f (x, y, t)\\
+\deg_y X(x, y, t) < \deg_y m(x, y, t) < \deg_y f (x, y, t)\\
+\deg_t X(x, y, t) < \deg_t m(x, y, t) < \deg_t f (x, y, t)
+\end{cases}
+$$
+M\'as a\'un,
+
+$(\deg_x m(x,y,t),\deg_y m(x,y,t),\deg_t m(x,y,t))\in\Gamma_m$
+
+$(\deg_x f(x,y,t),\deg_y f(x,y,t),\deg_t f(x,y,t))\in\Gamma_f$
+
+Donde $\Gamma_m = \{(i,j,k)\in\mathbb{N}^3 | c_{ijk}\neq 0\}$ es el conjunto de \'indices de coeficientes no nulos en  $m(x,y,t)$, tales que 
+
+
+$$m(x, y, t) = \sum_{(i,j,k)\in\Gamma_m} c_{ijk} x^{i} y^{j} t^{k} $$
+
+De estas condiciones se desprende la siguiente desigualdad
+
+
+$$\deg(m(u_x(t),u_y(t),t)) < \deg(f(u_x(t),u_y(t),t))$$
+Ahora, veamos el m\'etodo de definici\'on de $\deg f$ y $\deg m$.
+
+
+Para encontrar el texto simple durante el descifrado, es necesario resolver un sistema de ecuaciones lineales, el cual debe tener soluci\'on \'unica. El sistema se construye de la siguiente manera:
+
+
+\[ A \left( \begin{array}{c}
+m_{000}\\
+m_{001} \\
+m_{002}\\
+\vdots\\
+m_{ijk}\\
+\vdots  \end{array} \right) = 
+\left( \begin{array}{c}
+c_0\\
+c_1 \\
+c_2\\
+\vdots \\
+c_K \end{array} \right)\] 
+
+donde  $m_{i,j,k} $ son los coeficientes de 
+$$\sum_{(i,j,k)\in\Gamma_m}m_{i,j,k} u_x(t)^i u_y(t)^j t^k $$
+y $ c_1, c_2, \ldots,  c_K$ son los coeficientes
+$$m(u_x (t), u_y (t), t) = \sum_{\tau=0}^{K}c_{\tau} t^{\tau}$$
+
+
+Este sistema tendr\'a soluci\'on \'unica si, y s\'olo si, $\rank(A) = n$, donde $n$ es la cantidad de variables $m_{i,j,k} $. Si $\rank(A) <n$, se retorna al proceso de definici\'on de $f(x,y,t)$.
+
+
+ As\'i, el algoritmo de generaci\'on de las claves es el siguiente:
+
+
+ \begin{enumerate}
+ \item Definimos $\Lambda_X = \{(i, j) \in \mathbb{N}^2 : i = 1,\ldots, I; j = 1, \ldots , J\}$
+ 
+\item Aleatoriamente escogemos polinomios $c_{ij} (t)$ para cada par $(i, j)$ con coeficientes en  $\mathbb{F}_p$ y grado $l_{ij} = \deg c_{ij} (t)$.
+%$$c_{ij} (t) = r_{ij{l_{ij}} t^{l_{ij}} + r_{ijl_{ij} -1} t^{l_{ij} -1} + \cdots + r_{ij1} t + r_{ij0}$$
+
+\item Calculamos
+$c_{00} = -\sum_{(i,j)\in\Lambda_X}c_{ij} (t)u_x (t)^i u_y (t)^j$
+
+\item Construimos la Variedad
+
+$$X(x, y, t) =\sum_{(i,j)\in\Lambda_X} c_{ij} x^i y^j + c_{00}$$
+\end{enumerate}
+
+Es evidente que  $m(x,y,t)$ y $f(x,y,t)$ tienen por lo menos un elemento que divide a cualquiera de $X(x,y,t)$. 
+
+Para evitar curvas racionales sobre $X$, se debe cumplir que $\deg_x X(x,y,t) > 2$ y $\deg_y X(x,y,t) > 2$. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\paragraph*{Algoritmo de cifrado}
+
+
+Sea $m$ el texto plano. Dividimos $m$ en bloques \\$m = m_{00} || \cdots||m_{ij} || \cdots||m_{IJ}$ de manera que
+ $$|m_{ij}|\leq (|p| - 1)(l_{ij} + 1), \qquad\forall (i, j) \in\Lambda_m$$ 
+ 
+cada bloque $m_{ij}$ es dividido en  $l_{ij} + 1$ bloques de  $|p| - 1$ bits: $m_{ij} = m_{ij0} ||m_{ij1} \ldots ||m_{ijl_{ij}}$ .
+ 
+\begin{enumerate}
+\item Insertamos $m$ en el polinomio: $m(x, y, t)$
+
+\item Aleatoriamente, escogemos el polinomio divisor $f (x, y, t)$
+
+\item Aleatoriamente escogemos polinomios $r_0 (x, y, t)$ y $r_1 (x, y, t)$ tales que  $\Lambda_{r_0} = \Lambda_{r_1} = \Lambda_f$ y
+ $\deg r_{ij} (t) = \deg f_{ij} (t)$ para cada $(i, j) \in\Lambda_f$ .
+
+\item Aleatoriamente escogemos polinomios $s_0 (x, y, t)$ y $s_1 (x, y, t)$ tales que  $\Lambda_{s_0} = \Lambda_{s_1} = \Lambda_X$ y
+ $\deg r_{ij} (t) = \deg f_{ij} (t)$ para cada $(i, j) \in\Lambda_X$ .
+\end{enumerate}
+
+
+
+Construimos los polinomos del texto cifrado
+$$F_0 (x, y, t) = m(x, y, t) + f (x, y, t)s_0 (x, y, t) + X(x, y, t)r_0 (x, y, t)$$
+$$F_1 (x, y, t) = m(x, y, t) + f (x, y, t)s_1 (x, y, t) + X(x, y, t)r_1 (x, y, t)$$
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\paragraph*{Algoritmo de descifrado}
+En principio notemos que la secci\'on $D$ satisface  \\$X(u_x (t), u_y (t), t) = 0$, ya que ella se encuentra en la variedad $X$
+
+\begin{enumerate}
+\item  Sustituyamos  $D$ en $F_0 (x, y, t)$ y $F_1 (x, y, t)$
+ 
+ $h_0 (t)= m(u_x (t), u_y (t), t) + f (u_x (t), u_y (t), t)s_0 (u_x (t), u_y (t), t)$
+ 
+ $h_1 (t) = m(u_x (t), u_y (t), t) + f (u_x (t), u_y (t), t)s_1 (u_x (t), u_y (t), t)$
+ 
+ \item Calculemos  $h_0 (t) - h_1 (t)$.
+ 
+ 
+\item  Factoricemos $h_0 (t) - h_1 (t)$:
+$$f (u_x (t), u_y (t), t)[s_0 (u_x (t), u_y (t), t) - s_1 (u_x (t), u_y (t), t)]$$
+
+\item Encontremos  un factor de  $h_0 (t) -h_1 (t)$, cuyo grado coincida con \\$\deg f (u_x (t), u_y (t), t)$.
+
+
+\item Calculemos $h_0 (t)  = m(u_x (t), u_y (t), t)(\mod f(u_x (t), u_y (t), t))$
+
+\item Extraemos los coeficientes $m_{ij} (t)$ de $m(x, y, t)$, a trav\'es de la resoluci\'on de un sistema de ecuaciones lineales.
+
+Sea $m(x, y, t) =\sum_{(i,j,k)\in\Gamma_m}m_{i,j,k} x^i y^j t^k$ , donde $m_{ijk}$ son las variables  sobre $\mathbb{F}_p$ . Igualando coeficientes en $t$, obtenemos el sistema
+
+$$m(u_x (t), u_y (t), t) =\sum_{(i,j,k)\in\Gamma_m}m_{i,j,k} u_x(t)^i u_y(t)^j t^k, $$
+donde la parte izquierda de la igualdad es obtenida en el paso 5. Resolviendo este sistema obtenemos $m_{i,j,k}$
+
+\item Restablecemos $m$ desde $m_{ijk}$.
+\end{enumerate}
+
+En el paso 4, puede que no obtengamos  $f(u_x(t),u_y(t),t)$ de inmediato, ya que pudiese haber m\'as de un factor con el mismo grado que $\deg f(u_x(t),u_y(t),t)$. Si esto ocurre, podemos utilizar un MAC y repetir los pasos 4 al 7 hasta su autenticaci\'on.
+
+Por otro lado, $\deg f(u_x(t),u_y(t),t)$ y $\deg m(u_x(t),u_y(t),t)$ son fijados de antemano en el proceso de generación de las claves. Mientras mayor sea la diferencia entre ellos, mayor posibilidad habr\'a de encontrar  $\deg f(u_x(t),u_y(t),t)$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section*{Estimaci\'on de la longitud de las claves}
+\noindent
+
+En la resoluci\'on de $F_0(x,y,t) - F_1(x,y,t) = f(x,y,t)s(x,y,t) +\\+ X(x,y,t)r(x,y,t)$, donde 
+
+$$f(x,y,t)=\sum_{(i,j,k)\in\Gamma_f} a_{ijk}x^i y^j t^k$$
+
+$$s(x,y,t)=\sum_{(i,j,k)\in\Gamma_X} b_{ijk}x^i y^j t^k$$
+
+$$r(x,y,t)=\sum_{(i,j,k)\in\Gamma_f} c_{ijk}x^i y^j t^k$$
+surge un sistema de ecuaciones lineales en las variables $a_{ijk}$, $b_{ijk}$ y $с_{ijk}$. Si tiene soluci\'on \'unica, se obtiene $f(x,y,t)$. 
+
+Para estimar la longitud de las claves tenemos cuatro par\'ametros:
+
+\begin{itemize}
+\item $w = \deg_{xy} X$ grado m\'aximo de la Variedad.
+\item $k$ - cantidad de monomios en  $X$.
+\item $d$ - Grado m\'aximo de los polinomios de la secci\'on. 
+\item $p$ - caracter\'istica del campo $\mathbb{F}_p$.
+\end{itemize} 
+
+Para $p = 2$ y $w<4$ la variedad  $X$ es una superficie, cuyas secciones son conocidas. Por lo que, en adelante supondremos que  $p >2$ y $w\geq 4$. 
+
+Si $|\Gamma_f|> 50$ y $|\Gamma_X|>50$, el sistema de eacuaciones tiene m\'as de 100 variables. Encontrar la soluci\'on de tal sistema es suficientemente complejo, por lo que escogeremos $k>50$. 
+
+La clave secreta depende linealmente de $k$. La longitud de esta llave tiene la forma  $l_s = kp$. Por lo anterior, $l_s$  debe ser mayor a 100 bits.
+
+
+Calculemos ahora la longitud de la clave abierta $l_o$. El número $d$  debe ser mayor o igua a 3, ya que para el proceso de generación se necesita por lo menos un t\'ermino independiente en el polinomio. Si el coeficiente en $x^{\deg_x X}y^{\deg_y X}$  es constante, el grado de $c_{00}(t)$ ser\'a igual a $kw$. Luego, la longitud $l_o$ est\'a acotada por debajo por $(d-1)kw$. 
+
+
+De esta manera, una cota inferior de la longitud de la clave p\'ublica ser\'a
+ $(d-1)kw = 400$ bits. 
+ 
+Una de las ventajas del Criptosistema de Variedad Algebraica (CVA) es el tama\~no de las claves. En la tabla que sigue comparamos las longitudes de las claves de algunos criptosistemas conocidos:
+
+
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+
+\hline\hline
+Criptosostema & Lattice-bassed  &  Multivariate &  CVA\\
+\hline
+Clave p\'ulica & $O(n\log  n)$ & $O(n^3)$ & $O(n)$\\
+\hline
+Clave privada & $O(n\log  n)$ & $O(n)$ & $O(n)$\\ 
+\hline\hline
+\end{tabular}
+\end{center}
+
+Los criptosistemas CVA y multivariado, se basan ambos en sistemas de ecuaciones algebraicas de varias variables
+
+\begin{equation}\label{dos}
+f_1 = f_2 = \cdots = f_m =0
+\end{equation}
+
+sobre un campo finito $\mathbb{F}_p$. La clave p\'ublica en el criptosistema multivariado se construye directamente de los polinomios $f_1, f_2, \cdots, f_m$. 
+
+ Por otro lado, la clave p\'ublica del CVA est\'a dada por la ecuaci\'on $X(x,y,t)=0$
+ y la  soluci\'on a esta ecuaci\'on son dos polinomios  $u_x(t)$, $u_y(t)$ cuyos coficientes son soluci\'on de alg\'un sistema de ecuaciones $f_1 = f_2 = \cdots = f_m =0$. Es decir, en CVA evitamos el uso directo de \ref{dos}, y esto se refleja en la disminuci\'on del tama\~no de las claves.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Complejidad Computacional}
+
+\paragraph*{Complejidad del algoritmo de cifrado}
+
+
+Recordemos que el algoritmo de cifrado se define por la siguiente f\'ormula:
+
+$$F_0 (x, y, t) = m(x, y, t) + f (x, y, t)s_0 (x, y, t) + X(x, y, t)r_0 (x, y, t)$$
+$$F_1 (x, y, t) = m(x, y, t) + f (x, y, t)s_1 (x, y, t) + X(x, y, t)r_1 (x, y, t)$$
+
+Sea $k_1$ la cantidad de coeficientes de $X(x,y,t)$, $s_0(x,y,t)$ y  $s_1(x,y,t)$ y $k_2$ la cantidad de coeficientes de $f(x,y,t)$, $r_0(x,y,t)$  y $r_1(x,y,t)$. Luego la complejidad de este algoritmo, que se compone s\'olo de operaciones algebraicas, es de la forma
+
+$$O(k_1^2 k_2^2)$$
+
+
+
+\paragraph*{Complejidad del algoritmo de descifrado}
+
+
+Ahora pasemos a estimar la complejidad del algoritmo de descifrado. Dado que el proceso de factorización incluye, un posible problema de la mochila, en la presente estimaremos sólo una cota inferior para la complejidad del algoritmo. 
+
+
+Durante el descifrado, el polinomio $(F_0 - F_1)(u_x(t),u_y(t),t)$, sobre
+$\mathbb{F}_p$, tiene grado mayor o gual a $dw$, donde $d$ es el grado m\'aximo de los polinomios de la secci\'on y $w= \deg_{xy} X$ es el grado m\'aximo de la Variedad.  
+
+El algoritmo de factorizaci\'on sobre el campo finito $\mathbb{F}_p$ tiene comlejidad aritm\'etica 
+
+
+$$O(d^2 w^2 + dw \log p)$$ 
+
+En el \'ultimo paso del algoritmo de descifrado se resuelve  un sistema de ecuaciones lineales con $dw$ variables. La complejidad computacional de este paso es 
+
+$$O(w^3 d^3)$$ 
+Por \'ultimo, la complejidad total est\'a acotada por debajo por
+
+$$O(\log (p)(w^3 d^3 + dw \log(p)))$$ 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Implementaci\'on del Criptosistema}
+\noindent
+
+Por \'ultimo realizamos una implementaci\'on de un software de un modelo demostrativo del criptosistema. Para dicha implementaci\'on utilizamos el campo 
+$K=\mathbb{F}_p$, con $p=2^{61}-1$. Para la generaci\'on de los n\'umeros (pseudo-)aleatorios utlizamos la librer\'ia est\'andar de C++ Mersenne twister. 
+
+
+\paragraph*{Generaci\'on de las claves}
+\noindent
+
+Clave privada: $u_x(t)$,$u_y(t)$,  $\deg u_x(t) =\deg u_y(t)= 3$.
+
+ La clave p\'ublica tiene la forma:
+\begin{eqnarray*}
+X'(x,y,t)&=&\left(\sum_{k=0}^{d} x^k y^k \sum_{j=0}^{6(d-k)+1} a_{k,k_j} t^j\right)+\\&+&x^{d-1} y^{d-1} \sum_{j=0}^{4}(a_{d-1,d_j}x + a_{d,d-1_j}y)t^j + \sum_{j=0}^{6d-2}(a_{1,0_j}x+a_{0,1_j}y)t^j
+\end{eqnarray*}
+donde $a_{i,j,k}\in K$ son aleatorios distintos de  0. En esta imlementaci\'on se utiliza $d=3$
+
+
+$$X(x,y,t)=X'(x,y,t)- X'(u_x(t),u_y(t),t)$$
+
+El espacio de claves ser\'a $|(u_x(t),u_y(t))|=p^{\deg u_x(t) +\deg u_y(t) +2}$, con \\$2^{480}<|(u_x(t),u_y(t))|<2^{490}$. 
+
+Con estas condiciones, para cualquier $X'(x,y,t)$ y cualquier par  $(u_x(t),u_y(t))$ se define el \'unico polinomio anulador  $X'(u_x(t),u_y(t),t)$. 
+
+As\'i, para  $X'(x,y,t)$ fijo, existen no m\'as de $2^{490}$ polinomios anuladores para las distintas claves, por lo que el cardinal del conjunto de polinomios con ese grado es mayor que $2^{60*19}=2^{1140}$. Luego, la probabilidad de tener claves privadas adicionales para la clave p\'ublica dada es menor a  $2^{-650}$.
+
+
+
+\paragraph*{Procedimiento de cifrado}
+\noindent
+
+El mensaje de entrada se divide en bloques, que ser\'an los coeficientes en el campo $K$. Para definir la longitud de los bloques se usa la regla siguiente:
+
+
+\begin{description}
+\item[(a)] Se consideran los coeficientes  $m_i- |p|$, donde $|p|$ es la cantidad de bits en binario del número $p-1$. En la implementaión actual $|p|=61$.
+
+\item[(b)] Si para $m_i$ alcanzan $|p|-1$ bits, el  $|p|$-\'esimo bit ser\'a igual a  0  y lo conservamos para el siguiente coeficiente. En este caso, la longitud del bloque ser\'a $|p|-1$ bits, en caso contrario, $|p|$.
+
+\end{description}
+
+Sea  $|m|$ la longitud del mensaje y  $|m|_K$ la cantidad de coeficientes obtenidos,\\$d_m=\left\lceil\frac{|m|_K}{6}\right\rceil$. 
+
+\begin{enumerate}
+\item El polinomio divisor tiene la forma:
+
+\begin{eqnarray*}
+f(x,y,t) &=& \sum_{k=0}^{d_m+1}x^k y^k \sum_{j=0}^5 f_{k,k_j}t^j+\\&+& x^{d_m}y^{d_m}\sum_{j=0}^5(f_{d_m,(d_m+1)_j}x+f_{d_m+1,d_{m_j}}y)t^j+\\&+&\sum_{j=0}^5(f_{1,0_j}x+f_{0,1_j}y)t^j.
+\end{eqnarray*}
+
+\item Insertamos los coeficientes $m_i$ en el polinomio
+
+$$m(x,y,t)=\sum_{k=0}^{d_m}x^ky^k\sum_{j=0}^5m_{|m|_K-6k-j}t^j+|m|x^{d_m+1}y^{d_m+1},$$
+donde $m_i=0$, i<0.
+\item Escogemos de manera aleatoria los coeficientes de los polinomios $s_i(x,y,t)$, \\$i = 1,2$:
+\begin{eqnarray*}
+s_i(x,y,t)&=&\sum_{k=0}^{d} x^k y^k \sum_{j=0}^{6(d-k)+1} s_{i,k,k_j} t^j +\\
+&+&x^{d-1} y^{d-1} \sum_{j=0}^{4}(s_{id,d-1_j}x + s_{id-1,d_j}y)t^j + \sum_{j=0}^{6d-2}(s_{i1,0_j}x+s_{i0,1_j}y)t^j,
+\end{eqnarray*}
+\item Escogemos de manera aleatoria los coeficientes de los polinomios $r_i(x,y,t)$, \\$i = 1,2$:
+\begin{eqnarray*}
+r_i(x,y,t) &=& \sum_{k=0}^{d_m+1}x^k y^k \sum_{j=0}^5 r_{ik,k_j}t^j+ \\&+&x^{d_m}y^{d_m}\sum_{j=0}^5(r_{id_m+1,d_{m_j}}x+r_{id_m,(d_m+1)_j}y)t^j+\\&+&\sum_{j=0}^5(r_{i1,0_j}x+r_{i0,1_j}y)t^j.
+\end{eqnarray*}
+\item Obtenemos el polinomio del mensaje cifrado:
+\begin{eqnarray*}
+F_1(x,y,t)&=& m(x,y,t)+f(x,y,t)s_1(x,y,t)+X(x,y,t)r_1(x,y,t),\\
+F_2(x,y,t)&=& m(x,y,t)+f(x,y,t)s_2(x,y,t)+X(x,y,t)r_2(x,y,t).
+\end{eqnarray*}
+\item Dado que existe la posibilidad de ambiguedad luego de la factorizaci\'on en la etapa de descifrado, necesitamos un algoritmo hash. En esta implementaci\'on utilizamos el algoritmo "Stribog" \hbox{ } (ГОСТ 34.11-2012).
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%........................................................................
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph*{Procedimiento de descifrado}
+\noindent
+
+En la presente implementaci\'on, para la factorizaci\'on de polinomios utilizamos en algoritmo Cantor–Zassenhaus. Datos de entrada: polinomios $F_1(x,y,t)$ y $F_2(x,y,t)$, clave p\'ublica $X(x,y,t)$, clave privada $(u_x(t),u_y(t))$, c\'odigo de autenticaci\'on $h_m$.
+
+\begin{enumerate}
+\item Sustituimos la clave privada en los polinomios $F_i(x,y,t)$, $i=1,2$:
+\begin{eqnarray*}
+h_i(t)&=& F_i(u_x(t),u_y(t),t)\\
+&=& m(u_x(t),u_y(t),t)+f(u_x(t),u_y(t),t)s_i(u_x(t),u_y(t),t).
+\end{eqnarray*}
+\item Calculamos la diferencia $h_1(t)-h_2(t)$:
+\begin{eqnarray*}
+\Delta h(t)&=& h_1(t)-h_2(t)\\
+&=& f(u_x(t),u_y(t),t)s_1(u_x(t),u_y(t),t)-s_2(u_x(t),u_y(t),t)).
+\end{eqnarray*}
+\item Encontramos todos los factores de $\Delta h(t)$, cuyo grado es menor o igual a  $d_s=6d+1$:
+$$H=\{ \Delta h(t) \mod \Delta h_i(t)=0\}$$
+
+\item  Encontramos todos los posibles facotores de $$\Delta s_j(t)=\prod_{\Delta h_i(t)\in H}\Delta h_i(t)$$, con $\deg \Delta s_i(t) =d_s$. 
+
+\item Verificamos $f_i(t)=\Delta h(t) \mod \Delta s_i(t)$:
+$$m_i(t)=h_1(t) \mod f_i(t)=m(u_x(t),u_y(t),t).$$
+
+Sea  $a_x$ el coeficiente l\'ider de  $u_x(t)$, $a_y$ el correspondiente de $u_y(t)$. Denotemos $l_{\mu_{ij}}$ el coeficiente l\'ider del polinomio  $\mu_{ij}(t)$, y $d_{\mu_{ij}}$- su grado. A partir de la forma de $m(x,y,t)$, encontramos $m_{ij}$:
+\begin{eqnarray*}
+|m|=l_{m_i}(a_xa_y)^{-(d_m+1)}&,&  \mu_{i0}(t)=m_i(t)-|m|(u_x(t)u_y(t))^{d_m+1},\\
+m_{i0}=l_{\mu_{i0}}(a_xa_y)^{-\left\lfloor\frac{d_{\mu_{i0}}}{6}\right\rfloor}&,&  \mu_{i1}(t)=\mu_{i0}(t)-m_{i0}(u_x(t)u_y(t))^{\left\lfloor\frac{d_{\mu_{i0}}}{6}\right\rfloor}t^{d_{\mu_{i0}} \mod 6}\\
+&\vdots&\\
+m_{ij}=l_{\mu_{ij}}(a_xa_y)^{-\left\lfloor\frac{d_{\mu_{ij}}}{6}\right\rfloor}&,&  \mu_{ij+1}(t)=\mu_{ij}(t)-m_{ij}(u_x(t)u_y(t))^{\left\lfloor\frac{d_{\mu_{ij}}}{6}\right\rfloor}t^{d_{\mu_{ij}} \mod 6}\\
+&\vdots&\\
+m_{i|m|_K-1}&=&l_{\mu_{i|m|_K-1}}(a_xa_y)^{-\left\lfloor\frac{d_{\mu_{i|m|_K-1}}}{6}\right\rfloor}=l_{\mu_{i|m|_K-1}}
+\end{eqnarray*}
+
+Calculamos el c\'odigo de autenticaci\'on $h_{m'_i}$ para el mensaje \\$m_i'=m_{i0}|\cdots|m_{i|m|_K-1}$. Si no es igual a $h_m$, Verificamos  $f_{i+1}(t)$.
+\item Reestablecemos $m=m_i'$, para el cual $h_{m_i'}= h_m$. 
+\end{enumerate}
+
+\paragraph*{Estimación de la complejidad de las operaciones}
+\noindent
+
+Operaciones aritm\'eticas sobre los polinomios en  $\mathbb{F}_p[x]$:
+
+\begin{enumerate}
+\item Suma: $O(n+m)$ operaciones en $\mathbb{F}_p$.
+\item Resta: $O(n+m)$ operaciones en $\mathbb{F}_p$.
+\item Multiplicaci\'on: $O(nm)$ operaciones en $\mathbb{F}_p$.
+\item Divisi\'on: $O((n-m)m)$ operaciones en $\mathbb{F}_p$.
+\item Potenciaci\'on: $O(n^2\log_2d)$ operaciones en $\mathbb{F}_p$.
+\item Potenciaci\'on en m\'odulo: $O(m^2\log_2d)$ operaciones en $\mathbb{F}_p$.
+\item Potenciaci\'on de $\frac{p^d-1}{2}$ en m\'odulo: $O(dm^2\log_2p)$ operaciones en $\mathbb{F}_p$.
+\item M\'aximo Com\'un Divisor: $O(n^2)$ operaciones en $\mathbb{F}_p$.
+\end{enumerate}
+Operaciones aritm\'eticas sobre los polinomios en $\mathbb{F}_p[x,y,t]$:
+
+\begin{enumerate}
+\item Suma: $O(d_tk\log_2k)$ operaciones en $\mathbb{F}_p$, donde $d_t$ es el grado m\'aximo de  $t$, $k$ cantidad de monomios $x^iy^jm_{i,j}(t)$.
+\item Resta: $O(d_tk\log_2k)$ operaciones en $\mathbb{F}_p$.
+\item Multiplicaci\'on: $O(d_t^2k_1k_2\log_2k)$ operaciones en $\mathbb{F}_p$.
+\item Sustituci\'on de $u_x(t)$ y $u_y(t)$: $O(kd_{u_x}d_xd_{u_y}d_y(\log_2d_x\log_2d_y+d_t))$ operaciones en $\mathbb{F}_p$.
+\end{enumerate}
+Factorizaci\'on de polinomio de grado $n$ en factores con grado no mayor a $d$:
+
+\begin{enumerate}
+\item Square-free factorization: $O(n^2)$ operaciones en $\mathbb{F}_p$.
+\item Distinct-degree factorization: $O(dn^2\log_2p)$ operaciones en $\mathbb{F}_p$.
+\item Equal-degree factorization: $O(d^2r^2\log_2p\log_2 r )$ operaciones en $\mathbb{F}_p$ donde $r$ – cantidad de factores.
+\end{enumerate}
+Enumeraci\'on de todos los posibles factores de grado $d$: $O(d^2(\frac{r}{d}))$ operaciones en $\mathbb{F}_p$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Conclusi\'on}
+
+$\qquad$ En este trabajo fue estudiado un nuevo criptosistema de clave p\'ublica, basado en la b\'usqueda de secciones de una variedad algebraica sobre un campo finito.
+
+Se obtuvieron los siguientes resultados:
+
+\begin{enumerate}
+\item Implementaci\'on de un software de un modelo demostrativo del criptosistema para $p = 2^{61}-1$.  
+
+\item Se estableci\'o una estimaci\'on de la complejidad algor\'itmica de los algoritmos de cifrado y de descifrado
+\begin{eqnarray*}
+L_e &=&O(k_1^2 k_2^2)\\
+L_d &=& O(\log (p)(w^3 d^3 + dw \log(p)))
+\end{eqnarray*}
+
+\item Se obtuvo una estimaci\'on del tama\~no en bits de las claves p\'ublica y privada.
+\item Se estudi\'o el espacio de claves y se encontr\'o que las mismas son del orden lineal  $O(n)$ .
+
+\begin{eqnarray*}
+l_o &=& (d-1)kw \\
+l_s&=& kp
+\end{eqnarray*}
+donde $w = \deg_{xy} X$ es el grado de la variedad $X$, $k$ es la cantidad de monomios en $X$ y $d$ es el grado m\'aximo de los polinomios de la secci\'on.
+
+\item Se estudi\'o el espacio de claves y se encontr\'o que los tama\~nos de las claves p\'ublica y privada son del orden $O(n)$. Adem\'as, se logr\'o establecer una cota inferior para la complejidad del algoritmo de descifrado.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{footnotesize}
+
+\bibliography{scibib}
+
+\bibliographystyle{Science}
+
+\begin{thebibliography}{999999}
+
+\bibitem{shor} {\sc Shor, P.W. } {\sl Algorithms for quantum computation: discrete logarithms and factoring } 35th Annual Symposium on Foundations of Computer Science, 1994 Proceedings.,. IEEE, 1994.
+
+\bibitem{akiyama} {\sc K. Akiyama and Y. Goto.} {\sl An Algebraic Surface Public-key Cryptosystem.} Technical Report (Institute of Electronics, Information and Communication Engineers), 104(421):13–20, 2004.
+
+%\bibitem[2]{Lee} {\sc K. Akiyama, Y. Goto, and H. Miyake. } {\sl An Algebraic Surface Cryptosystem } Proceedings of the 12th International Conference on Practice and Theory in Public Key Cryptography: PKC’09, page 442. Springer, 2009.
+
+\bibitem{SpivakGeo1} {\sc D.G Cantor, H Zassenhaus.} {\sl A new algorithm for factoring polynomials over finite fields. } Mathematiccs of Computation, Vol 36, No 154.  1981.
+
+\bibitem{SpivakGeo} {\sc D. Cox, J. Little, D. O Shea.} {\sl Using Algebraic Geometry. } Springer - Verlag. New York, 1998
+
+\bibitem{ataque2} {\sc P. Ivanov and J.F. Voloch.} {\sl Breaking the Akiyama-Goto cryptosystem.}  Arithmetic, Geometry, Cryptography and Coding Theory, 487, 2008.
+
+\bibitem{ataque1} {\sc M. Iwami.} {\sl A Reduction Attack on Algebraic Surface Public-Key Cryptosystems. } New development of research on Computer Algebra, RIMS Kokyuroku, volume 1572. Springer, 2007.
+
+\bibitem{Milnor1} {\sc I. R. Shafarevich. } \textsl{Basic Algebraic Geometry. } Springer - Verlag. New York, 1990.
+
+\bibitem{ataque3} {\sc S. Uchiyama and H. Tokunaga. } \textsl{ On the Security of the Algebraic Surface Public-key Cryptosystems. } In Proceedings of SCIS, 2007.
+
+
+\bibitem{Milnor} {\sc S. A. Abramov. } \textsl{Lektsiy o slochznosty algoritmov. }  Ed. MTzHMO. Moscow, 2009.
+
+\bibitem{Spivak} {\sc V. B. Alekseyev.} {\sl Vvedenie v teoriyu slochznosty algoritmov. } Ed. Facultiet VMK MGU. Moscow, 2002.
+
+\bibitem{Munkres1} {\sc E. A. Primienko. } \textsl{ Algebraicheskie osnovy kriptografiy. } MAX Press. Moscow  2007.
+\end{thebibliography}
+\end{footnotesize}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

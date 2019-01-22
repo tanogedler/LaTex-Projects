@@ -1,0 +1,207 @@
+\documentclass[12pt,oneside]{book}
+%%% M\'argenes
+\textheight=21cm% Establece el largo del texto en cada página (en este caso, de 21 cm).
+%El default es 19 cm.
+\textwidth=18cm% Establece el ancho del texto en cada página (en este caso, de 18 cm).
+%El default es 14 cm.
+%\topmargin=-1cm %Establece el margen superior. El default es de 3 cm, en este caso la
+%instrucción -2cm sube el margen 2 cm hacia arriba.
+\oddsidemargin=-1cm
+
+
+     \sloppy 
+\usepackage[none]{hyphenat}
+\usepackage[spanish]{babel}
+%\usepackage[utf8]{inpuctenc}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext}
+\linespread{1.2}  %%%%% espacio entre lineas %%%%
+
+%\newtheorem{defi}{Definici\'on}
+\newtheorem{lema}{Lema}
+
+\newcommand{\car}{\operatorname{char}}
+
+\begin{document}
+
+\chapter{Curvas el\'ipticas}
+
+\section{Introducci\'on}
+
+Muchos criptosistemas de clave p\'ublica est\'an basados en la operaci\'on potencia en grupos matem\'aticos finitos. La fortaleza criptogr\'afica de estos sistemas proviene de la creencia en la intratabilidad computacional del c\'alculo de logaritmos en dichos grupos. Los grupos m\'as comunes son es el grupo multiplicativo $\mathbb{Z}_p^{\ast}$ (enteros m\'odulo un primo $p$) y $\mathbb{F}_{2^m}$ (campo finito de caracter\'istica 2). La principal ventaja de estos grupos son su rica teor\'ia, su estructura f\'acilmente entendible y su implementaci\'on directa. Sin embargo, estos no son los \'unicos grupos que tienen estas propiedades. En particular, la estructura matem\'atica conocida como curvas el\'ipticas son especialmente amenas para una implementaci\'on eficiente en hardware o software.
+
+El sistema algebraico definido sobre los puntos de una curva el\'iptica provee una manera alternativa para implementar ElGamal y los protocolos de cifrado de clave p\'ublica y firma electr\'onica tipo ElGamal. Estos protocolos son descritos en la literatura sobre el sistema algebraico $\mathbb{Z}_p$, los enteros m\'odulo $p$, donde $p$ es un n\'umero primo. Por ejemplo, el algoritmo para firma electr\'onica DSA definido en ANSI X9.30 es un esquema de firma tipo ElGamal definido sobre $\mathbb{Z}_p$. El mismo protocolo para firma puede ser definido sobre los puntos en una curva el\'iptica. 
+
+Los sistemas de curvas el\'ipticas, como los aplicados al protocolo ElGamal fueron propuestos inicialmente en 1985 de manera independiente por Neil Koblitz de la universidad de Washington, y Victor Miller, de la IBM. La seguridad de los criptosistemas basados en curvas el\'ipticas radica en la intratabilidad del problema de logaritmo discreto en el sistema algebraico. A diferencia del caso de problema de logaritmo discreto en un campo finito, o el problema de factorizaci\'on de n\'umeros enteros, no existe algoritmo de tiempo sub-exponencial conocido para el problema de logaritmo discreto en curvas el\'ipticas. 
+
+Cualquier campo finito $\mathbb{F}_q$ tiene asociados $q$ diferentes (salvo isomorfismo) curvas el\'ipticas que se pueden formar y ser usadas para el criptosistema. Esto es, para un campo finito dado $\mathbb{F}_q$, con $q$ elementos y una escogencia grande de $q$, existen muchas posibilidades para escoger un grupo de curva el\'iptica. Como cada operaci\'on de curva el\'iptica requiere un n\'umero de operaciones b\'asicas en el campo finito subyacente  $\mathbb{F}_q$, el campo finito puede ser escogido con una implementaci\'on de  software o hardware muy eficiente, y quedan una enorme cantidad de posibles escogencias para la curva el\'iptica.
+
+
+
+\section{Curvas sobre un campo arbitrario}
+
+\subsection{Definiciones b\'asicas}
+
+\begin{defi}
+Una \textbf{curva algebraica de orden $n$ sobre un campo $\mathbb{F}$} es un conjunto de puntos $(x,y)\in \mathbb{F}\times\mathbb{F}$, que satisfacen la ecuaci\'on $F(X,Y)=0$, donde $F(X,Y)$ es un polinomio de grado $n$ con coeficientes en el campo $\mathbb{F}$.
+\end{defi}
+
+Es preciso se\~nalar que, por \textbf{grado de un monomio} entendemos la suma de las potencias de las variables que intervienen y por \textbf{grado del polinomio}, el m\'aximo grado de los monomios que lo componen.
+
+Los pares $(x,y)\in \mathbb{F}\times\mathbb{F}$ de elementos del campo $\mathbb{F}$ que satisfacen la ecuaci\'on de la curva, son llamados \textbf{puntos}. La curva, definida por la ecuaci\'on de primer grado, se llama \textbf{recta}. El punto $(x_0,y_0)$ de la curva $F(X,Y)=0$ se llama \textbf{no singular} si las derivadas parciales del polinomio $F(x,y)$, en ambas variables, no se anulan.
+
+Aclaremos que, si el polinomio $F(x,y)$ se describe mediante la variable $x$ as\'i
+
+$$F(x,y)=A_0(y)+A_1(y)x+\cdots+A_n(y)x^n$$
+entonces la \textbf{derivada parcial en $x$} se define como
+$$\frac{\partial F}{\partial x} = A_1(y)+2A_2(y)x+\cdots+nA_n(y)x^{n-1}$$
+  y de manera an\'aloga para la variable $y$. 
+  
+\begin{defi}
+Una curva es \textbf{no singular} o \textbf{suave} si todos sus puntos son no singulares.
+\end{defi}
+
+En cualquiera de los puntos no singulares $(x,y)$ es posible trazar una \textbf{tangente} a \'el, esto es una recta, definida por la ecuaci\'on
+
+$$(X-x)\frac{\partial F}{\partial x}+(Y-y)\frac{\partial F}{\partial y}=0.$$
+
+\begin{defi}
+Una curva no singular de tercer orden sobre el campo $\mathbb{F}$ se llama \textbf{curva el\'iptica} sobre dicho campo, si si tiene al menos un punto.
+\end{defi}
+
+En el caso de un campo arbitrario de caracter\'istica distinta de 2, se puede describir una curva el\'iptica cualquiera mediante
+
+$$Y^2 + a_1 XY + a_3 Y = X^3 + a_2 X^2 + a_4 X + a_6, \qquad a_i\in\mathbb{F}$$
+
+llamada forma de Weierstrass. Lo que nos da una forma alternativa de definici\'on de curva el\'iptica
+
+\begin{defi}[Alternativa de curva el\'iptica]
+Una \textbf{curva el\'iptica $\mathcal{E}$ sobre el campo $\mathbb{F}$} es una curva suave, definida mediante la ecuaci\'on
+\begin{equation}\label{forma_wierstrass}
+Y^2 + a_1 XY + a_3 Y = X^3 + a_2 X^2 + a_4 X + a_6, \qquad a_i\in\mathbb{F}
+\end{equation}
+\end{defi}
+
+Denotaremos $\mathcal{E}(\mathbb{F})$ al conjunto de puntos $(x,y)\in \mathbb{F}\times\mathbb{F}$, que satisfacen la ecuaci\'on (\ref{forma_wierstrass}) y conteniendo adem\'as un punto $\mathcal{O}$ llamado \textit{infinito}.
+\\ \\
+
+Si $\mathbb{K}$ es una extensi\'on del campo $\mathbb{F}$, entonces $\mathcal{E}(\mathbb{K})$ denota al conjunto de puntos $(x,y)\in \mathbb{K}\times\mathbb{K}$ que satisfacen (\ref{forma_wierstrass}), junto con el punto $\mathcal{O}$. En la definici\'on de curva el\'iptica es conveniente a\~nadir la exigencia de suavidad para la extensi\'on algebraica cerrada $\mathbb{K}$ de $\mathbb{F}$ (Esto es, extensi\'on en la cual cualquier polinomio tiene ra\'iz). En otras palabras, las dos ecuaciones
+
+$$a_1 Y -3X^2-2a_2 X-a_4 = 0, \qquad 2 Y +a_1 X + a_3 =0$$
+
+no deben satisfacerse simult\'aneamente en ning\'un punto $(x,y)\in\mathcal{E}(\mathbb{K})$.
+
+En el caso particular en que $a_1=a_2=a_3=a_6=0$ y $a_4=-1$, la curva el\'iptica $Y^2 = X^3 -X$ sobre el campo $\mathbb{R}$ de los n\'umeros reales, para grandes valores de $X$ se puede ver como la funci\'on $Y=X^{3/2}$ que puede ser parametrizada mediante la sustituci\'on $X=T^2$ y $Y=T^3$.
+
+Si tomamos en cuenta que $X$ tiene grado 2 y $Y$ grado 3, los \'indices de los coeficientes en la ecuaci\'on de la curva definen el grado, el cual debe estar dado por los coeficientes, de manera tal que la ecuaci\'on sea uniforme, es decir, que los grados de cada miembro sea igual a 6 (en el caso general la curva el\'iptica no tiene parametrizaci\'on racional). La curva $Y^2=f(x)$ coorresponde a la \textbf{integral el\'iptica} 
+$$\int{\frac{dX}{\sqrt{f(X)}}},$$
+% ho se toma en funciones elementales.
+
+Integrales el\'ipticas, est\'an relacionadas con el c\'alculo de la longitud de arco de las elipses. Su estudio comenz\'o en el siglo XVIII en los trabajos de Euler y Legendre.
+
+Examinemos la curva el\'iptica arbitraria
+\begin{equation}\label{arbitraria}
+y^2 + a_1 xy + a_3 y = x^3 + a_2 x^2 + a_4 x + a_6.
+\end{equation}
+
+Dos curvas el\'ipticas $\mathcal{E}$ y $\mathcal{E'}$ se llaman \textbf{isomorfas} si para un cambio de coordenadas dado
+$$X=u^2 x + r, \qquad Y= u^3 y + u^2 sx + t$$
+la ecuaci\'on de una curva se puede escribir en funci\'on de la otra.
+
+%%%%%%%%%%
+
+%Ejercicio1: Verificar que el conjunto de cambios de coordenadas es un grupo respecto a la operaci\'on composici\'on de cambios de coordenada.
+%
+%Ejercicio2: Verificar que, el conjunto de todas las curvas el\'ipticas sobre un campo dado se particiona en clases de equivalencia respecto a la relaci\'on de isomorfismo.
+
+\begin{lema}
+Si la caracter\'istica del campo $\mathbb{F}$ es distinta de 2, la curva $\mathcal{E}$ caracterizada por la ecuaci\'on (\ref{arbitraria}) es equivalente a la curva $\mathcal{E}$, dada por la ecuaci\'on
+
+\begin{equation}\label{arbitraria_eqv}
+Y^2 = X^3 + \alpha_2 X^2 + \alpha_4 X + \alpha_6.
+\end{equation}
+\end{lema}
+
+%%%%%%%%%%%%%%%%%%%%%%5 Pendiente Demostraci\'on. %%%%%%%%%%%%%%%%%%%%%%%%%%%55
+
+
+\begin{lema}
+Si la caracter\'istica del campo $\mathbb{F}$ es distinta de 2 y 3, entonces la curva (\ref{arbitraria}) es isomorfa a una curva con ecuaci\'on del tipo
+\begin{equation}\label{arbitraria_isom}
+Y^2 = X^3 + a_4 X + a_6.
+\end{equation}
+\end{lema}
+
+%%%%%%%%%%%%%%%%%%%%%%5 Pendiente Demostraci\'on. %%%%%%%%%%%%%%%%%%%%%%%%%%%55
+
+
+\begin{lema}
+Si la caracter\'istica del campo $\mathbb{F}$ es igual a 2, entonces la curva (\ref{arbitraria}) es isomorfa a una curva con ecuaci\'on del tipo
+\begin{equation}\label{arbitraria_isom_1}
+Y^2 + XY= X^3 + a_2 X^2 + a_6, \qquad a_i\in\mathbb{F},
+\end{equation}
+
+o a una del tipo 
+\begin{equation}\label{arbitraria_isom_2}
+Y^2 + a_3 Y= X^3 + a_4 X + a_6, \qquad a_i\in\mathbb{F}.
+\end{equation}
+\end{lema}
+
+%%%%%%%%%%%%%%%%%%%%%%5 Pendiente Demostraci\'on. %%%%%%%%%%%%%%%%%%%%%%%%%%%55
+
+
+\subsection{Discriminante e invariante de una curva el\'iptica}
+
+Si la caracter\'istica del campo no es igual a 2 o 3, entonces luego de un cambio lineal de variables la curva estar\'a dada en forma de la ecuaci\'on
+\begin{equation}\label{antes_discrim}
+Y^2 = X^3 + a X + b,\qquad a,b\in \mathbb{F}, \qquad \car(\mathbb{F})\neq 2,3
+\end{equation}
+
+En particular, escrita de esta manera, se puede representar las curvas el\'ipticas sobre un campo de caracter\'istica cero, por ejemplo, las curvas el\'ipticas sobre el campo $\mathbb{R}$ de los n\'umeros reales. 
+
+Con la ecuaci\'on (\ref{antes_discrim}) de la curva el\'iptica $\mathcal{E}$ se puede relacionar el \textbf{discriminante}
+
+\begin{equation}\label{discriminante}
+\Delta(\mathcal{E})= \left(\frac{a}{3}\right)^3 +\left(\frac{b}{2}\right)^2 = \frac{4a^3+27b^2}{108}
+\end{equation}
+del polinomio $x^3+ax+b$ y el \textit{$j$-invariante} que no cambia con transformaciones lineales 
+\begin{equation}\label{invariante}
+j(\mathcal{E}) = \frac{1728(4a^3)}{\Delta}.
+\end{equation}
+
+Las f\'ormulas del discriminante y el $j$-invariante son m\'as voluminosas:
+
+$$\Delta = -b_2^2 b_8 - 8 b_4^3 - 27b_6^2 + 9b_2b_4b_6,$$
+
+donde $b_2 = a_1^2 + 4a_2$, $b_4 = 2a_4 + a_1a_3$, $b_6 = a_3^2 + 4a_6$, $b_8 = a_1^2a_6 + 4a_2a_6 - a+1a_3a_4 + a_2a_3^2$ y 
+
+$$j(\mathcal{E})=\frac{c_4^3}{\Delta}, \qquad c_4 = b_2^2-24b_4$$
+
+Si $\Delta=0$, el polinomio mostrado posee ra\'iz m\'ultiple y el punto $(x,0)$  es un punto de inflexi\'on de las propiedades de suavidad de la curva. %Con lo que se cumple el siguiente  teorema....
+
+% pag 67...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Grupo de puntos de una curva el\'iptica}
+
+Sobre el conjunto $\mathcal{E(F)}$, compuesto por los puntos de la curva el\'iptica (\ref{forma_wierstrass}) y un elemento adicional -el punto exterior en el infinito (formalmente, hasta ahora no forma parte de la curva)-, se puede definir una operaci\'on que posee las propiedades de grupo abeliano. Es m\'as c\'omodo ver esta operaci\'on como aditiva, la llamaremos suma y ser\'a denotada, como siempre, con el signo ``m\'as''. El punto adicional mencionado desempe\~na el papel de elemento neutro (en forma aditiva es el elemento cero o nulo) del grupo y se denota por $\mathcal{O}$
+
+Si $\mathbb{K}$ es una extensi\'on del campo $\mathbb{F}$, entonces $\mathcal{E}(\mathbb{K})$ denota al conjunto de puntos $(x,y)\in \mathbb{K}\times\mathbb{K}$ que satisfacen (\ref{forma_wierstrass}), junto con el punto $\mathcal{O}$. Usaremos la notaci\'on $\mathcal{E}(\mathbb{K})$ s\'olo en aquellos casos cuando se ve como el campo $\mathcal{F}$, as\'i como su extensi\'on $\mathcal{K}$.
+
+Por definici\'on, supondremos que se cumple para cualquier punto de $(x,y)\in\mathcal{E(F)}$
+
+$$(x,y) + \mathcal{O} = \mathcal{O} + (x,y) = (x,y)\qquad \hbox{ y } \qquad \mathcal{O} + \mathcal{O} = \mathcal{O}.$$
+
+
+Para definir, en t\'erminos generales a la operaci\'on suma del grupo anbeliano, primero mostraremos que cada punto $(x,y)$ de la curva el\'iptca
+
+\end{document}
+
+
+La m\'usica es el placer que experimenta la mente humana de contar, sin ser consciente de que est\'a contando
+
+Leibniz

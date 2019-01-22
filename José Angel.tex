@@ -1,0 +1,1470 @@
+\documentclass[11pt,letterpaper,reqno,oneside]{book}
+\usepackage{kuvio}
+\usepackage{theorem}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+%\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext}
+%\usepackage[mathscr]{euscript}
+\usepackage{mathrsfs}
+\usepackage{theorem}
+\usepackage[latin1]{inputenc}
+%\usepackage{tocloft}
+\usepackage{titlesec}
+%\usepackage{topcapt}
+%\usepackage{exscale,relsize}
+\usepackage{enumerate}
+%\usepackage{latexcad}
+\pagestyle{headings}
+
+%\setlength{\topmargin}{4EM}     %%%  para GV
+%\setlength{\topmargin}{-2EM}    %%% para WINDVI
+%\setlength{\footskip}{1.5cm}
+%\setlength{\textwidth}{5.0in}
+%\setlength{\textheight}{7.5in}
+%\pagestyle{myheadings}
+%\markboth{W.\ J.\ Colmen\'arez}{Physical Measures for Singular Hyperbolic Attractors}
+%\setlength{\unitlength}{.1cm}
+\setlength{\textheight}{7.9in} \setlength{\textwidth}{15cm}
+\setlength{\topmargin}{12ex} \setlength{\parskip}{.5mm}
+\addtolength{\headsep}{2ex} \setlength{\footnotesep}{.3cm}
+\renewcommand{\baselinestretch}{1.2}
+\setlength{\parindent}{1cm} \setlength{\partopsep}{-.2em}
+\setlength{\parsep}{-.2em} \frenchspacing
+
+% *********** MARGENES **************
+\setlength{\oddsidemargin}{.5cm} \setlength{\evensidemargin}{0.5cm}
+
+%\setlength{\oddsidemargin}{.5cm}   %% impares
+\addtolength{\oddsidemargin}{7mm}  %anular para two sided
+%\addtolength{\evensidemargin}{.5cm}   %% pares
+%\setlength{\evensidemargin}{0.5cm}  % anular para two sided
+
+% ***************************************
+% ************ FORMATO ***************
+% ***************************************
+
+%\numberwithin{table}{chapter}
+%\numberwithin{figure}{chapter}
+
+\newcommand{\bigrule}{\titlerule[0.5mm]}
+\titleformat{\chapter}[display] % cambiamos el formato de los capítulos
+{\bfseries\LARGE} % por defecto se usarán caracteres de tamaño \Huge en negrita
+{% contenido de la etiqueta
+\titlerule % línea horizontal
+\filcenter % texto alineado a la derecha
+\Large\chaptertitlename\ % "Capítulo" o "Apéndice" en tamaño \Large en lugar de \Huge
+\Large\thechapter} % número de capítulo en tamaño \Large
+{1mm} % espacio mínimo entre etiqueta y cuerpo
+{\filcenter} % texto del cuerpo alineado a la derecha
+[\vspace{0.5mm} \bigrule] % después del cuerpo, dejar espacio vertical y trazar línea horizontal gruesa
+
+\titleformat{\subsection}[hang] % cambiamos el formato de los capítulos
+{\bfseries\normalsize} % por defecto se usarán caracteres de tamaño \Huge en negrita
+{% contenido de la etiqueta
+\bigskip % texto alineado a la derecha
+\thesubsection } % número de capítulo en tamaño normal
+{1ex} % espacio mínimo entre etiqueta y cuerpo
+{ }
+
+\titleformat{\subsubsection}[hang] % cambiamos el formato de los capítulos
+{\bfseries\normalsize} % por defecto se usarán caracteres de tamaño \Huge en negrita
+{% contenido de la etiqueta
+ % texto alineado a la derecha
+\thesubsubsection } % número de capítulo en tamaño normal
+{1ex} % espacio mínimo entre etiqueta y cuerpo
+{ }
+\newcounter{ejemp}
+\newcommand{\finp }{\hspace{\fill}\rule{.2cm}{.2cm}\medskip}
+\newcommand{\ejemplo}{\addtocounter{ejemp}{1}{\medskip\noindent\sffamily
+            \slshape Ejemplo }{\thechapter.\theejemp. }}
+
+\newcommand{\demost}{\noindent{\itshape\bfseries Demostraci\'on.} }
+\newcommand{\fullref}[1]{{\rm(\ref{#1})} en la p\'agina~{\rm\pageref{#1}}}
+\newcommand{\dspaceon}{\renewcommand{\baselinestretch}{1.35}\large\normalsize}
+\newcommand{\dspaceoff}{\renewcommand{\baselinestretch}{1.1}\large\normalsize}
+\newcommand{\tto}{\longrightarrow}
+%\newcommand{\Pb}{{\rm I}\!\hspace{.3pt} {\sf P}}
+\newcommand{\restricto}[1]{%
+\!\left|_{#1}\right.}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\txs}{\textstyle}
+\newcommand{\ssty}{\scriptstyle}
+\newcommand{\sssty}{\scriptscriptstyle}
+\newcommand{\D}{\textup{D}}
+\newcommand{\Esp}{\mathbb{E}}
+\newcommand{\var}{\operatorname{var}}
+\newcommand{\sen}{\operatorname{sen}}
+\newcommand{\Ger}{\operatorname{Ger}}
+\newcommand{\clos}{\operatorname{clos}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\sop}{\operatorname{sop}}
+\newcommand{\osc}{\operatorname{osc}}
+\newcommand{\spanned}{\textrm{\upshape span}}
+\newcommand{\Dif}{\operatorname{Diff}}
+\newcommand{\graph}{\operatorname{graph}}
+\newcommand{\interior}{\operatorname{int}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\loc}{\textrm{\upshape loc}}
+\newcommand{\dist}{\textrm{\sl dist}}
+\newcommand{\vacio}{\varnothing}
+\newcommand{\integ}[1]{\raisebox{-1.4em}{$\stackrel{\displaystyle\int}{\scriptstyle #1}$}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\mod}[1]{(\text{\upshape mod\:}{#1})}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+
+
+
+\theoremstyle{plain} \theorembodyfont{\slshape}
+\newtheorem{teorema}{T{\footnotesize EOREMA}}%[chapter]
+\newtheorem{proposicion}{P{\footnotesize ROPOSICI\'ON}}%[chapter]
+\newtheorem{lema}{L{\footnotesize EMA}}%[chapter]
+\newtheorem{corolario}{C{\footnotesize OROLARIO}}%[chapter]
+{\theorembodyfont{\rmfamily}
+\newtheorem{definicion}{D{\footnotesize EFINICI\'ON}}%[chapter]
+\theoremheaderfont{\upshape\rmfamily\bfseries}
+\newtheorem{afirmacion}{A\footnotesize FIRMACI\'ON\normalsize}%[chapter]
+{\theorembodyfont{\rmfamily}
+\theoremheaderfont{\upshape\rmfamily\bfseries}
+
+
+%************* Ambiente para listas enumeradas alfabeticamente **************
+
+
+%\newenvironment{enumeracion}%
+%{\begin{list}{{\bf (\alph{enumi})}}%
+%{\usecounter{enumi} \topsep .02in \itemsep .05in \parsep .05in \rightmargin .21in \leftmargin .60in}}%
+%{\end{list}}
+
+\newcounter{qcounter}
+\newlength{\qrulewidth}
+\newenvironment{ej}[2]{%
+\setlength{\qrulewidth}{#2}
+\begin{quote}\rule{\linewidth}{#2}
+\refstepcounter{qcounter}%
+\textsl{\bfseries Ejemplo \theqcounter}
+\textit{#1}\sf}{ %
+\newline\rule{\linewidth}{\qrulewidth}
+\end{quote} }
+%**********************************************************************
+
+\title{Trabajo Especial de Grado}
+\author{Br. Jos\'e Angel Contreras Gedler}
+\date{\today}
+
+
+\begin{document}
+\renewcommand{\chaptertitlename}{CAP\'ITULO}
+\renewcommand{\contentsname}{\textbf{CONTENIDO}}
+%\renewcommand{\listtablename}{INDICE DE CUADROS}
+%\renewcommand{\figurename}{Figura}
+%\renewcommand{\listfigurename}{INDICE DE FIGURAS}
+\renewcommand{\appendixname}{Anexo}
+
+\frontmatter
+%\maketitle
+\thispagestyle{empty}
+%\cleardoublepage
+
+\setcounter{page}{0}
+%\newpage
+%\fancyhead{}%
+
+%\maketitle
+\clearpage
+
+\begin{center}
+UNIVERSIDAD CENTROCCIDENTAL ``LISANDRO ALVARADO" \\
+DECANATO DE CIENCIAS Y TECNOLOG\'IA \\
+LICENCIATURA EN CIENCIAS MATEMÁTICAS\\
+
+\vspace{4cm}
+
+{\huge\bf 1-Formas y el Espacio de Primera Cohomolog\'ia}\\[2ex]
+%{\huge\bf} \\[2ex]
+
+\vspace{2cm}
+{\large\sc Autor: Br. Jos\'e Angel Contreras Gedler} \\
+{\large\sc Tutor: Dr.\ Wilmer Colmen\'arez Rodriguez (UCLA)}\\
+
+\vspace{2.5cm}
+{\LARGE TRABAJO ESPECIAL DE GRADO}\\
+\vspace{.8cm}
+Presentado ante la Ilustre\\
+Universidad Centroccidental ``Lisandro Alvarado''\\
+como requisito final para optar al grado de \\
+Licenciado en Ciencias Matemáticas
+
+\vspace{\fill} \vspace*{-1ex}
+BARQUISIMETO, VENEZUELA \\
+\nobreak Abril, 2010
+\end{center}
+%\end{titlepage}
+
+\pagenumbering{roman}
+%\clearpage
+\clearpage \tableofcontents
+%\clearpage
+
+%\chapter{Agradecimientos}
+
+%\chapter{Dedicatoria}
+
+
+\mainmatter %\pagenumbering{arabic}
+\chapter{Preliminares}
+Una 1-forma sobre una variedad diferenciable $M$, puede ser descrita como una funci\'on  que a cada punto
+de la variedad le asigna un covector, el cual es un funcional lineal sobre el espacio tangente a $M$ en
+dicho punto. Al concentrar nuestra atenci\'on en el fibrado tangente $T(M)$ de $M$, es posible construir
+a partir de \'el, el fibrado dual llamado fibrado cotangente $T^{*}(M)$ cuyas secciones diferenciables son
+precisamente, las 1-formas.
+
+Si consideramos una funci\'on diferenciable $f:M\tto\mathbb{R}$, la diferencial $df$ es una 1-forma sobre $M$.
+Pero existen 1-formas que no se pueden expresar como la diferencial de alguna funci\'on $f\in C^{\infty}(M)$.
+Cuando esto ocurre, la 1-forma es llamada exacta. Al igual, existen 1-formas que son localmente exactas, es decir,
+en cada punto de la variedad existe un entorno en el cual la 1-forma es exacta. La relaci\'on entre las formas
+exactas y las formas localmente exactas nos da informaci\'on sobre la topolog\'ia de la variedad $M$ a trav\'es
+del espacio $H^{1}(M)$, llamado el espacio de primera cohomolog\'ia de de Rham, un espacio vectorial cuyos
+elementos son clases de equivalencia de 1-formas localmente exactas, donde dos 1-formas localmente exactas son
+equivalentes si y s\'olo si su diferencia es una 1-forma exacta.
+
+El presente trabajo, basado en el desarrollo del cap\'itulo 6 de la referencia principal \cite{Conlon},
+comienza con la construcci\'on de un fibrado vectorial cualquiera, a partir de la definici\'on de un cociclo
+$\gamma$ y un isomorfismo de fibrados. Se establece que todo fibrado construido desde un cociclo proveniente
+del fibrado, es isomorfo al fibrado original. Partiendo del cociclo que caracteriza al fibrado  se induce
+la definici\'on del llamado fibrado dual, cuyas fibras son isomorfas al dual de las fibras del fibrado inicial.
+
+En el cap\'itulo 2 se aplica la construcci\'on del fibrado vectorial
+arbitrario, al fibrado tangente $T(M)$ de una variedad $M$ y se
+define el fibrado cotangente $T^{*}(M)$.
+ El conjunto $A^{1}(M)$ de 1-formas sobre $M$, tiene estructrura de $C^{\infty}(M)$-m\'odulo y se define
+ un isomorfismo de m\'odulos que
+da la representaci\'on can\'onica de las 1-formas. Luego se definen
+la derivada exterior y las Pull-back, con lo que se evidencia la
+funtorialidad de $A^{1}$, de la catergor\'ia de variedades
+diferenciables y funciones diferenciables a la categor\'ia de
+espacios vectoriales y aplicaciones lineales.
+
+Al considerar curvas diferenciables sobre la variedad $M$ se define, en el cap\'itulo 3, las integrales de
+linea, mediante las cuales se caracteriza las 1-formas exactas. En este mismo cap\'itulo se define la homotop\'ia
+diferenciable entre lazos diferenciables a trozos. Gracias a la homotop\'ia diferenciable podemos decir
+que la integral es invariante sobre lazos homot\'opicos y desde aqu\'i se prueba que, en $\mathbb{R}^{n}$
+toda 1-forma localmente exacta, es exacta.
+
+En el cap\'itulo 4 trabajamos con el funtor contravariante $H^{1}$
+y, despues de definir el espacio $H^{1}(M)$ se define la
+equivalencia homot\'opica de una funci\'on diferenciable $f:M\tto
+N$, que induce un isomorfismo lineal entre $H^{1}(N)$ y $H^{1}(M)$
+para concluir con el espacio de primera cohomolog\'ia de $S^{1}$.
+
+Algunas aplicaciones topol\'ogicas de $H^{1}(S^{1})$ sobre la teor\'ia del grado son vistas en el cap\'itulo 5,
+donde se realizan algunos preliminares sobre el grado m\'odulo 2. Se estudia luego el grado de una aplicaci\'on
+sobre $S^{1}$, primero desde el punto de vista del levantamiento de una aplicaci\'on diferenciable y despu\'es
+en t\'erminos de valores regulares. Se aplica esta teor\'ia para demostrar el Teorema Fundamental del \'Algebra.
+Finalizamos el cap\'itulo con algunos comentarios sobre la estructura de $\pi[S^{1},S^{1}]$ y el isomorfismo
+can\'onico que existe entre este conjunto y el grupo fundamental $\pi_{1}(S^{1},1)$.
+
+Al final recogemos en un ap\'endice los resultados y definiciones
+principales sobre la teor\'ia de categor\'ias y funtores, espacios
+de recubrimiento y grupo fundamental que son utilizados en este
+trabajo. Para las definiciones principales de la teor\'ia de
+categor\'ias puede consultarse las referencias \cite{BottTu} y
+\cite{Conlon}. Sobre espacios de recubrimiento y grupo fundamental
+referimos a \cite{Conlon}, \cite{Massey} y  \cite{Munkres}.
+
+\section{Construcci\'on de un fibrado vectorial}
+\begin{definicion}
+Sean $M$ una $m$-variedad diferenciable, $E$ una variedad diferenciable de dimensi\'on $(m+n)$ y $\pi: E\tto M$ una funci\'on sobreyectiva y diferenciable. El sistema $(E,M,\pi)$ ser\'a llamado un $n$-\textit{fibrado vectorial} sobre $M$ si se cumplen las siguientes propiedades:
+\begin{enumerate}
+\item Para cada $x\in M$, el conjunto $E_{x}=\pi^{-1}(x)$ tiene estructura de espacio vectorial real $n$-dimensional.
+\item Existen un cubrimiento abierto $\{W_{j}\}_{j\in J}$ de $M$ y difeomorfismos $\psi:\pi^{-1}(W_{j})\tto W_{j}\times\mathbb{R}^{n}$ tales que los diagramas
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%  DIAGRAMA CONMUTATIVO  %%%%%%%%%%%%%%%%%%%%%%%%
+
+$$\Dg
+\pi^{-1}(W_{j}) & & \rTo ^{\psi} & & W_{j}\times\mathbb{R}^{n}\\
+& \rdTo <{\pi} & & \ldTo >{\pi_{j}} \\
+& & W_{j} \\
+\endDg$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+son conmutativos.
+\item Para cada $j\in J$ y $x\in W_{j}$, la restricci\'on $\psi_{jx}=\psi_{j}\restricto E_{x}$ mapea el espacio vectorial $E_{x}$ isom\'orficamente en el espacio vectorial $\{x\}\times\mathbb{R}^{n}$.
+\end{enumerate}
+\end{definicion}
+$E$ es llamado el \textit{espacio total}, $M$ el \textit{espacio base}, $\pi$ la \textit{proyecci\'on} del fibrado y $E_{x}$ es la \textit{fibra} sobre $x$. Tambi\'en llamaremos a cada $W_{j}$ \textit{vecindad trivializante} para el fibrado y $\{W_{j}\}_{j\in J}$ un cubrimiento localmente trivializante (de $M$) para $E$.
+
+\begin{definicion}
+Sean $\pi_1:E_1\tto M$ y $\pi_2:E_2\tto M$ $n$-fibrados vectoriales sobre $M$. Un \textit{isomorfismo de fibrados} es un par $(\varphi,id)$, donde $\varphi:E_{1}\tto E_{2}$ es  diferenciable e $id: M\tto M$ es la identidad, de manera que el diagrama
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%  DIAGRAMA CONMUTATIVO  %%%%%%%%%%%%%%%%%%%%%%%%
+$$\Dg
+E_{1} & \rTo^{\varphi}  & E_{2} \\
+\dTo <{\pi_{1}} & & \dTo >{\pi_{2}} \\
+M & \rTo_{id} & M \\
+\endDg$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+es conmutativo, $\varphi$ es biyectiva, diferenciable y lleva a $E_{1x}$ isom\'orficamente (como espacio vectorial) en $E_{2x}$ para todo $x\in M$. Si $E_2=M\times \mathbb{R}^{n}$, con $\pi_2$ la proyecci\'on can\'onica, el isomorfismo $\varphi$ es llamado una \textit{trivializaci\'on} de $E_1$.
+\end{definicion}
+\begin{definicion}
+Denotaremos $GL(n)$ al grupo lineal general de matrices no singulares sobre $\mathbb{R}$. Un $GL(n)$-\textit{cociclo} sobre $M$ es una familia $\gamma=\{W_{j},\gamma_{ji}\}_{i,j\in J}$ tal que $\{W_{j}\}_{j\in J}$ es un cubrimiento abierto de $M$ y $\gamma_{ji}:W_{i}\cap W_{j}\tto GL(n)$ es una funci\'on diferenciable para todo $i,j\in J$, todo sujeto a las siguientes condiciones:
+ \begin{equation}
+\gamma_{kj}(x)\gamma_{ji}(x)=\gamma_{ki}(x)
+\end{equation}
+para todo $x\in W_i\cap W_j\cap W_k$ y para todo $i,j,k\in J$. Estas propiedades implican, para una apropiada escogencia de $x$ y de \'indices $i,j\in J$,
+ \begin{eqnarray}
+\gamma_{ii}(x)&=&I_{n}\\
+\gamma_{ij}(x)&=&(\gamma_{ji}(x))^{-1}
+\end{eqnarray}
+Si el cociclo $\gamma$ proviene de un $n$-fibrado vectorial $E$, diremos que es una \textit{estructura de cociclo} para $E$.
+\end{definicion}
+Una estructura de cociclo $\gamma$ para $E$ contiene toda la informaci\'on necesaria para rearmar el fibrado salvo por un isomorfismo de fibrado. En efecto, un $GL(n)$-cociclo $\gamma=\{W_{j},\gamma_{ji}\}_{i,j\in J}$ sobre $M$ caracteriza un $n$-fibrado vectorial para el cual \'este es una estructura de cociclo. Veamos cu\'al es el procedimiento para dicha construcci\'on. Sea
+$$\widetilde{E}_{\gamma}=\bigsqcup_{j\in J}W_{j}\times\mathbb{R}^{n}$$
+donde el s\'imbolo $\bigsqcup$ denota uni\'on disjunta. Dados  $(x,v)\in W_{j}\times\mathbb{R}^{n}$ y $(y,w)\in W_{i}\times\mathbb{R}^{n}$ definamos sobre $\widetilde{E}_{\gamma}$ la siguiente relaci\'on:
+$$(x,v)\sim (y,w) \hbox{  si y s\'olo si  } x=y\in W_{j}\cap W_{i}\hbox{  y  } w=\gamma_{ji}(x)v.$$
+Esta es una relaci\'on de equivalencia como consecuencia inmediata de las condiciones de cociclo. Consideremos la proyecci\'on sobre el primer factor
+$$\pi_{j}:W_j\times\mathbb{R}^{n}\tto W_j$$
+dada por $\pi_{j}(x,v)=x$, y definamos
+$$\widetilde{\pi}:\widetilde{E}_{\gamma}\tto M$$
+por $\widetilde{\pi}(x,v)=\pi_{j}(x,v)=x$ para $(x,v)\in \widetilde{E}_{\gamma}$. Esta funci\'on preserva la relaci\'on de equivalencia. En efecto, si $(x,v)\sim (y,w)$ entonces $x=y$, de modo que
+\begin{eqnarray*}
+    \widetilde{\pi}(x,v)  &=&y\\
+                          &=&\pi_{i}(y,w)\\
+                          &=&\widetilde{\pi}(y,w).
+\end{eqnarray*}
+Sea $E_{\gamma}=\widetilde{E}_{\gamma}/\sim$. Como $\widetilde{\pi}$ preserva la relaci\'on $\sim$, queda bien definida la funci\'on
+$$\pi:E_{\gamma}\tto M.$$
+\begin{proposicion}
+El sistema $(E_{\gamma},M,\pi)$ es un $n$-fibrado vectorial diferenciable.
+\end{proposicion}
+\demost Dado $x\in M$ tenemos
+\begin{eqnarray*}
+(E_{\gamma})_{x}=\pi^{-1}(x)&=&\widetilde{\pi}^{-1}(x)\\
+                                     &=&\pi_{j}^{-1}(x)\\
+                                     &=&\{x\}\times\mathbb{R}^{n},
+\end{eqnarray*}
+el cual tiene estructura de espacio vectorial real. Observemos ahora que $\pi^{-1}(W_{j})=\widetilde{\pi}^{-1}(W_{j})=\pi_{j}^{-1}(W_{j})=W_{j}\times\mathbb{R}^{n}$. Por lo que podemos considerar la funci\'on identidad, $id:\pi^{-1}(W_{j})\tto W_{j}\times\mathbb{R}^{n}$ que es un difeomorfismo y claramente el diagrama
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%  DIAGRAMA CONMUTATIVO  %%%%%%%%%%%%%%%%%%%%%%%%
+$$\Dg
+\pi^{-1}(W_{j}) & & \rTo ^{id} & & W_{j}\times\mathbb{R}^{n}\\
+& \rdTo <{\pi} & & \ldTo >{\pi_{j}} \\
+& & W_{j} \\
+\endDg$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+conmuta, cumpliendo así con la propiedad de trivialidad local.\finp
+\begin{proposicion}
+Existe un isomorfismo de fibrados entre $(E_{\gamma},M,\pi)$ y $(E,M,\widehat{\pi})$, donde el cociclo $\gamma$ proviene de las trivializaciones locales $\psi_{j}:\pi_{j}^{-1}(W_{j})\tto W_{j}\times\mathbb{R}^{n}$ del fibrado $(E,M,\widehat{\pi})$.
+\end{proposicion}
+\demost
+Debemos probar que existe $\psi:E_{\gamma}\tto E$, isomorfismo de fibrados, tal que el siguiente diagrama es conmutativo:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%  DIAGRAMA CONMUTATIVO  %%%%%%%%%%%%%%%%%%%%%%%%
+$$\Dg
+E_{\gamma} & \rTo^{\psi}  & E \\
+\dTo <{\pi} & & \dTo >{\widehat{\pi}} \\
+M & \rTo_{id} & M \\
+\endDg$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+En efecto, a partir de las trivializaciones locales $\psi_{j}:\pi_{j}^{-1}(W_{j})\tto W_{j}\times\mathbb{R}^{n}$ del fibrado $(E,M,\widehat{\pi})$, definamos  $\psi:E_{\gamma}\tto E$ que preserve la relaci\'on de equivalencia.
+
+Sean $(x,v)\in W_{j}\times\mathbb{R}^{n}$ y $(y,w)\in W_{i}\times\mathbb{R}^{n}$ tales que $(x,v)\sim(y,w)$. Ahora,
+\begin{eqnarray*}
+(x,v)\sim(y,w)&\Rightarrow& x=y \hbox{  y  } w=\gamma_{ij}(x)\cdot v\\
+                  &\Rightarrow& \psi_{i}\psi_{j}^{-1}(x,v)=(x,\gamma_{ij}(x)\cdot v)\\
+                  &\Rightarrow& \psi_{j}^{-1}(x,v)=\psi_{i}^{-1}(x,\gamma_{ij}(x)\cdot v)\\
+                  &\Rightarrow& \psi_{j}^{-1}(x,v)=\psi_{i}^{-1}(y,w)
+\end{eqnarray*}
+Definamos $\widetilde{\psi}:\widetilde{E}_{\gamma}\tto E$ por $\widetilde{\psi}(x,v)=\psi_{j}^{-1}(x,v)$ la cual, por lo anterior, preserva la relaci\'on de equivalencia y permite que la funci\'on
+$$
+{\yscale=.6
+\Diagram
+\psi:E_{\gamma} & \rTo & E \\
+\Modify \Mapsto (0,-1) (2,-1) \tl{[x,v]} \hd{\widetilde{\psi}(x,v)} \\
+\endDiagram }
+$$
+quede bien definida. Probemos ahora que $\widehat{\pi}\circ\psi=id\circ\psi$.
+\begin{eqnarray*}
+(\widehat{\pi}\circ\psi)[x,v]&=&\widehat{\pi}(\widetilde{\psi}(x,v))\\
+                                      &=&\widehat{\pi}(\psi_{j}^{-1}(x,v))=x\in W_{j}\subset M.
+\end{eqnarray*}
+Por otra parte,
+\begin{eqnarray*}
+(id\circ\pi)[x,v]&=&id(\pi_{j}(x,v))\\
+                      &=&id(x)=x.
+\end{eqnarray*}
+Por lo tanto, $\widehat{\pi}\circ\psi=id\circ\pi$.\finp
+\section{Fibrado dual de fibrados vectoriales}
+Sea $\gamma=\{W_{\alpha},\gamma_{\alpha\beta}\}_{\alpha,\beta\in\mathscr{A}}$ un $GL(k)$-cociclo proveniente de una familia de trivializaciones $\psi_{\alpha}:\pi^{-1}(W_{\alpha})\tto W_{\alpha}\times\mathbb{R}^{k}$ de un $k$-fibrado vectorial. Este $GL(k)$-cociclo $\gamma$ induce el $GL(k)$-cociclo $\gamma'$ dado por
+$$\gamma_{\alpha\beta}'(x)=(\gamma_{\alpha\beta}(x)^{\top})^{-1}\qquad\hbox{  para todo  }x\in W_{\alpha}\cap W_{\beta}.$$
+Aplicando la construcci\'on anterior podemos, a partir del cociclo $\gamma'$ construir el fibrado $E_{\gamma '}$. Dicho fibrado recibe el nombre de \textit{fibrado dual}.
+\begin{proposicion}
+Para cada $x\in M$ la fibra $(E_{\gamma'})_{x}=E_{x}^{*}$ es can\'onicamente isomorfa al dual de la fibra $(E_{\gamma})_{x}=E_{x}$.
+\end{proposicion}
+\demost Denotemos las clases de equivalencia $(E_{\gamma})_{x}$ por $[x,v,\alpha]$ y aquellas en $(E_{\gamma'})_{x}$ por $[x,v,\alpha]^{*}$. Evaluemos $[x,w,\alpha]^{*}$ sobre  $[x,v,\alpha]$ mediante la f\'ormula
+\begin{equation}\label{eq1}
+ [x,w,\alpha]^{*} \cdot [x,v,\alpha] = w^{\top}\cdot v
+\end{equation}
+Veamos que esta acci\'on est\'a bien definida, para lo cual tomaremos $x\in W_{\alpha}\cap W_{\beta}$, $v,w\in\mathbb{R}^{k}$ y $\alpha, \beta$ tales que $[x,w,\alpha]^{*}=[x,v,\beta]^{*}$ y $[x,v,\alpha]=[x,w,\beta]$. Por como est\'an definidas estas relaciones a partir de los respectivos cociclos, tenemos
+\begin{align*}
+ [x,w,\alpha]^{*}&= [x,\gamma'_{\beta\alpha}(x)\cdot w,\beta]^{*}\\
+ [x,v,\alpha]    &= [x,\gamma_{\beta\alpha}(x)\cdot v,\beta]
+\end{align*}
+ As\'i
+\begin{align*}
+v^{\top}\cdot w  &= (\gamma'_{\beta\alpha}(x)\cdot w)^{\top}\cdot\gamma_{\beta\alpha}(x)\cdot v\\
+            &= w^{\top} (\gamma'_{\beta\alpha}(x))^{\top}\gamma_{\beta\alpha}(x)\cdot v\\
+            &= w^{\top}\gamma_{\alpha\beta}(x)\gamma_{\beta\alpha}(x)\cdot v\\
+            &= w^{\top}\cdot v
+\end{align*}
+Con esto vemos que (\ref{eq1}) no depende del representante de la
+clase. De ah\'i que est\'e bien definida dicha acci\'on, la cual
+adem\'as es lineal. Como $[x,w,\alpha]^{*}\in
+(E_{\gamma'})_{x}=E_{x}^{*}$ est\'a actuando linealmente sobre los
+elementos de $E_{x}$, tenemos claramente $E_{x}^{*}\subset
+(E_{x})^{*}$, donde
+$(E_{x})^{*}=\Hom_{\mathbb{R}}(E_{x},\mathbb{R})$. Pero $E_{x}^{*}$
+y $(E_{x})^{*}$ tienen la misma dimensi\'on. Por tanto, $E_{x}^{*} =
+(E_{x})^{*}$ can\'onicamente. \finp
+
+Observemos que el doble dual de un $n$-fibrado vectorial $\pi:E\tto M$ es can\'onicamente isomorfo al fibrado original. Esto es, $(E^{*})^{*}=E$. En efecto, es imnediato que $(\gamma'_{\alpha\beta})'=\gamma_{\alpha\beta}$.
+
+
+\chapter{El Espacio de las 1-formas}
+\section{1-Formas}
+Apliquemos la construcci\'on del cap\'itulo anterior al fibrado tangente $T(M)$.
+\begin{definicion}
+Sean $M$ una variedad diferenciable y $x\in M$.
+\begin{itemize}
+\item El espacio dual $(T_{x}M)^{*}$ de $T_{x}(M)$ es llamado \textit{espacio cotangente} de $M$ en $x$ y es denotado por $T_{x}^{*}M$.
+\item Cada $\alpha\in T_{x}^{*}M$ es llamado \textit{vector cotangente} a $M$ en $x$.
+\item El fibrado $T^{*}M$ con fibras $T_{x}^{*}(M)$, dual del fibrado tangente, es llamado \textit{fibrado cotangente} de $M$.
+\end{itemize}
+\end{definicion}
+
+Sean $U\subset M$ abierto, $x\in U$ y $f\in C^{\infty}(U)$. Denote $G_{x}$ el \'algebra de g\'ermenes en $x$. Como $T_{f(x)}(\mathbb{R})=\mathbb{R}$ can\'onicamente, obtenemos un funcional lineal $df_{x}:T_{x}(M)\tto\mathbb{R}$. As\'i, $df_{x}\in T_{x}^{*}(M)$. Es evidente que $df_{x}$ depende s\'olo de los g\'ermenes $[f]_{x}\in G_{x}$ por lo que obtenemos que $d:G_{x}\tto T_{x}^{*}(M)$ es un funcional $\mathbb{R}$-lineal.
+\begin{lema}\label{lema1}
+Para cada $X_{x}\in T_{x}M$ se cumple $df_{x}(X_{x})=X_{x}(f)$, para $f\in C^{\infty}(U)$, donde $U$ es un entorno de $x$.
+\end{lema}
+\demost Sea $(U, x^{1},\ldots,x^{n})$ una carta coordenada alrededor de $x$. Puesto que $f:U\subset M\tto\mathbb{R}$, se tiene que $df_{x}:T_{x}M\tto\mathbb{R}$ y $df_{x}=Jf_{x}=\left[\frac{\partial f}{\partial x^{1}}(x)\cdots\frac{\partial f}{\partial x^{n}}(x)\right]$. Si expresamos
+$$X_{x}=\sum_{i=1}^{n}a^{i}\left(\frac{\partial}{\partial x^{i}}\right)_{x}\in T_{x}M,$$
+entonces,
+$$df_{x}(X_{x})=Jf_{x}\cdot\left[\begin{array}{c}
+                            a^{1}\\
+\vdots\\
+a^{n}
+\end{array}\right]=\sum_{i=1}^{n}a^{i}\frac{\partial f}{\partial x^{i}}(x)=X_{x}(f).$$\finp
+\begin{corolario}
+Los covectores $dx^{1},\ldots,dx^{n}$ asociados a las funciones de coordenadas locales $x^1, \ldots, x^n$ alrededor de $x\in M$ forman una base de $T_{x}^{*}(M)$.
+\end{corolario}
+\demost Puesto que $\dim T_{x}^{*}(M)=n$, es suficiente probar que
+el conjunto $dx^{1},\ldots,dx^{n}$ es linealmente independiente. Por
+el Lema %\ref{lema1},
+$$dx_{x}^{i}\left(\frac{\partial}{\partial x^{j}}\right)_{x}=\frac{\partial x^{i}}{\partial x^{j}}(x)=\delta_{ij}.$$
+As\'i
+\begin{eqnarray*}
+\sum_{i=1}^{n}b_{i}dx_{x}^{i}=0 &\Longleftrightarrow& 0=\sum_{i=1}^{n}b_{i}dx_{x}^{i}\left(\frac{\partial}{\partial x^{j}}\right)_{x}\\
+&\Longleftrightarrow& 0=b_{j}, \hbox{ para } j\in\{1,\ldots,n\}.
+\end{eqnarray*}\finp
+\begin{corolario}
+La aplicaci\'on lineal $d:G_{x}\tto T_{x}^{*}(M)$ es sobreyectiva.
+\end{corolario}
+Esto es, todo covector es el diferencial de una funci\'on.
+
+Recordemos que una \textit{secci\'on diferenciable} del fibrado tangente $T(M)$ es una funci\'on diferencable $X:M\tto T(M)$ tal que $X(x)=X_{x}\in T_{x}(M)$ para alg\'un $x\in M$ . Las secciones del fibrado tangente son llamadas \textit{campo de vectores}. An\'alogamente se define una \textit{secci\'on} del fibrado cotangente como una funci\'on
+$$
+{\yscale=.6
+\Diagram
+\omega:M & \rTo & T^{*}(M) \\
+\Modify \Mapsto (0,-1) (2,-1) \tl{x} \hd{\omega_{x}\in T_{x}^{*}(M)} \\
+\endDiagram }
+$$
+llamada \textit{campo de covectores}. Dados $x\in U\subset M$, y $(U,x^{1},\ldots,x^{n})$, carta coordenada alrededor de $x$, la secci\'on $\omega$ puede ser escrita localmente como
+\begin{equation}\label{eq6}
+\omega_{x}=\sum_{i=1}^{n}f_{i}(x)dx^{i}
+\end{equation}
+para algunas funciones $f_{1},\ldots,f_{n}:U\tto R$ llamadas funciones componentes de $\omega$. La siguiente proposici\'on nos proporciona la diferenciabilidad de la secci\'on $\omega$.
+\begin{proposicion}\label{propo1}
+Sea $\omega:M\tto T^{*}(M)$ una secci\'on, no necesariemente diferenciable o continua. Entonces, $\omega$ es diferenciable si la funci\'on
+$$
+{\yscale=.6
+\Diagram
+M & \rTo & \mathbb{R} \\
+\Modify \Mapsto (0,-1) (2,-1) \tl{x} \hd{\omega_{x}(X_{x})} \\
+\endDiagram }
+$$
+es diferenciable para toda secci\'on diferenciable $X$ de $T(M)$.
+\end{proposicion}
+\demost Sea $X$ una secci\'on diferenciable de $T(M)$. Por hip\'otesis se tiene que la funci\'on $x\mapsto\omega_{x}(X_{x})$ es diferenciable. Adem\'as, dados $x\in M$ y $(U,x^{1},\ldots,x^{n})$, carta local de $x$, existen funciones $f_{1},\ldots,f_{n}$ que caracterizan a $\omega$ localmente, en el sentido de la ecuaci\'on (\ref{eq6}). Evaluando $\omega_{x}$ en $X_{x}$ tenemos
+$$\omega_{x}(X_{x})=\sum_{i=1}^{n}f_{i}(x)dx^{i}(X_{x}).$$
+As\'i, las funciones componentes de $\omega$, a saber, $f_{1},\ldots,f_{n}$ son diferenciables en $M$. Por tanto $\omega$ es diferenciable.\finp
+
+\begin{definicion}
+El $C^{\infty}(M)$-m\'odulo $\Gamma(T^{*}(M))$ de secciones diferenciables del fibrado cotangente es denotado por
+$$A^{1}(M)=\Gamma(T^{*}(M)).$$
+Los elementos de $A^{1}(M)$ son llamados \textit{campos de covectores} o \textit{1-formas} de $M$. Si $\omega\in A^{1}(M)$, entonces su valor en $x\in M$ es denotado por $\omega_{x}\in T_{x}^{*}(M)$.
+\end{definicion}
+\section{Representaci\'on Can\'onica}
+Denotemos por $\Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$ el $C^{\infty}(M)$-m\'odulo de todas las funciones de $\mathfrak{X}(M)$ en $C^{\infty}(M)$ que son $C^{\infty}(M)$-lineal. Toda 1-forma $\omega\in A^{1}(M)$ act\'ua sobre $\mathfrak{X}(M)$ mediante la correspondencia  $X\mapsto\omega(X)\in C^{\infty}(M)$ dada por
+$$\omega(X)(x)=\omega_{x}(X_{x}), \text{ para todo } x\in M.$$
+Es claro que $\omega(fX)=f\omega(X)$ para toda $f\in C^{\infty}(M)$. En efecto, dado $x\in M$ cualquiera se tiene
+\begin{eqnarray*}
+\omega(fX)(x)&=&\omega_{x}((fX)(x))\\
+                 &=&\omega_{x}(f(x)X_{x})\\
+                 &=&f(x)\omega_{x}(X_{x})
+\end{eqnarray*}
+Como $x\in M$ es arbitrario se cumple $\omega(fX)=f\omega(X)$. As\'i podemos ver esta 1-forma como un elemento $\omega\in \Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$. Esto define un homomorfismo inyectivo de $C^{\infty}(M)$-m\'odulos
+$$A^{1}(M)\hookrightarrow \Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M)).$$
+Mostraremos ahora que este homomorfismo tambi\'en es una sobreyecci\'on, para lo cual probaremos primero los siguientes lemas.
+
+Sean $\alpha\in \Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$ y $U\subseteq M$ abierto.
+\begin{lema}\label{lema2}
+Si $X\in\mathfrak{X}(M)$ y $X\restricto U\equiv 0$, entonces $\alpha(X)\restricto U\equiv 0$.
+\end{lema}
+\demost Dado $x\in U$ empleamos el Lema de Urysohn para escoger $f\in C^{\infty}(M)$ que se anula en $x\in U$ y es id\'enticamente igual a 1 en $M\setminus U$. Entonces $fX=X$ y
+$$\alpha(X)=\alpha(fX)=f\alpha(X).$$
+Esto muestra que
+$$\alpha(X)(x)=f(x)\alpha(X)(x)=0.$$
+Como esto es cierto para $x\in U$ arbitrario, se sigue que $\alpha(X)\restricto U\equiv 0$. \finp
+\begin{lema}
+Existe una aplicaci\'on can\'onica  $\widetilde{\alpha}\in\Hom(\mathfrak{X}(U),C^{\infty}(U))$ tal que $\widetilde{\alpha}(X\restricto{U})=\alpha(X)\restricto{U}$ para todo $X\in\mathfrak{X}(M)$.
+\end{lema}
+\demost Si $Y\in\mathfrak{X}(U)$, definamos $\widetilde{\alpha}(Y)\in C^{\infty}(U)$ como sigue: para $y\in U$ arbitrario, escojamos $f\in C^{\infty}(M)$ tal que $f\equiv 1$ en alguna vecindad abierta $V\subset U$ de $y$ y $f\restricto{M\setminus U}\equiv 0$. Entonces podemos interpretar a $fY$ como un campo definido en todo $M$ y $fY\restricto{V}=Y\restricto{V}$. Definamos
+$$\widetilde{\alpha}(Y)(y)=\alpha(fY)(y).$$
+Por el Lema \ref{lema2} la definici\'on de $\widetilde{\alpha}(Y)$ es independiente de $f$ y de $V$. Es claro que esto define $\widetilde{\alpha}\in \Hom_{C^{\infty}(U)}(\mathfrak{X}(U), C^{\infty}(U))$ y que $\widetilde{\alpha}(X\restricto{U})=\alpha(X)\restricto{U}$, para todo $X\in\mathfrak{X}(M)$. \finp
+\begin{corolario}
+Si $\alpha\in\Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$, entonces $\alpha(X)(x)$ depende solamente del valor $X_{x}$ de $X$ (y no de $X$ en general), para todo $x\in M$ y $X\in\mathfrak{X}(M)$.
+\end{corolario}
+\demost Sea $x\in M$. Escojamos una vecindad $U$ de $x$ en $M$ sobre la cual $T(M)$ es trivial, y sea $Y^{1},\ldots,Y^{n}\in\mathfrak{X}(U)$ un sistema de referencia local del espacio tangente en cada punto de $U$, en el sentido que $\{Y^{1}(x),\ldots, Y^{n}(x)\}$ es una base de $T_{x}(M)$ para $x\in U$. Entonces un campo arbitrario $X\in\mathfrak{X}(M)$ puede ser escrito sobre $U$ como
+$$X\restricto{U}=\sum_{i=1}^{n}f_{i}Y^{i}$$
+y con esto expresamos
+\begin{eqnarray}
+\alpha(X)(x)&=&(\alpha\restricto{U})(X\restricto{U})(x)\\
+                &=&\sum_{i=1}^{n}f_{i}(x)(\alpha\restricto{U})(Y^{i})(x)\label{eq2}.
+\end{eqnarray}
+En (\ref{eq2}), la \'unica dependencia respecto de $X$ est\'a expresada en los valores $f_{i}(x)$, $i=1,\ldots,n$, con lo cual queda demostrado el resultado.\finp
+
+La propiedad de $\alpha$ en el corolario anterior es llamada \textit{propiedad tensorial}.
+\begin{lema}
+Sea $\eta:\mathfrak{X}(M)\tto C^{\infty}(M)$ es una aplicaci\'on $\mathbb{R}$-lineal. Entonces, $\eta$ tiene la propiedad tensorial si y s\'olo si $\eta\in \Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$.
+\end{lema}
+\demost En el corolario anterior se mostr\'o que si $\eta\in\Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$, entonces $\eta$ tiene la propiedad tensorial. Para el rec\'iproco supongamos que $\eta$ tiene la propiedad tensorial y sean $f\in C^{\infty}(M)$ y $X\in\mathfrak{X}(M)$. Para cada $x\in M$ el valor $\eta(fX)(x)$ depende s\'olo de $f(x)X_{x}$, as\'i, por la $\mathbb{R}$-linealidad tenemos
+$$\eta(fX)(x)=\eta(f(x)X)(x)=f(x)\eta(X)(x).$$
+Como $x\in M$ es arbitrario, $\eta(fX)=f\eta(X)$. \finp
+
+Para $x\in M$ y $\alpha\in \Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$ definimos $\alpha_{x}\in T_{x}^{*}(M)$ como sigue. Dado $v\in T_{x}(M)$, sea $X\in\mathfrak{X}(X)(M)$ cualquier campo de vectores tal que $X_{x}=v$. Definimos
+$$\alpha_{x}(v)=\alpha(X)(x).$$
+Como $\alpha$ tiene la propiedad tensorial, el valor $\alpha(X)(x)$ depende s\'olo de $X(x)=v$ y no de la escogencia de una extensi\'on $X$; de modo que $\alpha_{x}$ est\'a bien definida como funci\'on de $T_{x}(M)$ a $\mathbb{R}$. Luego, $\alpha_{x}\in T_{x}^{*}(M)$ para cada $x\in M$. Ahora, como la funci\'on $x\longmapsto \alpha_{x}(X_{x})$ es diferenciable y dado que $X\in\mathfrak{X}(M)$ es una secci\'on diferenciable de $T(M)$ tenemos, por la Proposici\'on \ref{propo1}, que la aplicaci\'on $x\longmapsto\alpha_{x}$ define una secci\'on diferenciable de $T^{*}(M)$. Esto identifica a $\alpha$ como un elemento de $A^{1}(M)$.
+
+Se ha demostrado as\'i la siguiente proposici\'on:
+\begin{proposicion}
+Existe un isomorfismo can\'onico
+$$A^{1}(M)\rightarrow\Hom_{C^{\infty}(M)}(\mathfrak{X}(M),C^{\infty}(M))$$
+de $C^{\infty}(M)$-m\'odulos.
+\end{proposicion}
+\section{Pull-Back y La Derivada Exterior}
+\begin{definicion}
+Sea $\varphi:M\tto N$ una funci\'on diferenciable entre variedades. Dados $x\in M$ y $\alpha\in T^{*}_{\varphi(x)}N$ definimos $\varphi_{x}^{*}(\alpha)\in T_{x}^{*}(M)$ por
+$$\varphi_{x}^{*}(\alpha)(X_{x})=\alpha(\varphi_{*x}(X_{x})),\text{ para cada } X_{x}\in T_{x}(M).$$
+Esto define una funci\'on lineal
+$$\varphi^{*}_{x}:T_{\varphi(x)}^{*}(N)\tto T_{x}^{*}(M)$$
+llamada \textit{adjunto} de $\varphi_{*x}$. Sea $\varphi:M\tto N$ diferenciable. Si $\omega\in A^{1}(M)$, se define $\varphi^{*}(\omega):M\tto T^{*}(M)$ por
+$$\varphi^{*}(\omega)_{x}=\varphi_{x}^{*}(\omega_{\varphi(x)}), \hbox{ para cada } x\in M.$$
+Por otro lado, para $f\in C^{\infty}(M)$, definimos $\varphi^{*}(f)=f\circ\varphi\in C^{\infty}(M)$.
+\end{definicion}
+\begin{lema}
+Si $\varphi:M\tto N$ es una aplicaci\'on diferenciable entre variedades y $\omega\in A^{1}(N)$, entonces $\varphi^{*}(\omega)\in A^{1}(M)$ y queda definida as\'i una aplicaci\'on lineal
+$$\varphi^{*}:A^{1}(N)\tto A^{1}(M)$$
+entre espacios vectoriales sobre $\mathbb{R}$. M\'as a\'un, si $f\in C^{\infty}(M)$, entonces
+$$\varphi^{*}(f\omega)=\varphi^{*}(f)\varphi^{*}(\omega).$$
+\end{lema}
+\demost Sea $\omega\in A^{1}(N)$. Entonces $\varphi^{*}(\omega):M\tto T^{*}(M)$ est\'a definido por $\varphi^{*}(\omega)_{x}=\varphi_{x}^{*}(\omega_{\varphi(x)})$ para todo $x\in M$. Pero $\varphi_{x}^{*}(\omega_{\varphi(x)})$ es un covector en $M$ tal que $\varphi_{x}^{*}(\omega_{\varphi(x)})(X_{x})=\omega_{\varphi(x)}(\varphi_{*x}(X_{x}))$ para todo $X_{x}\in T_{x}(M)$. Evidentemente el adjunto $\varphi_{x}^{*}$ es diferenciable, por lo que la funci\'on $x\longmapsto\omega_{\varphi(x)}(\varphi_{*x}(X_{x}))$ es diferenciable. Aplicando la Proposici\'on \ref{propo1} se deduce que $\varphi^{*}(\omega)$ es una secci\'on diferenciable de $T^{*}(M)$. Por tanto, $\varphi^{*}(\omega)\in A^{1}(M)$. Sean $\omega, \sigma\in A^{1}(N)$ y $a\in\mathbb{R}$.
+\begin{eqnarray*}
+  \varphi^{*}(a\omega+\sigma)_{x}&=&\varphi_{x}^{*}((a\omega+\sigma)_{\varphi(x)})\\
+                                    &=&\varphi_{x}^{*}(a\omega_{\varphi(x)}+\sigma_{\varphi(x)})\\
+                                    &=& a\varphi_{x}^{*}(a\omega_{\varphi(x)})+\varphi_{x}^{*}(\sigma_{\varphi(x)})\\
+                                    &=&a\varphi^{*}(\omega)_{x}+\varphi^{*}(\sigma)_{x}.
+\end{eqnarray*}
+Por tanto, $\varphi^{*}$ es lineal.
+Tomemos ahora $f\in C^{\infty}(N)$ y $x\in M$ fijo.
+\begin{eqnarray*}
+  \varphi^{*}(f\omega)_{x}&=&\varphi_{x}^{*}((f\omega)_{\varphi(x)})\\
+                          &=&\varphi_{x}^{*}(f(\varphi(x))\omega_{\varphi(x)})\\
+                          &=&f(\varphi(x))\varphi_{x}^{*}(\omega_{\varphi(x)})\\
+                          &=&(f\circ\varphi)(x)\varphi_{x}^{*}(\omega_{\varphi(x)})\\
+                          &=&\varphi^{*}(f)(x)\varphi^{*}(\omega)_{x}.
+\end{eqnarray*}
+Como $x\in M$ es arbitrario, obtenemos $\varphi^{*}(f\omega)=\varphi^{*}(f)\varphi^{*}(\omega)$. \finp
+\begin{lema}
+Si $\varphi:M\tto N$ y $\psi:N\tto P$ son funciones diferenciables entre variedades, entonces
+$$(\psi\circ\varphi)^{*}=\varphi^{*}\circ\psi^{*}$$
+en $A^{1}(P)$ y en $C^{\infty}(P)$.
+\end{lema}
+\demost Sea $\omega\in A^{1}(P)$. Por definici\'on tenemos que $(\psi\circ\varphi)^{*}(\omega)_{x}=(\psi\circ\varphi)_{x}^{*}(\omega_{\psi(\varphi(x))})$, y apelando a las definiciones respectivas desarrollamos
+\begin{eqnarray*}
+(\psi\circ\varphi)^{*}_{x}(\omega_{\psi(\varphi(x))})(X_{x})&=&\omega_{\psi(\varphi(x))}((\psi\circ\varphi)_{*x(X_{x})})\\
+&=&\omega_{\psi(\varphi(x))}(\psi_{*\varphi(x)}\varphi_{*x}(X_{x}))\\
+&=&\psi_{\varphi(x)}^{*}(\omega_{\psi(\varphi(x))}(\varphi_{*x}(X_{x})))\\
+&=&\varphi_{x}^{*}(\psi_{\varphi(x)^{*}}(\omega_{\psi(\varphi(x))}))(X_{x}).
+\end{eqnarray*}
+Luego, $(\psi\circ\varphi)_{x}^{*}(\omega_{\psi(\varphi(x))})=\varphi_{x}^{*}(\psi_{\varphi(x)}(\omega_{\phi(\varphi(x))}))$, lo cual implica $(\psi\circ\varphi)^{*}(\omega)_{x}=(\varphi^{*}\circ\psi^{*})(\omega)_{x}$ para todo $x\in M$. Con esto se obtiene $(\psi\circ\varphi)^{*}=\varphi^{*}\circ\psi^{*}$.
+Sea $f\in C^{\infty}(P)$, aplicando tres veces la definici\'on de $*$ se tiene
+$(\psi\circ\varphi)^{*}(f)= f\circ\psi\circ\varphi=\varphi^{*}(\psi^{*}(f))=(\varphi^{*}\circ\psi^{*})(f)$.\finp
+
+De lo anterior vemos que $A^{1}$ es un funtor contravariante de la categor\'ia de variedades diferenciables y funciones diferenciables a la categor\'ia de espacios vectoriales reales y aplicaciones lineales (vea el ap\'endice para las nociones de catogor\'ias y funtores).
+\begin{definicion}
+Si $f\in C^{\infty}(M)$ entonces $df$ es llamada la \textit{derivada exterior} de $f$. La aplicaci\'on $\mathbb{R}$-lineal $d:C^{\infty}(M)\tto A^{1}(M)$ es llamada \textit{diferenciaci\'on exterior}. Donde $df:M\tto T^{*}(M)$ definida por $df(x)=df_{x}$ para todo $x\in M$, es una $1$-forma sobre $M$.
+\end{definicion}
+\begin{lema}
+Si $f,g\in C^{\infty}(M)$, entonces $d(fg)=fdg+gdf$.
+\end{lema}
+\demost Dado $X\in\mathfrak{X}(M)$ tenemos
+\begin{eqnarray*}
+d(fg)(X)&=& X(fg)\\
+          &=& fX(g)+gX(f)\\
+          &=& fdg(X)+gdf(X)\\
+          &=& (fdg+gdf)(X).
+\end{eqnarray*}
+Como $X$ es arbitrario, obtenemos el resultado. \finp
+
+Este lema es una \textit{regla de Leibnitz} para la diferenciaci\'on exterior.
+
+\begin{proposicion}\label{propo2}
+Sea $\varphi:M\tto N$ diferenciable. Entonces el diagrama
+$$\Dg
+C^{\infty}(N) & \rTo^{\varphi^{*}}  & C^{\infty}(N) \\
+\dTo <{d} & & \dTo >{d} \\
+A^{1}(N) & \rTo_{\varphi^{*}} & A^{1}(M) \\
+\endDg$$
+es conmutativo. Esto es, para cualquier $f\in C^{\infty}(N)$, $d(\varphi^{*}(f))=\varphi^{*}(df)$.
+\end{proposicion}
+\demost Sea $x\in M$ arbitrario y $X_{x}\in T_{x}(M)$. Aplicando definiciones se tiene
+\begin{eqnarray*}
+(\varphi^{*}df)_{x}(X_{x})&=&\varphi_{x}^{*}(df_{\varphi(x)})(X_{x})\\
+                                  &=&df_{\varphi(x)}(\varphi_{*x}(X_{x}))\\
+                                  &=&d(f\circ\varphi)_{x}(X_{x})\\
+                                  &=&d(\varphi^{*}(f))_{x}(X_{x}).
+\end{eqnarray*}
+Por lo tanto $(\varphi^{*}(df))=d\varphi^{*}(f)$. \finp
+
+Esta propiedad de $d$ es llamada \textit{naturalidad} de la derivada exterior.
+
+\section{Derivada de Lie de 1-formas}
+\begin{definicion}
+Sean $X\in\mathfrak{X}(M)$ y $\Phi$ el flujo local generado por $X$. Se define la \textit{derivada de Lie}  $\mathcal{L}_{X}:A^{1}(M)\tto A^{1}(M)$, por
+\begin{equation}\label{eq3}
+\mathcal{L}_{X}(\omega)=\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(\omega)-\omega}{t}\hbox{,     para cualquier  }\omega\in A^{1}(M)
+\end{equation}
+tomado puntualmente sobre $M$.
+\end{definicion}
+Veamos la existencia del l\'imite, para lo cual estudiemos $\Phi_{t}^{*}(\omega)-\omega$, para $x \in M$ fijo, pero arbitrario.
+\begin{eqnarray*}
+(\Phi_{t}^{*}(\omega)-\omega)_{x}(X_{x})&=&[(\Phi_{t})_{x}^{*}(\omega_{\Phi_{t}(x)})-\omega_{x}](X_{x})\\
+                                                     &=&(\Phi_{t})_{x}^{*}(\omega_{\Phi_{t}(x)})(X_{x})-\omega_{x}(X_{x})\\
+&=&\omega_{\Phi_{t}(x)}((\Phi_{t})_{*x}(X_{x}))-\omega_{\Phi_{0}(x)}(X_{x})
+\end{eqnarray*}
+Observemos que la funci\'on $t\mapsto\omega_{\Phi_{t}(x)}((\Phi_{t})_{*x}(X_{x})$ es diferenciable ya que $t\mapsto\Phi_{t}(x)$ es diferenciable para $x\in M$ fijo, $\omega$ es diferenciable y $t\mapsto (\Phi_{t})_{*x}(X_{x})$ es diferenciable, para $x$ fijo. Luego el l\'imite
+$$\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(\omega)-\omega}{t}$$
+est\'a definido, para cualquier $\omega\in A^{1}(M)$
+\begin{proposicion}
+Dadas $f\in C^{\infty}(M)$, $\omega\in A^{1}(M)$ y $Y\in\mathfrak{X}(M)$ arbitrarios, la derivada de Lie satisface las siguientes identidades:
+\begin{enumerate}[(1)]
+\item $\mathcal{L}_{X}(df)=d\mathcal{L}_{X}(f)$
+\item $\mathcal{L}_{X}(f\omega)=\mathcal{L}_{X}(f)\omega+f\mathcal{L}_{X}(\omega)$
+\item $\mathcal{L}_{X}(\omega(Y))=\mathcal{L}_{X}(\omega)(Y)+\omega(\mathcal{L}_{X}(Y))$
+\end{enumerate}
+Donde$$\mathcal{L}_{X}(Y)=\lim_{t\rightarrow 0}\frac{\Phi_{-t*}(Y)-Y}{t}\hbox{  y  }\mathcal{L}_{X}(f)=\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(f)-f}{t}$$
+\end{proposicion}
+\demost
+
+(1) Aplicando la Proposici\'on \ref{propo2}, $\Phi_{t}^{*}(df)-df=d\Phi_{t}^{*}(f)-df=d(\Phi_{t}^{*}(f)-f)$. As\'i
+\begin{eqnarray*}
+\mathcal{L}_{X}(df)=\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(df)-df}{t}&=&\lim_{t\rightarrow 0}\frac{d(\Phi_{t}^{*}(f)-f)}{t}\\
+&=&d\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(f)-f}{t}\\
+&=&d\mathcal{L}_{X}(f).
+\end{eqnarray*}
+Por tanto, $\mathcal{L}_{X}(df)= d\mathcal{L}_{X}(f)$.
+
+(2) Observemos que, para $x\in M$ arbitrario pero fijo, se tiene
+\begin{eqnarray*}
+[\Phi_{t}^{*}(f\omega)&-&f\omega]_{x}=\Phi_{t}^{*}(f\omega)_{x}-f(x)\omega_{x}\\
+&=&[\Phi_{t}^{*}(f)\Phi_{t}^{*}(\omega)]_{x}-f(x)\omega_{x}\\
+&=&f(\Phi_{t}(x))(\Phi_{t})^{*}_{x}(\omega_{\Phi_{t}(x)})+f(x)(\Phi_{t})^{*}_{x}(\omega_{\Phi_{t}(x)})-f(x)(\Phi_{t})^{*}_{x}(\omega_{\Phi_{t}(x)})-f(x)\omega_{x}\\
+&=&f(x)[(\Phi_{t})_{x}^{*}(\omega_{\Phi_{t}(x)})-\omega_{x}]+[\Phi_{t}^{*}(f)_{x}-f(x)](\Phi_{t})_{x}^{*}\omega_{\Phi_{t}(x)}.
+\end{eqnarray*}
+Luego, tomando en cuenta que $(\Phi_{t})_{x}^{*}\omega_{\Phi_{t}(x)}\rightarrow\omega_{x}$ cuando $t\rightarrow 0$, calculamos
+\begin{eqnarray*}
+\mathcal{L}_{X}(f\omega)_{x}&=&\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(f\omega)_{x}-f(x)\omega_{x}}{t}\\
+&=&\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(\omega)_{x}-\omega_{x}}{t}f(x)+\lim_{t\rightarrow 0}\frac{\Phi_{t}^{*}(f)_{x}-f(x)}{t}(\Phi_{t})_{x}^{*}\omega_{\Phi_{t}(x)}\\
+&=&\mathcal{L}_{X}(\omega)_{x}f(x)+\mathcal{L}_{X}(f)_{x}\omega_{x}.
+\end{eqnarray*}
+Como $x\in M$ es cualquiera, resulta que $\mathcal{L}_{X}(f\omega)=\mathcal{L}_{X}(f)\omega+f\mathcal{L}_{X}(\omega)$.
+
+(3) Para probar la identidad (3) estudiemos primero la expresi\'on $[\Phi_{t}^{*}(\omega(Y))-\omega(Y)]_{x}$, para $x\in M$ fijo.
+\begin{eqnarray*}
+[\Phi_{t}^{*}(\omega(Y))&-&\omega(Y)]_{x}=\omega_{\Phi_{t}(x)}(Y_{\Phi_{t}(x)})-\omega_{x}(Y_{x})\\
+&=&\omega_{\Phi_{t}(x)}[Y_{\Phi_{t}(x)}+(\Phi_{t})_{*x}(Y_{x})-(\Phi_{t})_{*x}(Y_{x})]-\omega_{x}(Y_{x})\\
+&=&\omega_{\Phi_{t}(x)}((\Phi_{t})_{*x}(Y_{x}))+\omega_{\Phi_{t}(x)}[(\Phi_{t})_{*x}((\Phi_{-t})_{*\Phi_{t}(x)}(Y_{\Phi_{t}(x)})-Y_{x})]-\omega_{x}(Y_{x})\\
+&=&[(\Phi_{t})_{x}^{*}(\omega_{\Phi_{t}(x)})(Y_{x})-\omega_{x}(Y_{x})]+\omega_{\Phi_{t}(x)}\circ(\Phi_{t})_{x}^{*}[(\Phi_{-t})_{*\Phi_{t}(x)}(Y_{\Phi_{t}(x)})-Y_{x}]\\
+&=&[\Phi_{t}^{*}(\omega)_{x}-\omega_{x}](Y_{x})+\omega_{\Phi_{t}(x)}\circ(\Phi_{t})_{x}^{*}[(\Phi_{-t})_{*}(Y)_{x}-Y_{x}].
+\end{eqnarray*}
+Cuando $t\rightarrow 0$ la funci\'on $(\Phi_{t})_{*x}$ se aproxima a la funci\'on identidad $id_{T_{x}(M)}$ y $\omega_{\Phi_{t}(x)}\rightarrow\omega_{x}$. As\'i
+\begin{align*}
+\mathcal{L}_{X}(\omega(Y))_{x}&=\lim_{t\rightarrow 0}\left[\frac{\Phi_{t}^{*}(\omega)_{x}-\omega_{x}}{t}\right](Y_{x})+\omega_{x}\lim_{t\rightarrow 0}\left[\frac{(\Phi_{-t})_{*}(Y)_{x}-Y_{x}}{t}\right]\\[.6ex]
+&=\mathcal{L}_{X}(\omega)_{x}(Y_{x})+\omega_{x}\mathcal{L}_{X}(Y)_{x}.
+\end{align*}
+Como $x\in M$ es arbitrario, se obtiene el resultado esperado. \finp
+\chapter{Integrales de l\'inea}
+\section{Integral de L\'inea e independencia de caminos}
+Si $\omega\in A^{1}(M)$ y $s:[a,b]\tto M$ es una curva diferenciable, entonces $s^{*}(\omega)\in A^{1}([a,b])$ y podemos escribir $s^{*}(\omega)=fdt$.
+
+\begin{definicion}
+  La \textit{integral de l\'inea} de $\omega\in A^{1}(M)$ a lo largo de la curva diferenciable $s:[a,b]\tto M$ es
+$$\int_{s}\omega=\int_{s}s^{*}(\omega)=\int_{a}^{b}f(t)dt.$$
+\end{definicion}
+\begin{lema}\label{lema3}
+Sean $s:[a,b]\tto M$ y $u:[c,d]\tto [a,b]$ diferenciables. Hagamos $\sigma=s\circ u$. Entonces.
+\begin{enumerate}[(1)]
+\item Si $u(c)=a$ y $u(d)=b$, entonces $\int_{s}\omega=\int_{\sigma}\omega$ para toda $\omega\in A^{1}(M).$
+\item Si $u(c)=b$ y $u(d)=a$, entonces $-\int_{s}\omega=\int_{\sigma}\omega$ para toda $\omega\in A^{1}(M).$
+\end{enumerate}
+\end{lema}
+\demost Sea $t$ la coordenada de $[a,b]$ y $\tau$ la coordenada de $[c,d]$. Entonces,
+\begin{eqnarray*}
+\int_{\sigma}\omega&=&\int_{c}^{d}\sigma^{*}(\omega)\\
+                         &=&\int_{c}^{d}u^{*}(s^{*}(\omega))\\
+                         &=&\int_{c}^{d}u^{*}(fdt)\\
+                         &=&\int_{c}^{d}(f\circ u)\frac{du}{dt}d\tau.
+\end{eqnarray*}
+En el caso (1) la regla para el cambio de variables implica $\int_{\sigma}\omega=\int_{a}^{b}fdt=\int_{s}\omega$.
+En el caso (2) implica $\int_{\sigma}\omega=\int_{b}^{a}fdt=-\int_{s}\omega$. \finp
+
+\begin{lema}\label{lema4}
+Sean $s_{1}:[a,b]\tto M$ y $s_{2}:[c,d]\tto M$ caminos diferenciables coincidiendo en los puntos inicial y final, esto es, $s_{1}(a)=s_{2}(c)=x$ y $s_{1}(b)=s_{2}(d)=y$. Si $f\in C^{\infty}(M)$ entonces,
+$$\int_{s_{1}}df=\int_{s_{2}}df=f(y)-f(x).$$
+\end{lema}
+\demost Apelando al Lema anterior supongamos, sin p\'erdida de generalidad, que $[a,b]=[c,d]$. Entonces,
+\begin{eqnarray*}
+\int_{s_{1}}df&=&\int_{a}^{b}s_{1}^{*}(df)\\
+                  &=&\int_{a}^{b}d(f\circ s_{1})\\
+                  &=&\int_{a}^{b}\frac{d}{dt}f(s_{1}(t))dt\\
+                  &=&f(s_{1}(b))-f(s_{1}(a))\\
+                  &=&f(y)-f(x)
+\end{eqnarray*}
+An\'alogamente, se establece que
+$$\int_{s_{2}}df=f(s_{2}(b))-f(s_{2}(a))=f(y)-f(x),$$
+con lo cual queda demostrado el Lema.\finp
+
+La noci\'on de integral de l\'inea puede ser extendida para permitir la integraci\'on de 1-formas a trav\'es de caminos $s:[a,b]\tto M$ que son s\'olo diferenciables a trozos. Esto es, sean $s:[a,b]\tto M$ continua y $a=t_{0}<t_{1}<\cdots<t_{q}=b$ una partici\'on de $[a,b]$ tal que $s_{i}=s\restricto{[t_{i-1},t_{i}]}$ es diferenciable, $1\leq i\leq q$. Escribimos $s=s_{1}+\cdots+s_{q}$ y definimos
+$$\int_{s}\omega=\sum_{i=1}^{q}\int_{s_{i}}\omega.$$
+\begin{corolario}\label{coro1}
+Sean $s_{1}:[a,b]\tto M$ y $s_{2}:[a,b]\tto M$ caminos diferenciables a trozos que coinciden en los puntos inicial $x$ y final $y$ . Entonces, para $f\in C^{\infty}(M)$ se tiene
+$$\int_{s_{1}}df=\int_{s_{2}}df=f(y)-f(x).$$
+\end{corolario}
+\begin{lema}\label{lema5}
+Si $\omega\in A^{1}(M)$ y si para todo camino diferenciable a trozos $s$ la integral $\int_{s}\omega$ es nula, entonces $\omega=0$.
+\end{lema}
+\demost Supongamos que no es as\'i. Luego existen un punto $z \in M $ y un vector $v\in T_{z}(M)$ tales que $\omega_{z}(v)>0$. Sea $s:[-\epsilon, \epsilon]\tto M$ diferenciable tal que $s(0)=z$ y $\dot{s}(0)= v$. Escogiendo $\epsilon>0$ m\'as pequeño (si es necesario) podemos asumir que $\omega_{s(t)}(\dot{s}(t))>0$, para $-\epsilon \leq t\leq \epsilon$. Luego $s^{*}(\omega)_{t}$=$\omega_{t}(s(t))dt>0$ entonces,
+$\int_{s}\omega=\int_{-\epsilon }^{\epsilon}s^{*}(\omega)= \int_{-\epsilon}^{\epsilon} \omega_{s(t)}(\dot{s}(t))dt>0 $ , contradiciendo la hip\'otesis. \finp
+\begin{definicion}
+Diremos que $\omega \in A^{1}(M)$ tiene integral de l\'inea \textit{independiente por caminos} si, para todo camino diferenciable a trozos $s:[a,b]\tto M $, la integral $\int_{s}\omega$ depende s\'olo de $s(a)$ y $s(b)$.
+\end{definicion}
+\begin{definicion}
+Un camino diferenciable a trozos $s:[a,b]\tto M$ es un \textit{lazo} si $s(a)=s(b)$.
+\end{definicion}
+\begin{lema}\label{lema7}
+Sea $M$ una variedad diferenciable conexa. Entonces dos puntos cualesquiera de $M$ pueden ser unidos por un camino diferenciable a trozos.
+\end{lema}
+\demost Sea $x_{0}\in M$ un punto arbitrario, fijo de $M$ y definamos el subconjunto $\mathcal{C}\subseteq M$ por $\mathcal{C}=\{x\in M\text{ : existe un camino diferenciable a trozos en }M\text{ de }x_{0}\text{ a }x\}$. Claramente $x_{0}\in\mathcal{C}$, por lo que $\mathcal{C}$ es distinto de vac\'io. Bajo la hip\'otesis de conexidad, probaremos que $\mathcal{C}= M$ mostrando que $\mathcal{C}$ es abierto y cerrado.
+
+Sea $x\in\mathcal{C}$, cualquiera. Luego existe un camino diferenciable a trozos $s$ de $x_{0}$ a $x$. Si $(U,\varphi)$ es una carta coordenada alrededor de $x$ y $x'$ es cualquier punto en $U$, entonces podemos construir un camino diferenciable a trozos de $x_{0}$ a $x'$, siguiendo primero a $s$ de $x_{0}$ a $x$ y luego de $x$ a $x'$ mediante un segmento de recta parametrizado por $\varphi$. Luego $U$ est\'a totalmente contenido en $\mathcal{C}$, por lo que $\mathcal{C}$ es abierto.
+
+Por otra parte, si $x\in \partial\mathcal{C}$, la frontera topol\'ogica de $\mathcal{C}$, tomemos $(U,\varphi)$, carta coordenada alrededor de $x$. Del hecho que $x$ sea punto frontera se deduce que existe un punto $x'\in\mathcal{C}\cap U$. En este caso podemos construir un camino diferenciable a trozos de $x_{0}$ a $x$ siguiendo primero uno de $x_{0}$ a $x'$ (ya que $x'\in\mathcal{C}$) y luego siguiendo un segmento de recta parametrizado por $\varphi$ de $x'$ a $x$. Esto muestra que $\mathcal{C}$ contiene todos sus puntos frontera, o lo que es lo mismo, $\mathcal{C}$ es cerrado.\finp
+\section{Formas exactas}
+\begin{definicion}
+Una 1-forma $\omega\in A^{1}(M)$ es \textit{exacta} si $\omega=df$ para alguna $f\in C^{\infty}(M)$.
+\end{definicion}
+El Lema \ref{lema4} dice que la integral de l\'inea $\int_{s}\omega$ de una 1-forma exacta $\omega$ s\'olo depende de los puntos inicial y final del camino $s$. En $\mathbb{R}$ toda 1-forma es exacta. En efecto, si $\omega=gdx$ para alguna funci\'on $g\in C^{\infty}(\mathbb{R})$, entonces haciendo $f(x)=\int_{0}^{x}g(u)du$ encontramos que $df_{x}=g(x)dx$.
+
+\begin{teorema}\label{teo1}
+Para todo $\omega \in A^{1}(M)$, las siguientes proposiciones son equivalentes:
+\begin{itemize}
+\item [(i)] $\omega$ es una forma exacta
+\item [(ii)] $\int_{s} \omega=0 $ para todo lazo diferenciable a trozos $s$
+\item [(iii)] $\omega$ tiene integral de linea independiente del camino.
+\end{itemize}
+\end{teorema}
+\demost ((i) $\Rightarrow$ (ii)) Si $\omega=df$ es exacta y $s:[a,b]\tto M$ es un lazo diferenciable a trozos, con $s(a)=q=s(b)$, entonces el Corolario %\ref{coro1} implica que
+$$\int_{s}\omega=\int_{q}\omega=0,$$
+donde $q$ denota el camino constante $q(t)=q$, $a\leq t\leq b$.
+
+((ii) $\Rightarrow$ (iii)) Sean $s_{1}$ y $s_{2}$ curvas diferenciables a trozos enpezando en el mismo punto $x$ y terminando en el mismo punto $y$. Sin p\'erdida de generalidad, supongamos que $s_{1}$ est\'a parametrizada en $[-1,0]$ y $s_{2}$ en $[0,1]$. Sea $u:[0,1]\tto [0,1]$ definida por $u(t)=1-t$. Entonces $s_{2}\circ u$ comienza en $y$ y termina en $x$, adem\'as, $s_{1}+s_{2}\circ u=s:[-1,1]\tto M$ es un lazo diferenciable a trozos. De (ii) tenemos que
+\begin{equation}\label{eq4}
+0=\int_{s}\omega=\int_{s_{1}}\omega - \int_{s_{2}}\omega
+\end{equation}
+Por lo tanto $\omega$ tiene integral de linea independiente por caminos. Donde en (\ref{eq4}) hemos usado la parte (2) del Lema \ref{lema3} para escribir $\int_{s_{2}\circ u}\omega=-\int_{s_{2}}\omega$.
+
+(iii) $\Rightarrow$ (i) Usaremos (iii) para construir $f\in C^{\infty}(M)$ tal que $\omega=df$. Sin p\'erdida de generalidad supongamos que $M$ es conexa. Fijemos un punto base $x_{0}\in M$. Dado un punto $x\in M$ cualquiera, por el Lema \ref{lema7} existe un camino diferenciable a trozos $s:[a,b]\tto M$ tal que $s(a)=x_{0}$ y $s(b)=x$. Sea $f(x)=\int_{s}\omega$. Por (iii) esta definici\'on es independiente del camino diferenciable a trozos $s$, de $x_{0}$ a $x$. Probemos primero que $f:M\tto \mathbb{R}$ es diferenciable. Sean $q\in M$ arbitrario y $(U,x^{1},\ldots,x^{n})$ una carta coordenada alrededor de $q$ con $U=\interior D^{n}$, donde $D^{n}$ es la bola unitaria cerrada en $\mathbb{R}^{n}$. En estas coordenadas podemos escribir
+$$\omega\restricto{U}=\sum_{i=1}^{n}g_{i}dx^{i},$$
+donde $g_{i}\in C^{\infty}(U)$, $1\leq i\leq n$. Para cada $x\in U$ definamos $s_{x}:[0,1]\tto U$ por $s_{x}(t)=tx$, $0\leq t\leq 1$ y expresemos $f\restricto{U}$ por la f\'ormula
+$$f(x)=f(q)+\int_{s_{x}}\omega.$$
+As\'i, sobre $U$ se obtiene
+\begin{eqnarray*}
+f(x^{1},\ldots,x^{n})&=&f(0)+\sum_{i=1}^{n}\int_{0}^{1}g_{i}(tx^{1},\ldots,tx^{n})\frac{d}{dt}(tx^{i})dt\\
+                        &=&f(0)+\sum_{i=1}^{n}x^{i}\int_{0}^{1}g_{i}(tx^{1},\ldots,tx^{n})dt.
+\end{eqnarray*}
+Claramente, la \'ultima expresi\'on es una funci\'on diferenciable de $x^{1},\ldots,x^{n}$. Luego, como $q\in M$ es arbitrario, $f\in C^{\infty}(M)$.
+
+Mostremos finalmente que $\omega=df$. Sea $s:[a,b]\tto M$ un camino diferenciable a trozos arbitrario. Sean $c<a$ y $s_{0}:[c,a]\tto M$ diferenciable a trozos tal que $s_{0}(c)=x_{0}$ y $s_{0}(a)=s(a)$. Entonces,
+$$f(s(b))=\int_{s_{0}+s}\omega=\int_{s_{0}}+\int_{s}\omega=f(s(a))+\int_{s}\omega.$$
+De aqu\'i
+$$\int_{s}\omega=f(s(b))-f(s(a))=\int_{s}df.$$
+Luego la forma $\widetilde{\omega}=\omega-df$ satisface que $\int_{s}\widetilde{\omega}=0$ para todo camino diferenciable a trozos $s$. Por el Lema \ref{lema5} se tiene $\widetilde{\omega}=0$ por tanto, $\omega=df$.\finp
+
+\begin{ej}{}{.3pt}\label{ejem1}
+La 1-forma
+$$\eta=\frac{-y}{x^{2}+y^{2}}dx+\frac{x}{x^{2}+y^{2}}dy$$
+definida sobre la variedad $M=\mathbb{R}\setminus\{(0,0)\}$ no es exacta. En efecto, consideremos el lazo diferenciable $s:[0,2\pi]\tto M$ definido por $s(t)=(\cos{t}, \sen{t})$. Podemos calcular $s^{*}(\eta)$ directamente sustituyendo $x=\cos{t}$ y $y=\sen{t}$ en la expresi\'on de $\eta$, lo cual da como resultado
+$$\int_{s}\eta=\int_{[0,2\pi]}\frac{-\sen{t}(-\sen{t}dt)+\cos{t}(\cos{t}dt)} {\sen^{2}{t}+\cos^{2}{t}}=\int_{0}^{2\pi}dt=2\pi\neq 0.$$
+\end{ej}
+
+\begin{definicion}
+Una 1-forma $\omega\in A^{1}(M)$ es \textit{localmente exacta} si para $x\in M$ existe una vecindad abierta $U$ de $x$ tal que $\omega\restricto{U}$ es exacta.
+\end{definicion}
+\begin{ej}{}{.3pt}\label{ejem2}
+Vimos en el Ejemplo \ref{ejem1} que la 1-forma $\eta$ no es exacta. Afirmamos en este ejempo que ella s\'i es localmente exacta. Si $q\in M$ no est\'a en el eje $y$,  la funci\'on $\theta_{1}=\arctan(y/x)$ est\'a definida y es diferenciable en una vecindad de $q$ y adem\'as $d\theta_{1}=\eta$. Si $q\in M$ no est\'a en el eje $x$, entonces en una vecindad de $q$ definimos la funci\'on $\theta_{2}=-\arctan(x/y)$, la cual tambi\'en cumple que $d\theta_{2}=\eta$. Como ning\'un punto de $M=\mathbb{R}^{2}\setminus\{(0,0)\}$ pertenece a ambos ejes simult\'aneamente, concluimos que $\eta$ es localmente exacta en $M$.
+\end{ej}
+
+\begin{definicion}
+Sean $s_{0},s_{1}:[a,b]\tto M$ lazos diferenciables a trozos. Diremos que $s_{0}$ es \textit{homot\'opica (diferenciablemente a trozos)} a $s_{1}$, y lo escribiremos $s_{0}\sim s_{1}$ si existen una funci\'on continua
+$$H:[a,b]\times[0,1]\tto M$$
+y una partici\'on $a=t_{0}<t_{1}<\cdots<t_{r}=b$ tal que
+\begin{enumerate}
+\item $H\restricto{([t_{i-1},t_{i}]\times[0,1])}$ es diferenciable, $1\leq i\leq r$.
+\item $H(t,0)=s_{0}(t)$ y $H(t,1)=s_{1}(t)$, $a\leq t\leq b$.
+\item $H(a,\tau)=H(b,\tau)$, $0\leq\tau\leq 1$.
+\end{enumerate}
+\end{definicion}
+La relaci\'on de homotop\'ia diferenciable a trozos es una relaci\'on de equivalencia.
+\begin{proposicion}\label{propo3}
+Si $\omega\in A^{1}(M)$ es localmente exacta y si $s_{1}$ y $s_{2}$ son lazos diferenciables a trozos y homot\'opicos entre s\'i, entonces
+$$\int_{s_{1}}\omega=\int_{s_{2}}\omega.$$
+\end{proposicion}
+Antes de demostrar esta Proposici\'on probemos primero las siguientes afirmaciones.
+\begin{afirmacion}\label{af1}
+Sean $U\subseteq\mathbb{R}^{2}$ abierto, $R=[a,b]\times[c,d]\subset U$ y $\omega\in A^{1}(U)$ localmente exacta. Entonces existe $\epsilon>0$ tal que $R_{\epsilon}=(a-\epsilon,b+\epsilon)\times(c-\epsilon,d+\epsilon)\subset U$ y $\omega\restricto{R_{\epsilon}}$ es exacta.
+\end{afirmacion}
+\demost Sea $\mathcal{U}=\{U_{i}\}_{i\in I}$ un cubrimiento por rect\'angulos abiertos de $R$ tal que $\omega\restricto{U_{i}}$ es exacta para cualquier $i\in I$. Como $\bigcup U_{i}$ es un entorno abierto de $R$, existe $\epsilon>0$ tal que $\overline{R}_{\epsilon}\subset\bigcup U_{i}\subset U$, donde $\overline{R}_{\epsilon}$ denota la clausura de $R_{\epsilon}=(a-\epsilon,b+\epsilon)\times(c-\epsilon,d+\epsilon)$.
+
+Como $\overline{R}_{\epsilon}$ es compacto existe $\delta>0$ (conocido como \textit{n\'umero de Lebesgue} del cubrimiento $\mathcal{U}$) tal que todo subconjunto $E\subset\overline{R}_{\epsilon}$ con $\diam(E)<\delta$ est\'a totalmente contenido en alg\'un $U_{i}\in\mathcal{U}$. Tambi\'en se cumple, por la misma compacidad de $\overline{R}_{\epsilon}$, que existe $\{U_{1}, U_{2},\cdots, U_{r}\}$ subcubrimiento finito de $\overline{R}_{\epsilon}$ tal que $\overline{R}_{\epsilon}\subset\bigcup_{i=1}^{r}U_{i}$.
+
+Nuestro objetivo es definir una funci\'on $f\in C^{\infty}(R_{\epsilon})$ tal que $\omega\restricto{R_{\epsilon}}=df$. Para ello particionamos el rect\'angulo $\overline{R}_{\epsilon}$ en $m$ filas y $n$ columnas con pequeños subrect\'angulos cerrados $R_{ij}$ con $1\leq i\leq m$ y $1\leq j\leq n$,  donde cada $R_{ij}$ tiene lados $r_{1},r_{2}$ tales que $\max\{r_{1},r_{2}\}<\delta$. Luego $R_{ij}\subset U_{k}$ para alg\'un $k\in\{1,2\cdots r\}$, con lo cual se cumple que $\omega\restricto{U_{k}}$ es exacta.
+
+Fijemos nuestra atenci\'on en alguna fila $i$ fija. Por lo anterior, el subrect\'angulo $R_{i1}$ est\'a contenido en alg\'un abierto $U_{i1}\in\{U_{1}, U_{2},\cdots, U_{r}\}$ en donde $\omega\restricto{U_{i1}}$ es exacta, esto es, existe una funci\'on diferenciable $f_{i1}:U_{i1}\tto\mathbb{R}$ para la cual $\omega\restricto{U_{i1}}=df_{i1}$ y tambi\'en $\omega\restricto{R_{i1}}=df_{i1}$. De manera an\'aloga, para el rect\'angulo $R_{i2}$ existe $f_{i2}:R_{i2}\tto\mathbb{R}$ diferenciable tal que $\omega\restricto{R_{i2}}=df_{i2}$. Consideremos ahora un rect\'angulo $Q$ tal que $R_{i1}\cap R_{i2}\subset Q$, para el cual tambi\'en se cumple $\omega\restricto{Q}=dg$ para alguna funci\'on diferenciable $g$ definida sobre un abierto que contiene a $Q$. Ahora, en $Q\cap R_{i1}$ se cumple que $\omega=dg=df_{i1}$ de modo que $g=f_{i1}+t_{1}$, para alguna constante $t_{1}\in\mathbb{R}$. Similarmente en $Q\cap R_{i2}$ se tiene que $\omega=dg=df_{i2}$ y de aqu\'i se cumple que $g=f_{i2}+t_{2}$, con $t_{2}\in\mathbb{R}$ constante. Podemos ver que en $Q\cap R_{i1}$ se cumple $f_{i1}=g-t_{1}$ y si tomamos $c_{2}=t_{2}-t_{1}$, en $Q\cap R_{i2}$ se tiene $f_{i2}+c_{2}=g-t_{2}+c_{2}=g-t_{1}$. Continuando este procedimiento en toda la fila $i$, y dado que hay una cantidad finita de columnas, podemos definir una funci\'on $f_{i}:R_{i1}\cup R_{i2}\cup\cdots\cup R_{in}\tto\mathbb{R}$ de la siguiente manera:
+\begin{align*}
+f_{i}(x)=
+\begin{cases}
+f_{i1}(x)                               &, \ x\in R_{i1} \\
+f_{i2}(x)+c_{2}                       &, \ x\in R_{i2} \\
+\qquad\quad\vdots\\
+f_{in}(x)+c_{n}                             &, \ x\in R_{in}
+\end{cases}
+\end{align*}
+Por la forma como se construy\'o la funci\'on $f_{i}$ concluimos que la misma est\'a definida en toda la fila $i$, es diferenciable y cumple que $\omega\restricto{K_{i}}=df_{i}$, donde $K_{i}=R_{i1}\cup R_{i2}\cup\cdots\cup R_{in}$.
+
+Como la fila $i$ en la construcci\'on anterior es arbitraria, es posible encontrar una funci\'on diferenciable $f_{i}$ en cada fila $i$ del rect\'angulo $\overline{R}_{\epsilon}$ tal que $\omega\restricto{K_{i}}=df_{i}$. Aplicando el mismo procedimiento, pero esta vez para las filas, es posible construir una funci\'on $f\in C^{\infty}(R_{\epsilon})$ tal que $\omega=df$ en $R_{\epsilon}$, lo que demuestra la afirmaci\'on.\finp
+\begin{figure}[htb]
+\centering
+\includegraphics[height=8.5cm]{cuadro1.eps}
+\caption{Construcci\'on de $f\in C^{\infty}(R_{\epsilon})$.}
+\label{cuadro1}
+\end{figure}
+\begin{equation}
+
+\end{equation}
+\begin{afirmacion}\label{af2}
+Sea $\varphi:M\tto N$ una funci\'on diferenciable entre variedades y $\omega\in A^{1}(N)$ localmente exacta. Entonces $\varphi^{*}(\omega)\in A^{1}(M)$ es localmente exacta.
+\end{afirmacion}
+\demost Sea $x\in M$ fijo. Como $\omega\in A^{1}(N)$ es localmente exacta, dado $\varphi(x)\in N$ existe un entorno abierto $U$ de $\varphi(x)$ en $N$ tal que $\omega\restricto{U}=df$ para alguna $f\in C^{\infty}(U)$. Luego
+$$\varphi^{*}(\omega)_{x}=\varphi_{x}^{*}(\omega_{\varphi(x)})=\varphi_{x}^{*}(df_{\varphi(x)})=\varphi^{*}(df)_{x}=d\varphi^{*}(f)_{x}$$
+Observemos que $\varphi^{*}(f)\in C^{\infty}(M)$, luego $\varphi^{*}(\omega)$ es exacta en un entorno abierto $\varphi^{-1}(U)=V$ de $x$ en $M$. Como $x\in M$ es arbitrario, se obtiene el resultado.\finp
+
+Procedamos ahora a demostrar la Proposici\'on \ref{propo3}.
+
+\demost Por hip\'otesis existen una funci\'on continua $H:[a,b]\times[0,1]\tto M$ y una partici\'on $a=t_{0}<t_{1}<\cdots<t_{r}=b$ del intervalo $[a,b]$ tales que
+\begin{itemize}
+\item $H\restricto{[t_{i-1},t_{i}]\times[0,1]}$ es diferenciable,
+\item $H(t,0)=s_{1}(t)$, $H(t,1)=s_{2}(t)$, para $a\leq t\leq b$,
+\item $H(a,\tau)=H(b,\tau)$, para $0\leq\tau\leq 1$.
+\end{itemize}
+Como $\omega\in A^{1}(M)$ es localmente exacta se tiene, por la Afirmaci\'on \ref{af2}, que $H^{*}(\omega)\restricto{[t_{i-1},t_{i}]\times[0,1]}$ es localmente exacta. por otra parte, por la Afirmaci\'on \ref{af1}, $H^{*}(\omega)\restricto{[t_{i-1},t_{i}]\times[0,1]}$ es exacta para cada $1\leq i\leq r$. En particular se cumple que $H^{*}(\omega)\restricto{[t_{i-1},t_{i}]\times\{0\}}=s_{1}^{*}(\omega)$ y $H^{*}(\omega)\restricto{[t_{i-1},t_{i}]\times\{1\}}=s_{2}^{*}(\omega)$. As\'i
+$$\int_{s_{1}}\omega=\int_{a}^{b}s_{1}^{*}(\omega)=\sum_{i=1}^{r}\int_{t_{i-1}}^{t_{i}}s_{1}^{*}(\omega)=\sum_{i=1}^{r}\int_{t_{i-1}}^{t_{i}}H^{*}(\omega)\restricto{[t_{i-1},t_{i}]\times\{0\}}=0$$
+An\'alogamente, $\int_{s_{2}}\omega=0$. Por tanto obtenemos que $\int_{s_{1}}\omega=\int_{s_{2}}\omega$.\finp
+\begin{corolario}\label{coro2}
+Toda 1-forma en $\mathbb{R}^{n}$ localmente exacta, es exacta.
+\end{corolario}
+\demost Sea $s:[a,b]\tto\mathbb{R}^{n}$ un lazo diferenciable a trozos y definamos
+$$H:[a,b]\times[0,1]\tto\mathbb{R}^{n}$$
+por $H(t,\tau)=\tau s(t)$. La aplicaci\'on $H$ es una homotop\'ia del lazo constante $0$ al lazo $s$. Si $\omega$ es localmente exacta, la Proposici\'on \ref{propo3} implica
+$$\int_{s}\omega=\int_{0}\omega=0.$$
+Como el lazo $s$ es arbitrario, el Teorema \ref{teo1} implica que $\omega$ es exacta. \finp
+\chapter{Cohomolog\'ia de 1-Formas}
+\section{El espacio de primera cohomolog\'ia}
+En el Ejemplo \ref{ejem2} vimos que una forma localmente exacta sobre una variedad $M$ puede no ser exacta y esto parece estar relacionado con la topolog\'ia de la variedad. Esta obsevaci\'on intuitiva es formalizada por la definici\'on de la cohomolog\'ia de de Rham $H^{1}(M)$, un espacio vectorial que mide en cierto sentido cuánto difieren las nociones de exactitud y exactitud local sobre $M$.
+\begin{definicion}
+El espacio de \textit{1-cociclos} (de de Rham) sobre $M$ es el conjunto
+$$Z^{1}(M)=\{\omega\in A^{1}(M):\omega \hbox{ es localmente exacta}\}.$$
+El espacio de \textit{1-cofronteras} (de de Rham) es el conjunto
+$$B^{1}(M)=\{\omega\in A^{1}(M):\omega \hbox{ es exacta}\}.$$
+\end{definicion}
+Notemos que si vemos a $A^{1}(M)$ como espacio vectorial sobre $\mathbb{R}$, entonces $Z^{1}(M)$ y $B^{1}(M)$ son subespacios vectoriales. Es claro que $B^{1}(M)\subset Z^{1}(M)$. Además ellos no son $C^{\infty}(M)$-subm\'odulos de $A^{1}(M)$.
+\begin{definicion}
+El espacio vectorial cociente
+$$H^{1}(M)=Z^{1}(M)/B^{1}(M)$$
+es llamado el \textit{espacio de primera cohomolog\'ia de de Rham} de la variedad $M$.
+\end{definicion}
+Si $\omega$ es un 1-cociclo, su clase de cohomolog\'ia es $[\omega]=\omega+B^{1}(M)\in H^{1}(M)$.
+
+Cohomolog\'ia es un funtor contravariante de la categor\'ia de variedades diferenciables y funciones diferenciables a la categor\'ia de espacios vectoriales y aplicaciones lineales. En efecto, por la Proposici\'on \ref{propo2}, una funci\'on diferenciable arbitraria $\varphi:M\tto N$ induce una aplicaci\'on lineal $\varphi^{*}:Z^{1}(N)\tto Z^{1}(M)$  tal que $\varphi^{*}(B^{1}(N))\subset B^{1}(M)$. Luego $\varphi^{*}$ induce, por pasaje al cociente, una funci\'on lineal bien definida (con el mismo nombre) $\varphi^{*}:H^{1}(N)\tto H^{1}(M)$, cumpli\'endose las propiedades funtoriales $(\varphi\circ\psi)^{*}=\psi^{*}\circ\varphi^{*}$ y $(id_{M})^{*}=id_{H^{1}(M)}$.
+\begin{proposicion}\label{propo4}
+Sean $\omega, \widetilde{\omega}\in Z^{1}(M)$. Entonces $[\omega]=[\widetilde{\omega}]\in H^{1}(M)$ si y s\'olo si $\int_{s}\omega=\int_{s}\widetilde{\omega}$, para todo lazo $s$ diferenciable a trozos en $M$.
+\end{proposicion}
+\demost Sean $\omega,\widetilde{\omega}\in Z^{1}(M)$, entonces para todo lazo diferenciable a trozos $s$ $\int_{s}\omega=\int_{s}\widetilde{\omega}$ si y s\'olo si $\int_{s}(\omega-\widetilde{\omega})=0$. Por el Teorema \ref{teo1}, esto es cierto precisamente cuando $\omega-\widetilde{\omega}\in B^{1}(M)$. Equivalentemente, $[\omega]=[\widetilde{\omega}]$.\finp
+
+Estos n\'umeros son llamados los \textit{per\'iodos} de $\omega$ y de la clase de cohomolog\'ia $[\omega]$.
+
+Sea $f:M\tto N$  una funci\'on diferenciable entre variedades de la misma dimensi\'on. Diremos que $x\in M$ es un \textit{punto regular} de $f$ si la derivada $df_{x}$ es no singular. En este caso, se sigue del teorema de la funci\'on inversa que $f$ mapea una vecindad de $x\in M$ difeomorficamente en un conjunto abierto en $N$. Un punto $y\in N$ es llamado \textit{valor regular} de $f$ si el conjunto $f^{-1}(y)$ contiene s\'olo puntos regulares.
+
+Un punto $x\in M$ que no sea punto regular de $f$ es llamado \textit{punto cr\'itico.} De igual manera, un punto $y\in N$ es un \textit{valor cr\'itico} de $f$ si $f^{-1}(y)$ contiene al menos un punto cr\'itico de $f$.
+
+El siguiente teorema, conocido como el \textit{Teorema de Sard}, ser\'a utilizado en el siguiente ejemplo para probrar que $H^{1}(S^{n})=\{0\}$, para $n\geq 2$. Para la demostraci\'on v\'ease las referencias \cite{Milnor}, \cite{Conlon}.
+\begin{teorema}
+Si $\varphi:M\tto N$ es una funci\'on diferenciable, entonces el conjunto de valores cr\'iticos tiene medida de Lebesgue cero.
+\end{teorema}
+Es bien conocido que se puede construir una sobreyecci\'on continua $s:\mathbb{R}\tto\mathbb{R}^{2}$ (una curva que llena el espacio). Sin embargo, si $s$ es diferenciable todo valor de $s$ en $\mathbb{R}^{2}$ es un valor cr\'itico, por lo que $s(\mathbb{R})\subset\mathbb{R}^{2}$ tiene medida cero. Curvas diferenciables no pueden llenar el espacio. M\'as generalmente, funciones de menor a mayor dimensi\'on siempre tienen imagen con medida cero.
+\begin{ej}{}{.3pt}\label{ejem4}
+Consideremos la esfera $S^{n}$, $n\geq 2$. Por proyecci\'on estereogr\'afica sabemos que el complemento de un punto en $S^{n}$ es difeomorfo a $\mathbb{R}^{n}$, luego, v\'ia este difeomorfismo, todo lazo diferenciable a trozos en $S^{n}$ es homot\'opico al lazo constante. Por el teorema de Sard, ninguna curva diferenciable a trozos en $S^{n}$ puede llenar el espacio si $n\geq 2$. Luego todo lazo diferenciable a trozos es homotopicamente trivial. Si $\omega\in Z^{1}(S^{n})$ y $\sigma$ es un lazo diferenciable a trozos sobre $S^{n}$ entonces se tiene, por la Proposici\'on \ref{propo3} que
+$$\int_{\sigma}\omega=0.$$
+Y por la Proposici\'on \ref{propo4} concluimos que $H^{1}(S^{n})=\{0\}$, siempre que $n\geq 2$.
+\end{ej}
+\section{Equivalencia Homot\'opica e isomorfismo inducido}
+\begin{proposicion}\label{propo5}
+Si $f_{0}, f_{1}:M\tto N$ son diferenciables y homot\'opicas entre s\'i, entonces las transformaciones lineales $f_{0}^{*},f_{1}^{*}:H^{1}(N)\tto H^{1}(M)$, inducidas por $f_{0}$ y $f_{1}$ respectivamente, son iguales.
+\end{proposicion}
+\demost Sea $[\omega]\in H^{1}(N)$. Si $s:[a,b]\tto M$ es un lazo diferenciable a trozos, entonces $s_{0}=f_{0}\circ s:[a,b]\tto N$ y $s_{1}=f_{1}\circ s:[a,b]\tto N$ tambi\'en son lazos diferenciables a trozos. Sea $H:M\times\mathbb{R}\tto M$ una homotop\'ia de $f_{0}$ a $f_{1}$. Entonces la aplicaci\'on compuesta
+$$\Dg
+[a,b]\times [0,1] & & \rOne ^{s\times id} & & M\times \mathbb{R} & &\rOne ^{H} & & N\\
+%& \rdTo <{f_{s\to u}} & & \ldTo >{f_{t\to u}} \\
+%& & X(u) \\
+\endDg$$
+es una homotop\'ia de $s_{0}$ a $s_{1}$. Ahora,
+\begin{equation}\label{eq5}
+\int_{s}f_{0}^{*}(\omega)=\int_{a}^{b}s^{*}f_{0}^{*}(\omega)=\int_{a}^{b}(f_{0}\circ s)^{*}(\omega)=\int_{s_{0}}\omega.
+\end{equation}
+Pero por la Proposici\'on \ref{propo3}, $\int_{s_{0}}\omega=\int_{s_{1}}\omega$. Luego, por un procedimiento an\'alogo al empleado en (\ref{eq5}) se obtiene que $\int_{s_{1}}\omega=\int_{s}f_{1}^{*}(\omega)$, por lo que $\int_{s}f_{0}^{*}(\omega)=\int_{s}f_{1}^{*}(\omega)$. Como $s$ es un lazo diferenciable a trozos, la Proposoci\'on \ref{propo4} implica
+$$f_{1}^{*}[\omega]=[f_{1}^{*}(\omega)]=[f_{0}^{*}(\omega)]=f_{0}^{*}[\omega].$$
+Finalmente, como $[\omega]\in H^{1}(N)$ es arbitrario, se tiene que $f_{0}^{*}=f_{1}^{*}$, al nivel de cohomolog\'ia, lo que demuestra la Proposici\'on. \finp
+
+\begin{definicion}
+Una funci\'on diferenciable $f:M\tto N$ es una \textit{equivalencia homot\'opica} si existe una funci\'on diferenciable $g:N\tto M$ tal que $f\circ g\sim id_{N}$ y $g\circ f\sim id_{M}$.
+\end{definicion}
+\begin{corolario}
+Una equivalencia homot\'opica $f:M\tto N$ induce un isomorfismo lineal
+$$f^{*}:H^{1}(N)\tto H^{1}(M).$$
+\end{corolario}
+\demost Como $f\circ g\sim id_{N}$, se deduce de la funtorialidad contravariante del espacio de primera cohomolog\'ia y la Proposici\'on \ref{propo5}, que $g^{*}\circ f^{*}=(f\circ g)^{*}=id_{N}^{*}=id_{H^{1}(N)}$ y $f^{*}\circ g^{*}=(g\circ f)^{*}=id_{M}^{*}=id_{H^{1}(M)}$. Luego, $f^{*}$ y $g^{*}$ son isomorfismos mutuamente inversos sobre los espacios de cohomolog\'ia $H^{1}(N)$ y $H^{1}(M)$.\finp
+
+\begin{ej}{}{.3pt}\label{ejem3}
+Sea $f:\{0\}\hookrightarrow D^{n}$ la funci\'on inclusi\'on. Sea $g:D^{n}\tto \{0\}$ la funci\'on constante. Estas funciones son diferenciables y $g\circ f=id_{\{0\}}$. Consideremos la funci\'on $f\circ g:D^{n}\tto D^{n}$ con imagen $\{0\}$. Afirmamos que $f\circ g$ es homot\'opica a $id_{D^{n}}$. En efecto, sea $\varphi:\mathbb{R}\tto [0,1]$ diferenciable tal que $\varphi(0)=0$ y $\varphi(1)=1$. Definamos $H:D^{n}\times\mathbb{R}\tto D^{n}$ por
+$$H(x,t)=\varphi(t)x.$$
+Entonces, $H(x,0)=\varphi(0)x=0=f(g(x))$ y $H(x,1)=\varphi(1)x=x=id_{D^{n}}(x)$, para todo $x\in D^{n}$, estableciendo as\'i la homotop\'ia deseada. Con esto tenemos que $f$ es una equivalencia homot\'opica. Luego,
+$$f^{*}:H^{1}(D^{n})\tto H^{1}(\{0\})=\{0\}$$
+es un isomorfismo. Esto es, $H^{1}(D^{n})=\{0\}$, o equivalentemente, toda 1-forma localmente exacta en $D^{n}$ es exacta. Un argumento similar muestra que $\mathbb{R}^{n}$ es homot\'opicamente equivalente a un punto, recuperando el Corolario \ref{coro2}.
+\end{ej}
+\begin{ej}{}{.3pt}\label{ejem6}
+Sea $i:S^{n-1}\hookrightarrow\mathbb{R}^{n}\setminus\{0\}$ la inclusi\'on y sea $g:\mathbb{R}^{n}\setminus\{0\}\tto S^{n-1}$ la funci\'on definida por
+$$g(v)=\frac{v}{\|v\|}.$$
+Ambas funciones son diferenciables y $g\circ i=id_{S^{n-1}}$. Afirmamos que $i\circ g\sim id_{\mathbb{R}^{n}\setminus\{0\}}$, por consiguiente $i$ es una equivalencia homot\'opica. En efecto, definamos $H:(\mathbb{R}^{n}\setminus\{0\})\times[0,1]\tto \mathbb{R}^{n}\setminus\{0\}$ por la f\'omula
+$$H(v,t)=\frac{v}{t+(1-t)\|v\|}.$$
+Podemos ver f\'acilmente que $H$ es diferenciable, ya que $\|v\|>0$ implica que $t+(1-t)\|v\|>0$, para $0\leq t\leq 1$. Entonces, $H(v,1)=v$ y $H(v,0)=\frac{v}{\|v\|}=i(g(v))$, para todo $v\in\mathbb{R}^{n}\setminus\{0\}$, de modo que
+$$H^{1}(\mathbb{R}^{n}\setminus\{0\})=H^{1}(S^{n-1}).$$
+En particular, junto con el Ejemplo \ref{ejem4}, esto prueba que $H^{1}(\mathbb{R}^{n}\setminus\{0\})$ es trivial, siempre que $n\geq 3$.
+\end{ej}
+\section{Espacio de Primera Cohomolog\'ia de $S^{1}$}
+\begin{proposicion}\label{propo6}
+Existe un isomorfismo can\'onico $H^{1}(S^{1})=\mathbb{R}$.
+\end{proposicion}
+Probaremos esta proposici\'on a trav\'es de tres lemas. Recordemos la funci\'on de recubrimiento universal $p:\mathbb{R}\tto S^{1}$ dada por
+$$p(t)=(\cos{2\pi t},\sen{2\pi t}).$$
+Esta funci\'on induce un difeomorfismo entre $\mathbb{R}/\mathbb{Z}$ y $S^{1}$, variedades que en lo sucesivo son consideradas iguales, como grupos de Lie difeomorfos (v\'ease el Ejemplo \ref{ejemA2} del Ap\'endice). Definimos la aplicaci\'on lineal $\alpha:Z^{1}(S^{1})\tto\mathbb{R}$ por
+$$\alpha(\omega)=\int_{0}^{1}p^{*}(\omega).$$
+\begin{lema}
+La aplicaci\'on lineal $\alpha$ induce una aplicaci\'on lineal bien definida
+$$\alpha:H^{1}(S^{1})\tto \mathbb{R}.$$
+\end{lema}
+\demost Se requiere mostrar que $\ker(\alpha)\supset B^{1}(S^{1})$. En efecto, la restricci\'on $\sigma=p\restricto{[0,1]}$ es un lazo diferenciable y puesto que $\omega\in B^{1}(S^{1})$ por el teorema \ref{teo1} se tiene
+$$\alpha(\omega)=\int_{\sigma}\omega=0.$$
+Luego, si $[\eta]\in H^{1}(S^{1})$ se tiene $\alpha([\eta])=\alpha(\eta+B^{1}(S^{1}))=\alpha(\eta)+\alpha(B^{1}(S^{1}))=\alpha(\eta)$. Por lo que $\alpha:H^{1}(S^{1})\tto \mathbb{R}$ est\'a bien definida.\finp
+\begin{lema}
+La aplicaci\'on lineal $\alpha:H^{1}(S^{1})\tto\mathbb{R}$ es inyectiva.
+\end{lema}
+\demost Basta mostrar que $\ker(\alpha)=B^{1}(S^{1})$ para $\alpha:H^{1}(S^{1})\tto \mathbb{R}$. Sea $\omega\in Z^{1}(S^{1})$ tal que $\alpha(\omega)=0$. Como $[\omega]=\omega+B^{1}(S^{1})$, debemos probar que $\omega\in B^{1}(S^{1})$ para que $\alpha$ sea inyectiva. Dado $n\in\mathbb{Z}$ sea $\tau_{n}:\mathbb{R}\tto\mathbb{R}$ la traslaci\'on $\tau_{n}(t)=t+n$. Entonces, $p\circ\tau_{n}=p$ y as\'i
+$$\tau_{n}^{*}\circ p^{*}=p^{*}:A^{1}(S^{1})\tto A^{1}(\mathbb{R}).$$
+Esto y la f\'ormula de cambio de variables para la integral nos permite obtener
+\begin{equation}\label{eq7}
+\int_{n}^{t+n}p^{*}(\omega)=\int_{0}^{1}\tau_{n}^{*}(p^{*}(\omega))=\int_{0}^{t}p^{*}(\omega),\text{ para cualquier }n\in\mathbb{Z},\  0\leq t \leq 1.
+\end{equation}
+En particular, como $\alpha(\omega)=0$ obtenemos
+\begin{equation}\label{eq8}
+\int_{n}^{n+1}p^{*}(\omega)=\int_{0}^{1}p^{*}(\omega)=0=\int_{n+1}^{n}p^{*}(\omega).
+\end{equation}
+Definamos $f_{\omega}\in C^{\infty}(S^{1})$ por
+$$f_{\omega}(\cos{2\pi t},\sin{2\pi t})=\int_{0}^{1}p^{*}(\omega).$$
+Para que $f_{\omega}$ sea diferenciable basta probar que est\'a bien definida. Estar\'a bien definida si
+$$\int_{0}^{t+n}p^{*}(\omega)=\int_{0}^{t}p^{*}(\omega)\text{  para todo  }n\in\mathbb{Z}\text{  y  }t\in\mathbb{R}.$$
+Si $n=0$, es obvio. Si $n>0$, entonces aplicamos %(\ref{eq8}) y (\ref{eq7}) para calcular
+\begin{eqnarray*}
+\int_{0}^{t+n}p^{*}(\omega)&=&\int_{n}^{t+n}p^{*}(\omega)+\sum_{i=0}^{n-1}\int_{i}^{i+1}p^{*}(\omega)\\
+&=&\int_{n}^{t+n}p^{*}(\omega)\\
+&=&\int_{0}^{t}p^{*}(\omega).
+\end{eqnarray*}
+Por otro lado, si $n<0$, aplicamos (\ref{eq8}) para obtener
+\begin{eqnarray*}
+\int_{t}^{n}p^{*}(\omega)&=&\int_{t}^{0}p^{*}(\omega)+\sum_{i=1}^{n}\int_{-i+1}^{-i}p^{*}(\omega)\\
+&=&\int_{t}^{0}p^{*}(\omega) \text{  por (\ref{eq8})}.
+\end{eqnarray*}
+As\'i queda mostrado que $f_{\omega}$ est\'a bien definida y por tanto es diferenciable. Para el levantamiento $\widetilde{f}_{\omega}=p^{*}(f_{\omega})\in C^{\infty}(\mathbb{R})$ se tiene
+$$\widetilde{f}_{\omega}(t)=\int_{0}^{t}p^{*}(\omega),$$
+luego, por el Teorema Fundamental del C\'alculo y la Proposici\'on \ref{propo2}, obtenemos
+$$p^{*}(\omega)=d\widetilde{f_{\omega}}=d(p^{*}(f_{\omega}))=p^{*}(df_{\omega}).$$
+Pero $p:\mathbb{R}\tto S^{1}$ es un difeomorfismo local, luego $\omega$ y $df_{\omega}$ son iguales localmente, luego globalmente. Esto es, $\omega\in B^{1}(S^{1})$.\finp
+\begin{ej}{}{.3pt}
+Recordemos la forma localmente exacta $$\eta=\frac{-y}{x^{2}+y^{2}}dx+\frac{x}{x^{2}+y^{2}}dy$$ del Ejemplo \ref{ejem2} y sea $\widetilde{\eta}=i^{*}(\eta)\in Z^{1}(S^{1})$, donde $i$ es la funci\'on inclusi\'on de $S^{1}$ en $\mathbb{R}^{2}\setminus\{0\}$. Para el lazo $\sigma=p\restricto{[0,1]}$, se tiene que $s=i\circ\sigma$ es como en el Ejemplo \ref{ejem2}, en donde se mostr\'o que $\sigma^{*}(\widetilde{\eta})=\sigma^{*}(i^{*}(\eta))=(i\circ\sigma)^{*}(\eta)=s^{*}(\eta)=2\pi dt$.
+\end{ej}
+\begin{lema}
+La aplicaci\'on lineal $\alpha:H^{1}(S^{1})\tto\mathbb{R}$ es sobreyectiva.
+\end{lema}
+\demost Es suficiente mostrar que $\alpha$ es no trivial. Dada $[\eta]\in H^{1}(S^{1})$ considere $\widetilde{\eta}=i^{*}(\eta)$ para la cual se cumple
+$$\alpha[\widetilde{\eta}]=\int_{0}^{1}p^{*}(\widetilde{\eta})=\int_{0}^{1}\sigma^{*}(\eta)=2\pi.$$
+Por tanto $\alpha$ es sobreyectiva.\finp
+
+Se ha completado as\'i la demostraci\'on de la Proposici\'on \ref{propo6}.
+\begin{corolario}
+Se verifica que $H^{1}(\mathbb{R}^{2}\setminus\{(0,0)\})=\mathbb{R}$.
+\end{corolario}
+\chapter{Algunas Aplicaciones Topol\'ogicas}
+\section{Teor\'ia de Grado M\'odulo 2}
+Supongamos que $M$ es una variedad compacta y $N$ una variedad conexa tales que $\dim(M)=m=n=\dim(N)>0$. Si $f\in C^{\infty}(M,N)$, escojamos un valor regular $y\in N$ de $f$. Sabemos que la imagen inversa $f^{-1}(y)$ es una subvariedad de $M$ de dimensi\'on $m-n=0$. Luego es un conjunto de puntos aislados. Como adem\'as es un subconjunto cerrado de un espacio compacto, es finito. Sea $k=|f^{-1}(y)|$ la cardinalidad de este conjunto, un entero no negativo.
+\begin{proposicion}\label{propo7}
+Sea $R\subset N$ el conjunto de valores regulares de la funci\'on $f$. La funci\'on $\lambda_{f}:R\tto\mathbb{Z}^{+}$ definida por $\lambda_{f}(y)=|f^{-1}(y)|$, es localmente constante.
+\end{proposicion}
+
+Por ser $\lambda_{f}(y)$ localmente constante, es constante en cada componente conexa.
+\begin{definicion}
+Si $y\in N$ es un valor regular de $f$, entonces $\deg_{2}(f,y)\in\mathbb{Z}_{2}$ es la clase residual m\'odulo 2 de $\lambda_{f}(y)$.
+\end{definicion}
+A continuaci\'on establecemos algunos resultados sobre grado que son requeridos para nuestros objetivos. Para la demostraci\'on el lector puede consultar \cite{Conlon}, \cite{Milnor}.
+\begin{lema}$($Lema de Homotop\'ia$)$
+Si $f,g\in C^{\infty}(M,N)$ son diferenciablemente homot\'opicas y si $y\in N$ es un valor regular para $f$ y para $g$ entonces se cumple
+$$\deg_{2}(f,y)=\deg_{2}(g,y)$$
+\end{lema}
+\begin{teorema}
+Si $y$ y $z$ son valores regulares de $f$ entonces
+$$\deg_{2}(f,y)=\deg_{2}(f,z).$$
+Esta clase residual com\'un depende s\'olo de la clase de homotop\'ia de $f$.
+\end{teorema}
+
+Gracias a este Teorema, podemos definir sin ambiguedad una funci\'on
+$$\deg_{2}(f):N\tto\mathbb{Z}_{2}.$$
+Por la Proposici\'on \ref{propo7} esta funci\'on es localmente costante. Luego, por la conexidad de $N$, $\deg_{2}(f)$ es constante.
+\begin{definicion}
+El elemento $\deg_{2}(f)\in\mathbb{Z}_{2}$ es llamado el \textit{grado $\mod 2$} de $f\in C^{\infty}(M,N)$.
+\end{definicion}
+\begin{corolario}
+Si $f,g\in C^{\infty}(M,N)$ son homot\'opicas, entonces $\deg_{2}(f)=\deg_{2}(g)$.
+\end{corolario}
+\begin{lema}
+Si $f:M\tto N$ no es sobreyectiva, entonces $\deg_{2}(f)=0$.
+\end{lema}
+\begin{corolario}
+Si $N$ no es compacto, $\deg_{2}(f)=0$.
+\end{corolario}
+\section{Teor\'ia de Grado sobre $S^{1}$}
+Para comenzar clasificaremos las funciones diferenciables $f:S^{1}\tto S^{1}$ bajo homotop\'ia. La primera observaci\'on es que como $H^{1}(S^{1})=\mathbb{R}$, la funci\'on $f$ induce una aplicaci\'on lineal $f^{*}:\mathbb{R}\tto\mathbb{R}$ que depende s\'olo de la clase de homotop\'ia de $f$. As\'i, $f^{*}$ es simplemente la multiplicaci\'on por una cierta constante $a_{f}\in\mathbb{R}$, donde $a_{f}$ depende solamente de la clase de homotop\'ia de $f$. Probaremos que $a_{f}\in\mathbb{Z}$, mostrando en particular que este entero determina a $f$ bajo homotop\'ia. Esto proporcionar\'a una correspondencia uno a uno entre $\mathbb{Z}$ y el conjunto de clases de homotop\'ia de funciones diferenciables de $S^{1}$ en s\'i mismo.
+\begin{lema}{(Lema del Levantamiento)}\label{lema8}
+Si $f:S^{1}\tto S^{1}$ es diferenciable, existe una funci\'on diferenciable $\widetilde{f}:\mathbb{R}\tto\mathbb{R}$ tal que el diagrama
+$$\Dg
+\mathbb{R} & \rTo^{\widetilde{f}}  & \mathbb{R} \\
+\dTo <{p} & & \dTo >{p} \\
+S^{1} & \rTo_{f} & S^{1} \\
+\endDg$$
+conmuta. M\'as a\'un, $\widehat{f}$ es otro levantamiento de $f$ si y s\'olo si $\widehat{f}=\widetilde{f}+k$ para alg\'un entero $k$.
+\end{lema}
+\demost Probaremos primero que si $g:\mathbb{R}\tto S^{1}$ es una funci\'on diferenciable, entonces existe una funci\'on diferenciable $\widetilde{g}:\mathbb{R}\tto\mathbb{R}$ tal que $p\circ\widetilde{g}=g$. El levantamiento $\widetilde{g}$ ser\'a diferenciable dada la diferenciabilidad de $g$ y el hecho que $p$ es un difeomorfismo local. Aplicando esto a $g=p\circ f$ obtenemos que $\widetilde{f}=\widetilde{g}$ es el levantamiento requerido.
+Primero definamos tal levantamiento sobre un intervalo compacto arbitrario $[a,b]\subset\mathbb{R}$. Sean $J_{+}$ y $J_{-}$ los complementos en $S^{1}\subset\mathbb{C}$ de los puntos $+1$ y $-1$ respectivamente. Luego,
+$$p^{-1}(J_{+})=\bigsqcup_{k\in\mathbb{Z}}(k,k+1)\text{ y }p^{-1}(J_{-})=\bigsqcup_{k\in\mathbb{Z}}(k-1/2,k+1/2).$$
+Estos intervalos son llevados difeomorficamente por $p$ en $J_{+}$ y $J_{-}$ respectivamente. Por la continuidad de $g$ y la compacidad de $[a,b]$ es posible encontrar una partici\'on $a=t_{0}<t_{1}<\cdot\cdot\cdot<t_{q}=b$ tal que $g\restricto{[t_{i-1},t_{i}]}$ o  $J_{+}$ o tiene imagen $J_{-}$, para $1\leq i\leq q$. Entonces $g_{1}=g\restricto{[t_{0},t_{1}]}$ posee un levantamiento continuo $\widetilde{g}_{1}$, el cual depende solamente de la elecci\'on de $\widetilde{g}_{1}(t_{0})\in p^{-1}(g(t_{0}))$ (v\'ease el Lema \ref{lema6} del Ap\'endice). Despu\'es, para la funci\'on $g_{2}=g\restricto{[t_{1},t_{2}]}$ puede encontrarse un \'unico levantamiento continuo $\widetilde{g}_{2}$ de manera que $\widetilde{g}_{2}(t_{1})=\widetilde{g}_{1}(t_{1})$. Si continuamos con este argumento producimos un levantamiento de $g\restricto{[a,b]}$ como se quer\'ia, dependiendo s\'olo de la escogencia del valor del levantamiento en $t_{0}=a$.
+Expresando a $\mathbb{R}$ como uni\'on de intervalos de la forma $[k,k+1]$, $k\in\mathbb{Z}$, escogemos primero un levantamiento de $g$ em $[0,1]$ mediante el procedimiento anterior, luego en $[1,2]$ tal que coincidan en $1$, luego en $[-1,0]$ tal que sean iguales en $0$ y as\'i sucesivamente. Hemos encontrado un levantamiento $\widetilde{g}:\mathbb{R}\tto\mathbb{R}$ tal que el siguiente diagrama es conmutativo
+$$\Dg
+\mathbb{R} & \rTo^{\widetilde{g}}  & \mathbb{R} \\
+  &\rdTo <{g}  & \dTo >{p} \\
+& & S^{1} \\
+\endDg$$
+Haciendo $g=p\circ f$ se obtiene el resultado. Por otra parte, si $\widetilde{f}$ y $\widehat{f}$ son dos levantamientos de $f:S^{1}\tto S^{1}$, el hecho que $p$ sea un homomorfismo de grupos de Lie entre $\mathbb{R}$ y $S^{1}$ implica que
+\begin{equation}\label{eq9}
+p(\widetilde{f}(t)-\widehat{f}(t))=\frac{p(\widetilde{f}(t))}{p(\widehat{f}(t))}=\frac{f(p(t))}{f(p(t))}=1.
+\end{equation}
+Esto es, $\widetilde{f}(t)-\widehat{f}(t)\in\mathbb{Z}$, para cualquier $t\in\mathbb{R}$. La continuidad de la expresi\'on (\ref{eq9}) en $t$ implica que este valor entero es una constante $k$. As\'i, $\widehat{f}=\widetilde{f}+k$.\finp
+\begin{proposicion}
+Si $f:S^{1}\tto S^{1}$ es diferenciable, entonces $a_{f}=\widetilde{f}(1)-\widetilde{f}(0)\in\mathbb{Z}$, donde $\widetilde{f}$ es cualquier levantamiento de $f$ como en el Lema $\ref{lema8}$.
+\end{proposicion}
+\demost Sea $\widetilde{f}$ un levantamiento de $f$ como en el Lema \ref{lema8}. Entonces,
+$$p(\widetilde{f}(1))=f(p(1))=f(p(0))=p(\widetilde{f}(0)).$$
+Luego, $\widetilde{f}(1)-\widetilde{f}(0)$ es un entero que denotaremos $m$. Recordemos ahora la forma $\widetilde{\eta}\in Z^{1}(S^{1})$ del Ejemplo \ref{ejem3} y calculemos
+\begin{eqnarray*}
+2\pi a_{f}&=&a_{f}\alpha[\widetilde{\eta}]=\alpha(a_{f}[\widetilde{\eta}])=\alpha(f^{*}[\widetilde{\eta}])=\int_{0}^{1}p^{*}(f^{*}(\widetilde{\eta}))=\int_{0}^{1}(f\circ p)^{*}(\widetilde{\eta})\\
+&=&\int_{0}^{1}(p\circ\widetilde{f})^{*}(\widetilde{\eta})=\int_{0}^{1}\widetilde{f}^{*}(p^{*}(\widetilde{\eta}))=\int_{0}^{1}\widetilde{f}^{*}(2\pi dt)=2\pi\int_{0}^{1}\widetilde{f}^{*}(dt)\\
+&=&2\pi\int_{0}^{1}\widetilde{f}'(t)dt=2\pi(\widetilde{f}(1)-\widetilde{f}(0))\\
+&=&2\pi m
+\end{eqnarray*}
+Esto es, $a_{f}=m\in\mathbb{Z}$.\finp
+\begin{definicion}
+Dada una funci\'on diferenciable $f:S^{1}\tto S^{1}$, el entero $a_{f}$ es llamado el \textit{grado} de $f$ y es denotado por $\deg(f)$.
+\end{definicion}
+\begin{corolario}\label{coro3}
+Si $f:S^{1}\tto S^{1}$ es diferenciable y $\widetilde{f}$ es un levantamiento definido como en el Lema \ref{lema8} y si $t\in\mathbb{R}$ es arbitrario, entonces $\deg(f)=\widetilde{f}(t+1)-\widetilde{f}(t)$.
+\end{corolario}
+\demost Veamos a $p:\mathbb{R}\tto S^{1}$ como un homomorfismo de grupos. Entonces,
+$$p(\widetilde{f}(t+1)-\widetilde{f}(t))=\frac{p(\widetilde{f}(t+1))}{p(\widetilde{f}(t))}=\frac{f(p(t+1))}{f(p(t))}=1.$$
+Luego, $\widetilde{f}(t+1)-\widetilde{f}(t)\in\mathbb{Z}$, para cualquier $t\in\mathbb{R}$. Esta funci\'on de $t$, siendo continua y a valores enteros, es constante en $\mathbb{R}$. Luego es igual a $\widetilde{f}(1)-\widetilde{f}(0)=\deg(f)$.\finp
+\begin{definicion}
+El conjunto de clases de homotop\'ia de funciones diferenciables $f:M\tto N$ ser\'a denotado $\pi[M,N]$.
+\end{definicion}
+Gracias a la invarianza por homotop\'ia de la cohomolog\'ia, hemos definido una funci\'on
+$$\deg:\pi[S^{1},S^{1}]\tto\mathbb{Z}.$$
+Describamos $\deg(f)$ en t\'erminos de valores regulares. Sea $z_{0}\in S^{1}$ un valor regular de $f:S^{1}\tto S^{1}$. Entonces $f^{-1}(z_{0})=\{z_{1},\ldots,z_{r}\}$. Si $f^{-1}(z_{0})=\vacio$, tomamos $r=0$. Recordemos que $\deg_{2}(f)=r \mod 2$.
+
+Escojamos $\widetilde{z}_{i}\in\mathbb{R}$ tal que $p(\widetilde{z}_{i})=z_{i}$, $1\leq i\leq r$. La funci\'on diferenciable $f:S^{1}\tto S^{1}$ preserva la orientaci\'on  en $z_{i}$ si $\widetilde{f}'(\widetilde{z}_{i})>0$ e invierte la orientaci\'on en $z_{i}$ si $\widetilde{f}'(\widetilde{z}_{i})<0$. Sea $\epsilon_{i}=\widetilde{f}'(\widetilde{z}_{i})/|\widetilde{f}'(\widetilde{z}_{i})|\in\{-1,1\}$, obs\'ervese que este n\'umero dopende s\'olo de $f$ y $z_{i}$.
+\begin{proposicion}
+Con las convenciones de arriba, se cumple que $$\deg(f)=\sum_{i=1}^{r}\epsilon_{i}.$$
+\end{proposicion}
+\demost Tomemos $a\in\mathbb{R}\setminus p^{-1}\{z_{1},\ldots,z_{r}\}$. Luego, la intersecci\'on $p^{-1}(z_{i})\cap(a,a+1)$ posee un s\'olo punto, el cual escogemos como nuestro $\widetilde{z}_{i}$, $1\leq i\leq r$. Sea $p^{-1}(z_{0})=\{b+k\}_{k\in\mathbb{Z}}$ y consideremos la gr\'afica de $s=\widetilde{f}(t)$ sobre el intervalo abierto $(a,a+1)$ y las l\'ineas horizontales $s=b+k$, $k\in\mathbb{Z}$. Cada vez que la gr\'afica cruza una l\'inea $s=b+k$ el par\'ametro $t$ es igual a uno de los $\widetilde{z}_{i}$ y $\epsilon_{i}$ indica si la gr\'afica cruza esta l\'inea de manera creciente $(\epsilon_{i}=1)$ o decreciente $(\epsilon_{i}=-1)$. La Figura (\ref{grafica1}) muestra el caso en que $r=7$, $\epsilon_{1}=\epsilon_{2}=\epsilon_{3}=\epsilon_{4}=\epsilon_{7}=1$ y $\epsilon_{5}=\epsilon_{6}=-1$.
+La suma de los $\epsilon_{i}$ pertenecientes a una l\'inea $s=b+k$ es $1$, $-1$ o $0$. Claramente la suma de todos estos valores es
+$$\sum_{i=1}^{r}\epsilon_{i}=\widetilde{f}(a+1)-\widetilde{f}(a)=\deg(f),$$
+donde la \'ultima igualdad ocurre gracias al Corolario \ref{coro3}.\finp
+
+(En la Figura (\ref{grafica1}) el grado es $3$)
+\begin{figure}[htb]
+\centering
+\includegraphics[height=6cm]{grafica1.eps}
+\caption{Gráfica de $\widetilde{f}$.}
+\label{grafica1}
+\end{figure}
+\begin{corolario}
+Si $f:S^{1}\tto S^{1}$ es una funci\'on diferenciable se cumple que
+$$\deg_{2}(f)=\deg(f)\mod 2.$$
+\end{corolario}
+\begin{ej}{}{.3pt}\label{ejem5}
+Para cada $n\in\mathbb{Z}$, definamos $f_{n}:S^{1}\tto S^{1}$ por $f_{n}(z)=z^{n}$. Viendo a $S^{1}$ como subconjunto del plano complejo $\mathbb{C}$. Podemos escoger el levantamiento $\widetilde{f}_{n}:\mathbb{R}\tto\mathbb{R}$ como $\widetilde{f}_{n}(t)=nt$, entonces
+$$\deg(f_{n})=\widetilde{f}_{n}(1)-\widetilde{f}_{n}(0)=n.$$
+Si $z\in S^{1}$ es un valor regular de $f_{n}$, entonces $f^{-1}_{n}(z)=\{\rho_{1},\ldots,\rho_{|n|}\}$, donde $\rho_{1},\ldots,\rho_{|n|}$ son las $n$ distintas ra\'ices de $z$. Es evidente que si $n=0$, entonces $f_{0}$ es constante y $f^{-1}_{0}(z)=\vacio$. Si $n>0$, todos los $\epsilon_{i}$ son iguales a $1$ y si $n<0$ entonces $\epsilon_{i}=-1$ para todo i. As\'i,
+$$n=\sum_{i=1}^{|n|}\epsilon_{i}$$
+en todos los casos.
+\end{ej}
+\begin{teorema}\label{teo2}
+La funci\'on $\deg:\pi[S^{1},S^{1}]\tto\mathbb{Z}$ es biyectiva.
+\end{teorema}
+\demost Para cada $n\in\mathbb{Z}$, existe $f_{n}$ tal que $\deg(f_{n})=n$, luego $\deg$ es sobreyectiva. Debemos probar que si $\deg(f)=\deg(g)=n$ entonces $f\sim g$. Definamos $\widetilde{H}:\mathbb{R}\times[0,1]\tto\mathbb{R}$ mediante la f\'ormula
+$$\widetilde{H}(t,\tau)=\tau\widetilde{f}(t)+(1-\tau)\widetilde{g}(t).$$
+Como $\widetilde{H}(t+1,\tau)-\widetilde{H}(t,\tau)=\tau n+(1-\tau)n=n$, es posible establecer una funci\'on diferenciable, bien definida $H:S^{1}\times[0,1]\tto S^{1}$ mediante la f\'ormula
+$$H(z,\tau)=p\circ\widetilde{H}(p^{-1}(z),\tau).$$
+Evidentemente, $H(z,0)=g(z)$ y $H(z,1)=f(z)$, para cualquier $z\in S^{1}$. Luego $f\sim g$.\finp
+
+\section{Teorema Fundamental del \'Algebra y estructura de $\pi[S^{1},S^{1}]$}
+\begin{teorema}\label{teo3}
+Una funci\'on diferenciable $f:S^{1}\tto S^{1}$ puede ser extendida a una funci\'on diferenciable $F:D^{2}\tto S^{1}$ si y s\'olo si $\deg(f)=0$.
+\end{teorema}
+\demost Primero supongamos que la extensi\'on diferenciable $F$ existe. Esto es, $f=F\circ i$ donde $i:S^{1}\hookrightarrow D^{2}$ es la funci\'on inclusi\'on. Entonces $f^{*}=i^{*}\circ F^{*}$ y $F^{*}:H^{1}(S^{1})\tto H^{1}(D^{2})$. Pero por el Ejemplo \ref{ejem6} $H^{1}(D^{2})=\{0\}$, lo cual implica que $f^{*}\equiv 0$. Por tanto $\deg(f)=0$.
+
+Para el rec\'icproco, supongamos que $\deg(f)=0$. Por el Teorema \ref{teo2} se sigue que $f$ es homot\'opica a la funci\'on constante $f_{0}\equiv 1$. Esto es, existe una homotop\'ia $\widetilde{H}:S^{1}\times [0,1]\tto S^{1}$ tal que $\widetilde{H}(z,1)=f(z)$ y $\widetilde{H}(z,0)=1$, para $z\in S^{1}$. Ahora, podemos reparametrizar $\widetilde{H}$ de manera que
+\begin{align*}
+H(z,t)=
+\begin{cases}
+\widetilde{H}(z,2t-1)                               &,  1/2\leq t\leq 1\\
+\widetilde{H}(z,0)                       &, \ 0\leq t\leq 1/2
+\end{cases}
+\end{align*}
+As\'i $H(z,1)=f(z)$ para todo $z\in S^{1}$ y $H(z,t)\equiv 1$, si $0\leq t\leq 1/2$. Definamos ahora una funci\'on sobreyectiva y diferenciable $\varphi:S^{1}\times[0,1]\tto D^{2}\subset\mathbb{C}$ por $\varphi{z,t}=zt$. Entonces $\varphi$ mapea $S^{1}\times(0,1]$ difeomorficamente sobre $D^{2}\setminus\{0\}$. Luego $H$ define una funci\'on diferenciable sobre el disco $F:D^{2}\tto S^{1}$ como sigue.
+$$F(\varpi(z,t))=H(z,t).$$
+La cual est\'a bien definida, es diferenciable en $D^{2}\setminus\{0\}$ y es constante en $\{w\in D^{2}:|w|\leq \frac{1}{2}\}$. Luego, $F$ es diferenciable. Evidentemente, $F(z)=H(z,1)=f(z)$, para todo $z\in S^{1}$, as\'i $F$ es una extensi\'on de $f$.\finp
+\begin{teorema}$($Teorema Fundamental del \'Algebra$)$
+Sea $f:\mathbb{C}\tto\mathbb{C}$ un polinomio de grado $n\geq 1$. Entonces existe $z_{0}\in\mathbb{C}$ tal que $f(z_{0})=0$.
+\end{teorema}
+\demost Podemos suponer que el coeficiente del t\'ermino de grado $n$ es $1$ y escribir
+$$f(z)=z^{n}+a_{1}z^{n-1}+\cdots+a_{n-1}z+a_{n}.$$
+Supongamos por absurdo que $f$ no tiene ra\'ices. Para cada $r\in\mathbb{R}^{+}$ definamos una funci\'on diferenciable $F_{r}:D^{2}\tto S^{1}$ por la f\'ormula
+$$F_{r}(z)=\frac{f(rz)}{|f(rz)|}.$$
+Esta funci\'on est\'a bien definida gracias a la hip\'otesis de que $f$ no tiene ra\'ices. Sea $g_{r}=F_{r}\restricto{S^{1}}$. Luego hagamos
+$\widehat{H}_{r}(z,t)=(rz)^{n}+t(a_{1}(rz)^{n-1}+\cdots+a_{n})$ y notemos que $\widehat{H}_{r}$ no se anula en $S^{1}\times[0,1]$ si $r$ es suficientemente grande. En efecto,
+$$\frac{\widehat{H}_{r}(z,t)}{(rz)^{n}}=1+t\left(\frac{a_{1}}{rz}+\cdots+\frac{a_{n}}{(rz)^{n}}\right)$$
+se aproxima a $1$ cuando $r\rightarrow\infty$, uniformemente en $S^{1}\times[0,1]$. As\'i, fijemos un $r$ suficientemente grande y definamos $H:S^{1}\times[0,1]\tto S^{1}$ por
+$$H(z,t)=\frac{\widehat{H}_{r}(z,t)}{|\widehat{H}_{r}(z,t)|}.$$
+Entonces $H(z,1)=g_{r}(z)$ y $H(z,0)=z^{n}$ para todo $z\in S^{1}$. En consecuencia, $g_{r}\sim f$ y $\deg{g_{r}}=\deg(f)=n> 0$. Pero $g_{r}$ puede ser extendida diferenciablemente a $F_{r}:D^{2}\tto S^{1}$, una contradicc\'ion con el Teorema \ref{teo3}.\finp
+\begin{lema}
+Si $f,g:S^{1}\tto S^{1}$ son diferenciables, entonces $\deg(f\circ g)=\deg(f)\deg(g)$.
+\end{lema}
+En efecto, la funtorialidad de la cohomolog\'ia implica que $a_{f\circ g}=a_{f}a_{g}$, luego el Lema es inmediato.
+\begin{corolario}
+Si $f,g:S^{1}\tto S^{1}$ son diferenciables, entonces $f\circ g$ y $g\circ f$ son homot\'opicas entre s\'i.
+\end{corolario}
+Si $f,g:S^{1}\tto S^{1}$ son diferenciables, se define el producto puntual, $fg:S^{1}\tto S^{1}$ mediante la estructura de grupo de Lie de $S^{1}$. Esto es,
+$$fg(z)=f(z)g(z)$$
+para todo $z\in S^{1}$. Claramente, $f_{0}g_{0}\sim f_{1}g_{1}$ siempre que ocurra $f_{0}\sim f_{1}$ y $g_{0}\sim g_{1}$. Esto define un producto conmutativo sobre el conjunto $\pi[S^{1},S^{1}]$. La funci\'on constante $1$ determina la clase $[1]\in\pi[S^{1},S^{1}]$ la cual es la identidad para dicho producto. Si $\iota:S^{1}\tto S^{1}$ es la func\'ion que a cada $z$ le asigna su inverso multiplicativo $z^{-1}$, entonces cada $[f]\in\pi[S^{1},S^{1}]$ posee un inverso $[\iota\circ f]$ relativo a este producto, as\'i $\pi[S^{1},S^{1}]$ es canonicamente un grupo abeliano.
+\begin{proposicion}
+La biyecci\'on $\deg:\pi[S^{1},S^{1}]\tto\mathbb{Z}$ es un isomorfismo de grupos.
+\end{proposicion}
+\demost S\'olo es necesario demostrar que $\deg(fg)=\deg(f)+\deg(g)$. Si $\deg(f)=n$ y $\deg(g)=m$ entonces $f\sim f_{n}$ y $g\sim f_{m}$. De manera que $fg\sim f_{n}f_{m}$. Pero $f_{n}f_{m}=f_{n+m}$. As\'i $\deg(fg)=\deg(f_{n}f_{m})=m+n=\deg(f)+\deg(g)$.\finp
+
+Por el Ejemplo \ref{ejemA3} del Ap\'endice, se tiene que el grupo fundamental $\pi_{1}(S^{1},1)=\mathbb{Z}$. Este es un isomorfismo can\'onico, producido por levantar un lazo $\sigma$ basado en $S^{1}$ a un camino $\widetilde{\sigma}$ en el cubrimiento universal $\mathbb{R}$ empezando en $0$. Gracias a la proposici\'on anterior podemos identificar canonicamente al primer grupo fundamental de $S^{1}$ con $\pi[S^{1},S^{1}]$.
+\backmatter
+\chapter{Apéndice}
+\section*{Categor\'ias y Funtores}
+Una \textit{Categoria} $\mathscr{C}$ consiste en:
+\begin{itemize}
+\item una clase (no necesariamente un conjunto) de \textit{objetos} $obj\mathscr{C}$
+\item para cada par ordenado $A,B\in obj\mathscr{C}$ un conjunto $\Hom_{\mathscr{C}}(A,B)$ de \textit{morfismos}.
+\item para cada terna $ A,B,C\in obj \mathscr{C}$ una funci\'on llamada \textit{composici\'on}: $\Hom_{\mathscr{C}} (A,B)\times \Hom_{\mathscr{C}}(B,C)\longrightarrow \Hom_{\mathscr{C}}(A,C)$ denotado por $(f,g)\longmapsto g \circ f$,
+\end{itemize}
+todos ellos sujetos a satisfacer los siguientes axiomas:
+\begin{itemize}
+\item[(i)] la composici\'on es asociativa: $(f\circ g)\circ h=f\circ (g\circ h)$,
+\item[(ii)] para cada $A \in obj \mathscr{C}$, existe un \textit{morfismo identidad} $Id_{A}\in \Hom_{\mathscr{C}}(A,A)$ que satisface: para cada $f\in \Hom_{\mathscr{C}}(A,B)$ se tiene que $Id_{B}\circ f=f=0\circ Id_{A}$
+\end{itemize}
+En cualquier categor\'ia $\mathscr{C}$, un morfismo $f\in \Hom_{\mathscr{C}}(A,B)$ es llamado un \textit{isomorfismo} si existe un morfismo $g\in \Hom_{\mathscr{C}}(B,A)$ tal que $f\circ g=Id_{B}$ y $g\circ f=Id_{A}$.
+
+Sean $\mathscr{C}$ y $\mathscr{A}$ categor\'ias tales que  $obj\mathscr{C}\subset obj\mathscr{A}$.
+Si $ A,B \in obj\mathscr{C}$, denotemos los dos conjuntos posibles de morfismos por $\Hom_{\mathscr{C}}(A,B) $ y $\Hom_{\mathscr{A}}$
+Entonces $\mathscr{C}$ es una  \textit{subcategoria} de $\mathscr{A}$ si
+$$ \Hom_{\mathscr{C}}(A,B)\subset\Hom_{\mathscr{A}}$$
+para todo $A,B \in obj\mathscr{C}$, y si la composici\'on en $\mathscr{C}$ es igual a la composici\'on en $ \mathscr{A}$.
+
+Una \textit{congruencia} sobre una categor\'ia $\mathscr{C}$ es una relaci\'on de equivalencia $\sim$ sobre la clase $\bigcup_{(A,B)} \Hom (A,B)$ de todos los morfismos en $\mathscr{C}$ tales que:
+\begin{enumerate}
+\item Si $f\in\Hom (A,B)$ y $f\sim f'$ entonces $f'\in\Hom (A,B)$.
+\item Si $f\sim f'$, $g\sim g'$ y $g\circ f$ existe, entonces $g\circ f \sim g'\circ f'$.
+\end{enumerate}
+\begin{teorema}
+Sea $\mathscr{C}$ una categor\'ia con congruencia $\sim$  y denotemos por $[f]$ la clase de equivalencia del morfismo $f$. Definamos $\mathscr{C}'$ como:
+$$obj \mathscr{C}' = obj \mathscr{C},\quad \Hom_{\mathscr{C}'} (A,B) = \{[f]:f \in \Hom _{\mathscr{C}}\}\hbox{  y  } [g]\circ [f] = [g\circ f]$$
+entonces $\mathscr{C}'$ es una categor\'ia.
+\end{teorema}
+La categor\'ia $\mathscr{C}'$ construida en el teorema anterior es llamada una \textit{categor\'ia cociente} de $\mathscr{C}$. Usualmente se denota $Hom_{\mathscr{C}'}(A,B)$ como $[A,B]$.
+
+Si $\mathscr{A}$ y $\mathscr{C}$ son categor\'ias, un \textit{funtor} $T:\mathscr{A}\tto\mathscr{C}$ es una funci\'on tal que:
+\begin{enumerate}
+\item $A\in obj\mathscr{A}\tto TA\in obj\mathscr{C}$.
+\item Si $f: A\tto A'$ es un morfismo en $\mathscr{A}$, entonces $Tf: TA\tto TA'$ es un morfismo en $\mathscr{C}$.
+\item Si $f$ y $g$ son morfismos en $\mathscr{A}$ para los cuales $g\circ f $ esta definido, entonces
+$$T(g\circ f)= (Tg)\circ (Tf).$$
+\item $T(1_{A})= 1_{TA}$,  para todo $A\in obj\mathscr{A}$.
+\end{enumerate}
+Los funtores, como se han definido son tambi\'en llamados \textit{funtores covariantes} para distinguirlos de los funtores contravariantes que cambian la direcci\'on de las flechas. Si $\mathscr{A}$ y $\mathscr{C}$ son categorias, un \textit{funtor contravariante} $S:\mathscr{A}\tto\mathscr{C}$ es una funci\'on tal que:
+\begin{enumerate}
+\item $A\in obj\mathscr{A}\Rightarrow SA\in obj\mathscr{C}$.
+\item Si $f:A\tto A'$ es un morfismo en $\mathscr{A}$, entonces $Sf:SA'\tto SA$ es un morfismo en $\mathscr{C}$.
+\item Si $f$ y $g$ son morfismos en $\mathscr{A}$ para los cuales $g\circ f $ est\'a definido, entonces
+$$S(g\circ f)= (Sf)\circ (Sg).$$
+\item $S(1_{A})= 1_{SA}$, para todo $A\in obj\mathscr{A}$.
+\end{enumerate}
+\begin{ej}{}{.3pt}\label{ejemA1}
+Sea $F$ un campo y $\mathscr{C}$ la categor\'ia de todos los espacios vectoriales de dimensi\'on finita sobre $F$. Definamos $S:\mathscr{C} \longrightarrow \mathscr{C}$ por
+\begin{eqnarray*}
+S(V) &=& V^{*}=\Hom (V,F)\\
+S(f) &=& f^{*}
+\end{eqnarray*}
+As\'i, $S$ es el \textit{funtor espacio dual} que asigna a cada espacio vectorial $V$ su espacio dual $V^{*}$, conformada por todos los funcionales lineales sobre $V$, y a cada transformaci\'on lineal $f$, su traspuesta $f^{*}$.
+\end{ej}
+\section*{Espacio de recubrimiento}
+En lo que sigue supondremos que todos los espacios topol\'ogicos a ser considerados son localmente conexos por caminos. Sea $p:Y\tto X$ una funci\'on continua entre espacios topol\'ogicos. Un subespacio conexo y abierto $U\subseteq X$ est\'a \textit{uniformemente cubierto} por $p$ si cada componente conexa de $p^{-1}(U)$ es llevada homeom\'orficamente sobre $U$ por $p$.
+
+Una funci\'on continua $p:Y\tto X$ es una \textit{funci\'on de recubrimiento} si $X$ es conexo y cada punto $x\in X$ tiene una vecindad conexa que est\'a uniformemente cubierta por $p$. La terna $(Y,p,X)$ es llamada \textit{espacio de recubrimiento} de $X$. En la pr\'actica nos referimos a $Y$ mismo como el espacio de recubrimiento. Adem\'as, en general, no se requiere que $Y$ sea conexo.
+
+Sea $p$ una funci\'on de recubrimiento. Una \textit{transformaci\'on de recubrimiento} es un homeomorfismo $h:Y\tto Y$ tal que $p\circ h=p$. Esto es, el siguiente diagrama conmuta.
+$$\Dg
+Y & & \rTo ^{h} & & Y\\
+& \rdTo <{p} & & \ldTo >{p} \\
+& & X \\
+\endDg$$
+\begin{lema}
+El conjunto $\Gamma$ de transformaciones de recubrimiento, asociado a una funci\'on de recubrimiento $p:Y\tto X$ forma un grupo bajo la composici\'on, llamado el \textit{grupo de recubrimiento}.
+\end{lema}
+
+\begin{ej}{}{.3pt}\label{ejemA2}
+La funci\'on $p:\mathbb{R}\tto S^{1}$ definida por
+$$p(t)=e^{2\pi i t}$$
+es una funci\'on de recubrimiento. En efecto, fijando un punto $z_{0}=e^{2\pi it_{0}}\in S^{1}$, es claro que $p$ lleva el intervalo compacto $[t_{0}-\frac{1}{4},t_{0}+\frac{1}{4}]$ inyectivamente, luego  homeom\'orficamente, en un arco compacto de $S^{1}$ conteniendo a $z_{0}$ en su interior $U$. Entonces $p^{-1}(U)$ es la uni\'on disjunta de intervalos abiertos $(t_{0}+n-\frac{1}{4},t_{0}+n+\frac{1}{4})$, con $n$ variando sobre el conjunto $\mathbb{Z}$ de los n\'umeros enteros. Evidentemente cada uno de estos intervalos es una componente conexa de $p^{-1}(U)$ y es llevada por $p$ homeom\'orficamente en $U$. Finalmente, $p(t)=p(s)$ si y s\'olo si $s=t+m$, para alg\'un $m\in\mathbb{Z}$. As\'i $h:\mathbb{R}\tto\mathbb{R}$ es una trasformaci\'on de recubrimiento si y s\'olo si $h(t)=t+m_{t}$ donde $m_{t}\in\mathbb{Z}$, para $-\infty<t<\infty$. Por continuidad, $m_{t}$ depende continuamente de $t$. Pero $\mathbb{Z}$ es un espacio discreto y $\mathbb{R}$ es conexo, luego $m_{t}\equiv m$ es constante. El grupo de transformaciones de recubrimiento es el grupo de traslaciones por enteros, luego es can\'onicamente isomorfo al grupo aditivo $\mathbb{Z}$.
+\end{ej}
+
+Si el diagrama
+$$\Dg
+Y' & \rTo^{\widetilde{f}}  & Y \\
+\dTo <{p'} & & \dTo >{p} \\
+X' & \rTo_{f} & X \\
+\endDg$$
+es un diagrama conmutativo de funciones continuas, donde $p$ y $p'$ son funciones de recubrimiento, diremos que $\widetilde{f}$ es un \textit{levantamiento} de $f$ a los espacios de recubrimiento. En el caso que $X=X'$ y $f=id_{X}$, tal levantamiento es llamado un \textit{homomorfismo} de espacios de recubrimiento. Un homomorfismo de espacios de recubrimiento que tambi\'en sea un homeomorfismo es llamado un isomorfismo de espacios de recubrimiento.
+\begin{lema}\label{lema6}
+Si $\widetilde{f}$ es un levantamiento de $f$, y si el espacio de recubrimiento $Y'$ es conexo, entonces $\widetilde{f}$ est\'a completamente determinada por $f$ y por el valor de $\widetilde{f}$ en un punto.
+\end{lema}
+\begin{corolario}
+Sea $p:Y\tto X$ una funci\'on de recubrimiento, supongamos que $Y$ es conexo, y sea $y\in Y$. Entonces toda transformaci\'on de recubrimiento $h:Y\tto Y$ est\'a \'unicamente determinada por el punto $h(y)$.
+\end{corolario}
+En efecto, una transformaci\'on de recubrimiento es un levantamiento de la transformaci\'on identidad $id:X\tto X$, donde $Y'=Y$ y $p'=p$.
+
+Otro tipo de levantamiento importante es aquel para el cual el recubrimiento $p':Y'\tto X'$ es el recubrimiento trivial $id:X'\tto X'$. En este caso el levantamiento continuo encaja en un tri\'angulo conmutativo
+$$\Dg
+&  & Y \\
+& \ruTo <{\widetilde{f}} & \dTo >{p} \\
+X' & \rTo_{f} & X \\
+\endDg$$
+
+\begin{lema}
+(\textit{Propiedad de Levantamiento por Caminos}). Sean $p:Y\tto X$ un espacio de recubrimiento, $x\in X$, $y\in p^{-1}(x)$ y $\sigma:[a,b]\tto X$ un camino continuo con $\sigma(a)=x$. Entonces existe un \'unico levantamiento $\widetilde{\sigma}:[a,b]\tto Y$ tal que $\widetilde{\sigma}(a)=y$.
+\end{lema}
+
+Otra propiedad de levantamiento importante para espacios de recubrimiento es la \textit{propiedad de levantamiento por homotop\'ia}. Sean $f_{0}$ y $f_{1}$ funciones continuas de un espacio $Z$ en un espacio $W$. Una \textit{homotop\'ia} entre estas funciones es una funci\'on continua $H:Z\times[0,1]\tto W$ tal que
+\begin{eqnarray*}
+f_{0}(z)&=&H(z,0), \text{ para todo } z\in Z\\
+f_{1}(z)&=&H(z,1), \text{ para todo } z\in Z.
+\end{eqnarray*}
+Si $C\subseteq Z$ y $f_{0}\restricto C\equiv f_{1}\restricto C$, diremos que $H$ es una homotop\'ia relativa $\mod{C}$ si, adem\'as,
+$$H(z,t)=f_{0}(z), \text{ para todo } z\in C \text{ y } 0\leq t\leq 1.$$
+Si existe una homotop\'ia entre $f_{0}$ y $f_{1}$, diremos que $f_{0}$ es \textit{homot\'opica} a $f_{1}$ y se escribir\'a $f_{0}\sim f_{1}$, si es una homotop\'ia $\mod{C}$, escribiremos $f_{0}\sim_{C}f_{1}$.
+
+Puede pensarse en una homotop\'ia $H$ como una deformaci\'on continua de la funci\'on $f_{0}$ a la funci\'on $f_{1}$ a trav\'es de funciones $f_{t}(z)=H(z,t)$, $0\leq t \leq 1$.
+
+Un caso particularmente importante de homotop\'ia relativa es aquel en el cual las funciones son caminos
+$$\sigma_{i}:[a,b]\tto W, \text{ con } i=0,1$$
+y $C=\partial[a,b]=\{a,b\}$. Luego las curvas tienen los mismos puntos finales $\sigma_{0}(a)=\sigma_{1}(a)=x$, $\sigma_{0}(b)=\sigma_{1}(b)=y$, y la homotop\'ia $\mod{\{a,b\}}$ deforma una curva en otra manteniendo los puntos finales fijos. Denotaremos esta homotop\'ia relativa por $\sigma_{0}\sim_{\partial}\sigma_{1}$.
+
+Usualmente parametrizaremos caminos en el intervalo $[0,1]$. Si $\sigma$ y $\tau$ son dos caminos tales que $\sigma(1)=\tau(0)$, podemos unirlos en este punto com\'un para producir un camino $\sigma\cdot\tau$ uniendo $\sigma(0)$ a $\tau(1)$ y parametrizado en $[0,1]$ como sigue:
+$$(\sigma\cdot\tau)(t)=
+            \begin{cases}
+                \sigma(2t), &  0\leq t\leq \frac{1}{2}\\
+                \tau(2t-1), &  \frac{1}{2}\leq t\leq 1.
+            \end{cases}
+$$
+Un \textit{lazo} en $X$ basado en $x_{0}$ es un camino $\sigma:[0,1]\tto X$ tal que $\sigma(0)=\sigma(1)=x_{0}$. Esto es, un camino que parte de $x_{0}$ en el tiempo $t=0$ y retornando a $x_{0}$ en el tiempo $t=1$. Denotaremos tambi\'en como $x_{0}$ al lazo constante $\sigma\equiv x_{0}$. Un espacio topol\'ogico $X$ es \textit{simplemente conexo} si se cumplen las siguientes condiciones:
+\begin{enumerate}
+\item $X$ es conexo por caminos
+\item Existe un punto $x_{0}\in X$ tal que todo lazo en $x_{0}$ satisface $\sigma\sim_{\partial}x_{0}$.
+\end{enumerate}
+Un espacio $X$ es \textit{localmente simplemente conexo} si cada vecindad de cada punto $x\in X$ contiene una vecindad abierta de $x$ simplemente conexa. El siguiente lema  nos provee de varias caracterizaciones de conexidad simple.
+
+\begin{lema}
+Las propiedades de un espacio $X$ conexo por caminos, que a continuaci\'on se enuncian, son equivalentes:
+\begin{enumerate}
+\item Toda funci\'on continua $f:S^{1}\tto X$ es homot\'opica a una funci\'on constante.
+\item Toda funci\'on continua $f:S^{1}\tto X$ puede extenderse a una funci\'on continua $F:D^{2}\tto X$, donde $D^{2}$ es el disco unitario cerrado en $\mathbb{R}^{2}$.
+\item Si $\sigma$ y $\tau$ son caminos en $X$ teniendo los mismos puntos inicial y final, entonces $\sigma\sim_{\partial}\tau$.
+\item Si $\sigma$ es un lazo en un punto arbitrario $x\in X$, entonces $\sigma\sim_{\partial} x$.
+\item $X$ es simplemente conexo.
+\end{enumerate}
+\end{lema}
+
+\section*{ El recubrimiento universal}
+
+Una funci\'on de recubrimiento $\pi:\widetilde{X}\tto X$ se dice que es \textit{universal} si $\widetilde{X}$ es conexo y, para cualquier funci\'on de recubrimiento $p:Y\tto X$ tal que Y es conexo, existe una funci\'on continua $\widetilde{\pi}:\widetilde{X}\tto Y$ que es un levantamiento de $\pi$. El espacio de recubrimiento $\widetilde{X}$ es llamado un espacio de recubrimiento universal de $X$.
+
+Un \textit{espacio punteado} es un par $(Z,z_{0})$, donde $z_{0}$ es un punto base fijo y $Z$ es conexo por caminos. Una funci\'on
+$$f:(Z,z_{0})\tto(W,w_{0})$$
+es una funci\'on continua de $Z$ en $W$ tal que $f(z_{0})=w_{0}$. \'Estas son llamadas \textit{funciones que preservan punto base}.
+
+El conjunto de todos los espacios punteados, junto con todas las funciones que preservan punto base forma la categor\'ia de los espacios punteados. Los espacios punteados son los objetos de la categor\'ia y las funciones que preservan punto base son los morfismos. En esta categor\'ia, la definici\'on de funci\'on de recubrimiento universal $\pi:(\widetilde{X},\widetilde{x}_{0})\tto(X,x_{0})$ requiere que, para cualquier funci\'on de recubrimiento $p:(Y,y_{0})\tto(X,x_{0})$, exista un diagrama conmutativo
+$$\Dg
+(\widetilde{X},\widetilde{x}_{0}) & \rTo^{\widetilde{\pi}}  & (Y,y_{0}) \\
+ &\rdTo <{\pi} & \dTo >{p} \\
+&  &( X,x_{0}) \\
+\endDg$$
+ De acuerdo con el Lema \ref{lema6} el levantamiento $\widetilde{\pi}$ est\'a \'unicamente determinado por la condici\'on $\widetilde{\pi}(\widetilde{x}_{0})=y_{0}$.
+
+\begin{lema}
+Si $\pi:(\widetilde{X},\widetilde{x}_{0})\tto(X,x_{0})$ y $\widehat{\pi}:(\widehat{X},\widehat{x}_{0})\tto(X,x_{0})$ son ambas funciones de recubrimiento universal, entonces existe un \'unico homeomorfismo $\varphi$ haciendo el diagrama
+$$\Dg
+(\widetilde{X},\widetilde{x}_{0}) & & \rTo^{\varphi} & & (\widehat{X},\widehat{x}_{0}) \\
+& \rdTo <{\pi} & & \ldTo >{\widehat{\pi}} \\
+&  & ( X,x_{0})\\
+\endDg$$
+conmutativo.
+\end{lema}
+Gracias a este Lema, podemos hablar de la unicidad del espacio de recubrimiento universal de $(X,x_{0})$, siempre que exista. La existencia del espacio de recubrimiento universal nos la proporciona el siguiente teorema.
+\begin{teorema}
+Sea $X$ es conexo por caminos y localmente simplemente conexo. Entonces $X$ admite un espacio de recubrimiento universal. M\'as a\'un, un espacio de recubrimiento es universal si y s\'olo si es simplemente conexo.
+\end{teorema}
+
+\section*{El Grupo Fundamental}
+
+Sea $\mathcal{P}(X,x_{0})$ el espacio de caminos $\sigma:[0,1]\tto X$ teniendo como punto inicial $x_{0}$ y sea $\Omega(X,x_{0})\subset\mathcal{P}(X,x_{0})$ el conjunto de lazos en $X$ basados en $x_{0}$. La relaci\'on de homotop\'ia $\sim_{\partial}$ define una relaci\'on de equivalencia en $\Omega(X,x_{0})$, y el conjunto cociente
+$$\pi_{1}(X,x_{0})=\Omega(X,x_{0})/\sim_{\partial}$$
+forma un grupo  con la operaci\'on $[\sigma]\cdot[\tau]=[\sigma\cdot\tau]$ llamado el \textit{grupo fundamental} de $(X,x_{0})$.
+
+El grupo $\Gamma$ de transformaciones de recubrimiento del espacio de recubrimiento universal $\widetilde{X}$ de $X$ es isomorfo a $\pi_{1}(X,x_{0})$. El punto base $x_{0}$ juega un papel esencial en el estudio del grupo fundamental. La escogencia del punto base es determinante para especificar un isomorfismo $\Gamma\cong\pi_{1}(X,x_{0})$.
+
+\begin{ej}{}{.3pt}\label{ejemA3}
+Por el Ejemplo \ref{ejemA2} y el hecho que un espacio de recubrimiento simplemente conexo es universal, el espacio de recubrimiento universal del c\'irculo es $p:\mathbb{R}\tto S^{1}$ ($\mathbb{R}$ al ser convexo, es simplemente conexo) y el grupo de transformaciones de recubrimiento  es isomorfo al grupo c\'iclico infinito $\mathbb{Z}$. As\'i $\pi_{1}(S^{1},x_{0})\cong\mathbb{Z}$, donde $x_{0}=p(\mathbb{Z})$. Es de observar que un lazo en $S^{1}$, basado en $x_{0}$ y generando a $\pi_{1}(S^{1},x_{0})$, est\'a dado por la restricci\'on $\sigma=p\restricto{[0,1]}$.
+\end{ej}
+
+Consideremos una funci\'on continua que preserva punto base $f:(X,x_{0})\tto(Y,y_{0})$ entre espacios punteados. Si $\sigma\in\Omega(X,x_{0})$, entonces, como $f$ preserva punto base, $f\circ\sigma\in\Omega(Y,y_{0})$. Si $\sigma\sim_{\partial}\tau$, entonces $f\circ\sigma\sim_{\partial} f\circ\tau$, lo cual nos permite definir una funci\'on \textit{inducida}
+\begin{eqnarray*}
+f_{*}:\pi_{1}(X,x_{0})&\tto&\pi_{1}(Y,y_{0})\\
+f_{*}([\sigma])&=&[f\circ\sigma].
+\end{eqnarray*}
+La funci\'on inducida $f_{*}$ es un homomorfismo de grupos que adem\'as cumple que si $g:(X,x_{0})\tto(Y,y_{0})$ y $f:(Y,y_{0})\tto(Z,z_{0})$ son funciones continuas que preservan punto base, entonces
+$$(f\circ g)_{*}=f_{*}\circ g_{*}.$$
+Estas propiedades se resumen diciendo que el grupo fundamental define un funtor covariante de la categor\'ia de espacios punteados y funciones continuas que preservan punto base a la categor\'ia de grupos y homomorfismos de grupos.
+
+Finalmente, usando el grupo fundamental, formulamos una condici\'on necesaria y suficiente para la existencia de leventamientos.
+\begin{teorema}
+Sean $p:(Y,y_{0})\tto (X,x_{0})$ una funci\'on de recubrimiento y $f:(Z,z_{0})\tto(X,x_{0})$ una funci\'on continua que preserva punto base. Entonces existe un levantamiento $\widetilde{f}:(Z,z_{0})\tto (Y,y_{0})$ si y s\'olo si $f_{*}(\pi_{1}(Z,z_{0}))\subseteq p_{*}(\pi_{1}(Y,y_{0}))$.
+\end{teorema}
+\begin{corolario}
+Sean $p:(Y,y_{0})\tto(X,x_{0})$ una funci\'on de recubrimiento y $Z$ simplemente conexo. Entonces toda funci\'on continua que preserva punto base $f:(Z,z_{0})\tto(X,x_{0})$ posee un \'unico levantamiento $\widetilde{f}:(Z,z_{0})\tto(Y,y_{0})$.
+\end{corolario}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\chapter*{Bibliografía}
+%\renewcommand{\refname}{Referencias Bibliogr\'aficas}
+\addtocontents{toc}{\bigskip\noindent\textbf{Bibliografía}\hspace{\fill}\textbf{\thepage}}
+\begin{thebibliography}{999999}
+\bibitem[B]{Boothby} {\sc W. Boothby. } \textsl{An introduction to Differential Manifolds and Differential Geometry. } Academic Press. New York, 1975.
+\bibitem[BT]{BottTu} {\sc R. Bott, L. W. Tu } \textsl{Differential Forms in Algebraic Topology } Graduate Texts in Mathematics V-82. Springer-Verlag. New York,  1982.
+\bibitem[C]{Conlon} {\sc L. Conlon. } {\sl Differentiable Manifolds. } Second Edition. Birkh\"{a}user. Boston, 2001.
+\bibitem[L]{Lee} {\sc J. M. Lee. } {\sl Introduction to smooth manifolds. } GTM Springer-Verlag.
+\bibitem[Ma]{Massey} {\sc W. Massey. }\textsl{Introducci\'on a la Topolog\'ia Algebraica. } Editorial Revert\'e, S. A. 1972.
+\bibitem[Mi]{Milnor} {\sc J. W. Milnor. } \textsl{Topology from the Differentiable Viewpoint. }  University of Virginia Press, 1965.
+\bibitem[MiS]{MilnorStasheff} {\sc J. W. Milnor, J. D. Stasheff } \textsl{Characteristic Classes. }  Princeton University Press. New Jersey, 1974.
+\bibitem[Mu1]{MunkresAn} {\sc J. M. Munkres. } \textsl{Analysis of Manifolds. } Addison-Wesley Publishing Company, 1991.
+\bibitem[Mu2]{Munkres} {\sc J. M. Munkres. } \textsl{Topology. } Second Edition. Prentice Hall, New Jersey, 2000.
+\bibitem[S1]{SpivakGeo} {\sc M. Spivak. } {\sl A Comprehensive Introduction to Differential Geometry, Vol 1.} Publish or Perish Inc, Boston, 1970.
+\bibitem[S2]{SpivakVar} {\sc M. Spivak. } \textsl{C\'alculo en Variedades. } Editorial Revert\'e S. A. Barcelona, 1988.
+\bibitem[W]{Weintraub} {\sc S. H. Weintraub. } \textsl{Differential Forms. A complement to vector calculus. } Academic Press Inc. San Diego, 1997.
+\end{thebibliography}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+
+linea de comando para escribir una entrada en al bibliografía:
+
+\bibitem[]{} {\sc } {\it } \textbf{} ()
+\end{document}

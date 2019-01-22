@@ -1,0 +1,61 @@
+\documentclass[letterpaper,12pt]{book}
+\usepackage{chngcntr}
+\counterwithout{footnote}{chapter}
+
+
+\input{B1Paquetes/paquetes.tex}
+
+%\title{\huge{\textbf{Análisis del Discurso}}\\\Large{\textbf{Procesamiento de lenguaje natural con Tecnologías Libres}}}
+%\date{9 de noviembre de 2017}
+%\author{Centro Nacional de Desarrollo e Investigación en Tecnologías Libres \\ CENDITEL}
+
+
+\begin{document}
+\hojaportada
+\blankpage
+\include{portada_interna/portada}
+\blankpage
+%\maketitle
+\include{licencia/licencia}
+%\restoregeometry
+\tableofcontents
+
+\frontmatter
+%\pagenumbering{roman}
+%\setcounter{page}{0}
+\include{Introduccion_general/Introduccion_general}
+
+\mainmatter
+%CAPITULO 1 Introducci\'on Al Modelado de T\'opicos
+\include{1Modelado/topicos}
+
+%CAPITULO 2 Latent Dirichlet Allocation
+\include{2LDA/lda}
+
+%CAPITULO 3 Proceso Generativo
+\include{3Generativo/generativo}
+
+%CAPITULO 4 M\'etodos de Inferencia
+\include{4Inferencia/inferencia}
+
+%CAPITULO 4 M\'etodos de Inferencia
+\include{5Estimacion/estimacion}
+
+\include{A1Apendices/estadistica}
+
+\include{A1Apendices/bayes} 
+
+\include{Aspectos_linguisticos/Aspectos_linguisticos}
+
+\appendix
+%APENDICES
+\include{Apendice_aspectos_discursivos/Apendice_aspectos_discursivos}
+
+%BIBLIOGRAFIA
+\include{A2Referencias/biblio}
+
+\backmatter
+\include{Autores/Autores}
+\blankpage
+\hojacontraportada
+\end{document}

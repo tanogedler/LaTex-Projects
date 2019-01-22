@@ -1,0 +1,556 @@
+\documentclass[11pt]{article}
+\usepackage [spanish] {babel}
+\usepackage [T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} %paquete para incluir gr\'aficos
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel}%paquete para simbolog\'ia matem\'atica
+
+\usepackage{fancyvrb} % Permite customizar entornos
+\usepackage{hyperref} % Para hacer un Hyperbook
+
+\usepackage{vmargin}
+
+%\setpapersize{letter}
+%\setmargins{2.5cm}       % margen izquierdo
+
+\newcommand{\dem}{\textbf{Demostraci\'on:\\}}
+\newcommand\qed{%
+ \begin{flushright}
+   $\blacksquare$
+ \end{flushright} }
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Fq}{\mathbb{F}_q}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\Fm}{\F_{2^m}}
+\newcommand{\izq}{\left\{ }
+\newcommand{\der}{\right\} }
+
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\newtheorem{ejem}{{\bf Ejemplo }}[subsection]
+\newtheorem{defi}{{\bf Definici\'on }}[subsection]
+\newtheorem{obs}{{\bf Observaci\'on }}[subsection]
+\newtheorem{lema}{{\bf Lema }}[subsection]
+\newtheorem{prop}{{\bf Proposici\'on }}[subsection]
+\newtheorem{coro}{{\bf Corolario }}
+
+\title{Avances en el Criptosistema de Clave P\'ublica Basado en una Variedad Algebraica}
+\author{Contreras G., Jos\'e A.\footnote{jancontreras@cenditel.gob.ve}\\ Londo\~no R., Anastacia\footnote{anas.2720@gmail.com}}
+
+\begin{document}
+%                        T\'iTULO
+%-------------------------------------------------------------------------------------------------------------------
+	\maketitle
+%-------------------------------------------------------------------------------------------------------------------
+
+%      RESUMEN
+%-------------------------------------------------------------------------------------------------------------------
+
+	\begin{abstract}
+		En 2004, Akiyama K. y Goto Y. \cite{AG04} propusieron un criptosistema de clave p\'ublica de resistencia postcu\'antica basado en una variedad algebraica. Espec\'ificamente, el criptosistema se basa en un problema poco com\'un en la criptograf\'ia multivariable: el Problema de B\'usqueda Secciones. Este esquema de cifrado asim\'etrico usa de tamaños razonables de las claves: para par\'ametros recomendados, el tamaño de la clave secreta es de 102 bits y el de la clave p\'ublica es de 500 bits. Dado el evidente atractivo del sistema, este ha sido examinado exhaustivamente por la comunidad criptogr\'afica, en este art\'iculo, se presentan los ataques publicados al criptosistema y los avances realizados a \'este en respuesta.
+	\end{abstract}
+%-------------------------------------------------------------------------------------------------------------------
+
+
+
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+%     SECCION 1 (INTRODUCCION)
+	\section{Introducci\'on}
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+
+		En 1994, gracias a los trabajos de Shor \cite{Shor}, qued\'o demostrado que los algoritmos de factorizaci\'on de n\'umeros enteros y de logaritmo discreto podr\'ian ser resueltos de manera efectiva mediante computadores cu\'anticos. Esto significa que los criptosistemas RSA y de curvas el\'ipticas, entre otros, ya no ser\'an seguros si un computador cu\'antico es construido. Por lo tanto, es importante la b\'usqueda de criptosistemas basados en problemas matem\'aticos m\'as complejos.\\
+
+		En este orden, la primera versi\'on del criptosistema de variedad algebraica (CVA) fue presentada por Akiyama-Goto \cite{AG04} basada en un problema NP-Completo de geometr\'ia algebraica, al que llamaremos \emph{el Problema de B\'usqueda de Secciones}, que describiremos luego y que puede ser visto como el problema de resolver un sistema de ecuaciones polin\'omicas multivariables (de grado alto) el cual se sabe que es NP-Completo. Esta versi\'on di\'o lugar a los ataques de Voloch \cite{Vol07} y Uchiyama-Tokunaga \cite{UT} (ver tambi\'en \cite{Iw08}).\\
+
+		La nueva versi\'on del criptosistema fue publicada en 2008 por Akiyama-Goto \cite{AG08}, y extendida por Akiyama-Goto-Miyake en 2009 \cite{AGM09}. En 2010, Faugere-Spaenlehauer \cite{FS} publicaron un criptoan\'alisis algebraico que rompe por completo el sistema, La idea principal de este ataque es descomponer los ideales deducidos del texto cifrado con el fin de evitar el problema de la b\'usqueda de secciones.\\
+
+		En 2015 Okumura \cite{Oku15} present\'o un criptosistema de clave p\'ublica basado en ecuaciones diof\'anticas de grado creciente (EDC), usando un m\'etodo an\'alogo al de Akiyama-Goto. En el art\'iculo se dan algunas discusiones sobre c\'omo asegurar este criptosistema en contra de los ataques conocidos (incluyendo el de Faugere-Spaenlehauer), sin embargo no se alcanz\'o una demostraci\'on de la seguridad del mismo. Recientemente, en Enero de 2016, Ding et al. \cite{DKOTT} publicaron un criptoan\'alisis efectivo contra \cite{Oku15}, mostrando que la seguridad de EDC depende de la dificultad de encontrar ciertos vectores (relativamente) cortos a partir de la clave p\'ublica y el texto cifrado.\\
+
+		En 2015 Contreras \cite{Con15} present\'o, un criptosistema de clave p\'ublica basado en una variedad algebraica, siguiendo lo establecido por \cite{AGM09}, en el marco de un proyecto de investigaci\'on de la Fundaci\'on CENDITEL. Este art\'iculo se presenta como una compilaci\'on de las investigaciones relacionadas al criptosistema con el fin de darle continuidad y actualizar el proyecto mencionado. \\
+
+		El resto del art\'iculo est\'a organizado como sigue; en la secci\'on 2, presenta algunos hechos importantes sobre las superficies algebraicas junto con el criptosistema original \cite{AG04}, en la secci\'on 3 se describen los ataques de Voloch \cite{Vol07}, Uchiyama-Tokunaga \cite{UT}  y su versi\'on generalizada, publicada por Iwami \cite{Iw08}. En la secci\'on 4 se presenta brevemente la \'ultima versi\'on del criptosistema de variedad algebraica (ver \cite{AGM09}) y se describe el ataque de Faugere-Spaenlehauer. Finalmente en la secci\'on 5 se describe el criptosistema basado en ecuaciones diof\'anticas de \cite{Oku15} y su respectivo criptoan\'alisis.
+
+
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+%      SECCION 2 (PRELIMINARES Y PRIMERA VERSION)
+	\section{Preliminares}
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 2.1 (PRELIMINARES MATEMATICOS)
+		\subsection{Superficies Algebraicas}
+		\label{21SA}
+%-------------------------------------------------------------------------------------------------------------------
+
+			Sea $\Fp$ un cuerpo finito con $p$ elementos. Una variedad algebraica sobre $\Fp$ se define como el conjunto de soluciones de ecuaciones algebraicas que tiene dos grados de libertad. Para construir nuestro criptosistema usaremos una variedad algebraica af\'in $X$, en el espacio af\'in $\mathbb{A}^3$ , definida de manera natural mediante la ecuaci\'on $X(x, y, t) = 0$ sobre $\Fp$. En nuestro caso, no reviste mayor importancia si $X$ es suave, en el sentido de poseer puntos singulares, pero el polinomio $X(x, y, t)$ necesariamente debe ser irreducible.\\
+
+			Sobre $X$ pueden definirse ciertas curvas, por ejemplo si tomamos otra variedad $Y$, la interseccion $X\bigcap Y$ es una curva sobre $X$. Tales curvas pueden ser encontradas f\'acilmente, pero encontrar todas las curvas sobre $X$ no es una tarea sencilla. Un tipo de curvas sobre la variedad $X$, particularmente dif\'icil de encontrar expl\'icitamente, son las curvas parametrizadas, definidas por ecuaciones de tipo $(x,y,t)=(u_x(t),u_y(t),t)$, donde $u_x(t)$ y $u_y(t)$ son polinomios en $t$ sobre $\Fp$.\\
+
+			Si definimos la relaci\'on $\sigma : X\rightarrow \mathbb{A}^1$ como $\sigma(x,y,t)=t$, entonces la curva parametrizada induce una relaci\'on inversa $\tau : \mathbb{A}^1\rightarrow X$, tal que $\sigma\circ\tau=\mathsf{id}_{\mathbb{A}^1}$. La funci\'on $\sigma$ es llamada el fibrado de $X$ en $\mathbb{A}^1$ y $\tau$ es llamada una secci\'on de $\sigma$.\\
+
+			Podemos ver una secci\'on como sigue: si reescribimos $X(x, y, t)$ como un polinomio sobre $\Fp [t]$, podemos ver a $X$ como una curva sobre el cuerpo $\Fp$ (o sobre el anillo $\Fp[t]$). Luego, una secci\'on ser\'a un punto racional sobre esta curva. Encontrar tales puntos es uno de los diez problemas de Hilbert y no existe algoritmo que lo resuelva en tiempo polinomial.
+
+			\begin{defi}
+ 				Sea $X(x, y, t) = 0$ una variedad algebraica sobre $\Fp$. El problema de encontrar curvas parametrizadas $(x, y, t) = (u_x (t), u_y (t), t)$ sobre $X$ se llama \textbf{Problema de B\'usqueda de Secciones en $X$}.
+			\end{defi}
+
+			La variedad algebraica est\'a definida por el polinomio $X(x, y, t)$, el objetivo del problema de b\'usqueda de secciones es encontrar dos polinomios $u_x(t)$ y $u_y (t)$ sobre $\Fp (t)$, tales que $X(u_x (t), u_y (t), t) = 0$. Este problema conduce a la resoluci\'on de un sistema de ecuaciones polinomiales no lineales en varias variables (ver \cite{AGM09} \'o \cite{Con15}). Como es sabido, la resoluci\'on de tal sistema es un problema que tiene complejidad NP-completo.
+
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 2.2 (CVA PRIMERA VERSION)
+		\subsection{Versi\'on Original del Criptosistema (CVA04)}
+		\label{22CVA1}	%-------------------------------------------------------------------------------------------------------------------
+
+			describiremos ahora la primera versi\'on del criptosistema anunciado en 2004, para m\'as detalles vea \cite{AG04}.
+
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 2.2.1 (PARAMETROS)
+			\subsubsection{Par\'ametros}
+			\label{221Para}
+%-------------------------------------------------------------------------------------------------------------------
+
+				\begin{enumerate}
+					\item El tamaño del cuerpo base: $p$.
+					\item El grado m\'aximo de las secciones: $d$.
+					\item El n\'umero de bloques en un texto plano: $l$, (con $d<l$).
+				\end{enumerate}
+
+			\subsubsection{Detalles del las Claves}
+				\begin{enumerate}
+					\item La clave secreta est\'a formada por dos de secciones.
+						$$
+							D_1 : (x,y,t)=(u_x(t),u_y(t),t)\text{ y  }D_2 : (x,y,t)=(v_x(t),v_y(t),t)
+						$$
+						con
+						$$
+							d=\max\izq u_x(t),u_y(t),v_x(t),v_y(t)\der.
+						$$
+					\item La clave p\'ublica es una superficie $X$ que contiene a $D_1$ y $D_2$ como secciones.
+				\end{enumerate}
+
+			\textbf{Notaci\'on} De aqu\'i en adelante, dado un polinomio $A$ nos referiremos a $\Lambda_A$ como su soporte.
+			
+			
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 2.2.2 (DESCRIPCION)
+			\subsubsection{Descripci\'on del Criptosistema}
+			\label{222DESCVA1}
+%-------------------------------------------------------------------------------------------------------------------
+				El criptosistema est\'a dividido en 3 etapas, como sigue:
+
+				\begin{description}%ESTOS ITEMS SERAN MARCADOS CON UN *
+					\item[1. Generaci\'on de Claves] Elegir dos polinomios%* 
+						$$
+							D_1(x,y,t)=(u_x(t),u_y(t),t)\text{ y } D_2(x,y,t)=(v_x(t),v_y(t),t)
+						$$
+						tales que $(u_x(t)-v_x(t))|(u_y(t)-v_y(t))$, y construir la superficie $X(x,y,t)$ que los contenga como secciones.
+					\item[2. Cifrado] Este paso consiste en convertir un texto plano (de elementos en $\Fp$) en un texto cifrado.%*
+					\begin{enumerate}% ESTOS ITEMS SERAN MARCADOS CON **
+						\item Dividir el texto plano $m$ en $l$ bloques, de la forma $m=m_0||\cdots||m_{l-1}$ e incrustar $m$ en un polinomio en $t$ como%**
+							$$
+								m(t)=m_{l-1}t^{l-1}+\cdots+m_1t+m_0 \text{ }(0\leq m_i<p, i=0,\ldots,l-1).
+							$$
+						\item Elegir un polinomio irreducible $f(t)$ de grado $l$.%**
+						\item Elegir un polinomio aleatorio%**
+							$$
+								r(x,y,t)=\sum_{(i,j)\in\Lambda_r}r_{ij}(t)x^iy^i
+							$$
+							y escribir
+							$$
+								X(x,y,t)r(x,y,t)=\sum_{(i,j)\in\Lambda_{X_r}}a_{ij}(t)x^iy^i
+							$$
+							donde $\Lambda_{X_r}:=\izq (i,j)\in\N^2|a_{ij}(t)\neq 0\der$
+						\item Elegir un polinomio aleatorio%**
+							$$
+								s(x,y,t)=\sum_{(i,j)\in\Lambda_{X_r}}s_{ij}(t)x^iy^i
+							$$
+							tal que $\deg(s_{ij}(t))=\deg(a_{ij}(t)-1)$. Esto hace que $fs$ y $Xr$ tengan la misma forma como polinomios en $x$ y $y$ sobre $\Fp[t]$.
+						\item Establecer el polinomio cifrado $F(x,y,t)$ como%**
+							\begin{equation}
+								\label{texcif}
+								F(x,y,t)=m(t)+f(t)s(x,y,t)+X(x,y,t)r(x,y,t)
+							\end{equation}
+					\end{enumerate}%AQUI FINALIZA LA MARCA **
+				\item[3. Decifrado] Este paso consiste en recuperar el mesaje a partir del texto cifrado y la clave privada.%*
+				\begin{enumerate}%ESTOS ITEMS SERAN MARCADOS CON ***
+					\item Sustituir las secciones $D_i$ en el polinomio $F(x,y,t)$ obteniendo:%***
+					\begin{eqnarray}
+						h_1(t)&=&F(u_x(t),u_y(t),t)=m(t)+f(t)s(u_x(t),u_y(t),t)\nonumber\\
+						h_2(t)&=&F(v_x(t),v_y(t),t)=m(t)+f(t)s(v_x(t),v_y(t),t)\nonumber
+					\end{eqnarray}
+					\item Calcular $h_1(t)-h_2(t)$ para obtener $f(t)\izq s(u_x(t),u_y(t),t)-s(v_x(t),v_y(t),t)\der$.%***
+					\item Factorizar $f(t)\izq s(u_x(t),u_y(t),t)-s(v_x(t),v_y(t),t)\der$ y encontrar $f(t)$ como un polinomio irreducible de grado $l$.%***
+					\item Obtener $m(t)$ como el resto de dividir $h_1(t)$ por $f(t)$ y recuperar el texto plano $m$ de $m(t)$.%***
+				\end{enumerate}%AQUI TERMINA LA MARCA ***
+			\end{description}%AQUI TERMINA LA MARCA *
+
+
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+%      SECCION 3 (PRIMEROS ATAQUES)
+	\section{Ataques a CVA04}
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+
+		Fueron presentados dos ataques a esta versi\'on del criptosistema (considerando \cite{Iw08} como una generalizaci\'on de \cite{UT}).
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 3.1 (UCHIYAMA-TOKUNAGA)
+		\subsection{Ataque de Reducci\'on de Uchiyama y Tokunaga}
+		\label{31UchiToku}
+%-------------------------------------------------------------------------------------------------------------------
+
+			Uchiyama y Tokunaga anunciaron su ataque al criptosistema en 2007 \cite{UT}. Su algoritmo es el siguiente:
+
+			\begin{enumerate}
+				\item Dado un texto cifrado $F(x,y,t)$ como en \ref{texcif}, calcular el resto
+					$$
+						R(x,y,t)=\sum_{(i,j)\in\Lambda_R}g_{i,j}(t)x^iy^y
+					$$
+					de la divisi\'on de $F(x,y,t)$ por la clave p\'ublica $X(x,y,t)$.
+				\item Establecer $G$ como el conjunto de todos los factores irreducibles de $g_{i,j}(t)$ de grado mayor o igual $l$.
+				\item Para cada $f_i(t)\in G$, calcular el resto $m_i(t)$ de la divisi\'on por $g_{00}(t)$. Luego, alguno de los $m_i(t)$ coincide con el texto plano $m(t)$.
+			\end{enumerate}
+
+			Para que este algoritmo funcione, es necesario que $G$ contenga a $f(t)$ y que $g_{00}(t)$ tenga la forma $m(t)+f(t)s(t)$, para alg\'un $s(t)$. En \cite{UT} demuestran que, estas condiciones se satisfacen, siempre que el t\'ermino l\'ider de $X(x,y,t)$ de un orden monomial, sea de la forma $cx^\alpha y^\beta$ con $c\in\Fp$.\\
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 3.1.1 (IWAMI)
+			\subsubsection{Refinamiento de Iwami}
+			\label{311Iwami}
+%-------------------------------------------------------------------------------------------------------------------
+
+				Para usar el algoritmo de Uchiyama y Tokunaga, es necesaria una suposici\'on sobre la forma del t\'ermino l\'ider de un un orden monomial. En 2008 Iwami \cite{Iw08}, encontr\'o una manera de evitar esa suposici\'on. La idea general, es considerar $X(x,y,t)$ como un polinomio en dos variables sobre el cuerpo $\Fp[t]$, en lugar de como un polinomio de tres variables en $\Fp$. Luego, dividiendo por el coeficiente del t\'ermino l\'ider, se puede tener siempre que este tenga la forma $x^\alpha y^\beta$. Finalmente, aplicando el algoritmo de reducci\'on a $X(x,y,t)$ sobre $\Fp$, el m\'etodo de Uchiyama y Tokunaga se recupera el p\'olinomio $f(t)$.
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 3.1.2 (ASEGURAR)
+			\subsubsection{Condici\'on para Evitar el Ataque de Reducci\'on}
+			\label{312ASEG}
+%-------------------------------------------------------------------------------------------------------------------
+
+				Para evitar este ataque, basta con modificar el CVA04 de tal forma que ning\'un orden monomial sea efectivo para extraer suficiente informaci\'on de $m(t)$ y $f(t)$ cuando $F(x,y,t)$ sea dividido por $X(x,y,t)$. Es decir, se debe construir el criptosistema, de tal manera que $m(x,y,t)$ y $f(x,y,t)$ contengan al menos un monomio que sea divisible por todos los monomios de $X(x,y,t)$.
+
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 3.2 (VOLOCH)
+		\subsection{Ataque de Voloch}
+		\label{32VOLOCH}
+%-------------------------------------------------------------------------------------------------------------------
+
+			La idea del ataque de Voloch \cite{Vol07} es considerar una extensi\'on de $\Fp(t)$ y usar la funci\'on traza $T$. De nuevo, consideremos $F$ como en \ref{texcif}, el algoritmo del ataque de Voloch se describe a continuaci\'on:
+
+			\begin{enumerate}
+				\item Sustituir $y$ por alg\'un polinomio $c(t)$, tal que $X(x,c(t),t)$ se vuelva irreducible.
+				\item Sea $\alpha$ una soluci\'on de $X(x,c(t),t)=0$ sobre $\Fp(t)$, encontrar $\beta\in\Fp(t)(\alpha)$ tal que $T_{\Fp(t)(\alpha)/\Fp(t)}(\beta)=0$.
+				\item Calcular $T(\beta F(\alpha,c(t),t))$ y notese que
+					$$
+						T(\beta F(\alpha,c(t),t))=T(\beta m(t)+\beta f(t)s(\alpha,c(t),t))=f(t)T(\beta s(\alpha,c(t),t)).
+					$$
+				\item Factorizar $T(\beta F(\alpha,c(t),t))$ y obtener $f(t)$.
+				\item Encontrar $\beta_1\in\Fp(t)(\alpha)$ tal que $T_{\Fp(t)(\alpha)/\Fp(t)}(\beta_1)\in\Fp^ \times$ y calcular
+					$$
+						T(\beta_1 F(\alpha,c(t),t))=m(t)T(\beta_1)+f(t)T(\beta_1 s(\alpha,c(t),t))
+					$$
+				\item Dividir $T(\beta_1 F(\alpha,c(t),t))$ entre $f(t)$, para encontrar $m(t)T(\beta_1)$, y por lo tanto $m(t)$.
+			\end{enumerate}
+
+
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 3.2.1 (ASEGURAR CONTRA VOLOCH)
+			\subsubsection{Ideas para evitar este ataque}
+			\label{321ANTVOL}
+%-------------------------------------------------------------------------------------------------------------------
+
+				Existen, al menos, dos maneras de evitar el ataque de Voloch: bien haciendo el c\'alculo de la traza extremadamente ineficaz, o bien cambiando la forma de $m(t)$ y $f(t)$. Ambas ideas se pueden aplicar simult\'aneamente simplemente añadiendo variables independientes a $m(t)$ y $f(t)$. En \cite{AGM09} establecen como caso seguro, el caso en el que $m$ y $f$ son polinomios en tres variables.
+
+
+%-------------------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------------------- 
+%      SECCION 4 (VERSION FINAL)
+	\section{Versi\'on Final del Criptosistema (CVA09)}
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 4.1 (DESCRIPCION)
+		\subsection{Descripci\'on del Criptosistema}
+		\label{41CVAFINAL}
+%-------------------------------------------------------------------------------------------------------------------
+
+			Damos aqu\'i una breve descripci\'on de CVA. Para una presentaci\'on m\'as detallada, se remite al lector a \cite{AGM09}. Mantendremos en esta secci\'on la notaci\'on establecida en \ref{21SA}. Esta versi\'on del CVA mantiene los par\'ametros $p$ y $d$ descritos en \ref{221Para}. Estos son especialmente importantes para la seguridad del criptosistema, ya que tienen un impacto directo en el tamaño binario de la clave secreta, que se determina por $2d\log(p)$. Los otros par\'ametros considerados son $w$, el grado de la superficie de clave p\'ublica $X$ en $x$ e $y$, y $k$ la cardinalidad de $\Lambda_X$. Los par\'ametros $w$, $d$ y $p$ tienen un impacto considerable en el tamaño de la clave p\'ublica, que tiene, aproxim\'adamente, $dw \log(p)$ bits.\\
+		
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 4.1.1 (CLAVES)
+			\subsubsection{Detalles de las Claves}
+			\label{411CLAVES}
+%-------------------------------------------------------------------------------------------------------------------
+
+				\begin{enumerate}% ESTOS ITEMS SE MARCARAN CON *
+					\item La clave secreta est\'a formada por una secci\'on.%*
+						$$
+							D: (x,y,t)=(u_x(t),u_y(t),t)
+						$$
+						con
+						$$
+							d=\max\izq u_x(t),u_y(t)\der.
+						$$
+					\item La clave p\'ublica es una superficie $X$, determinada por:%*
+					\begin{enumerate}%ESTOS ITEMS SE MARCARAN CON **
+						\item Un polinomio irreducible $X(x,y,t)\in\Fp[x,y,t]$ tal que $|\Lambda_X|=k$ y $X$ contiene a $D$ como secci\'on, con $d^{(X)}_{ij}\in\N$ el grado (en $t$) del coeficiente del monomio $x^iy^j$.%**
+						\item $m(x,y,t)$, un polinomio deducido del texto a cifrar, con $d^{(m)}_{ij}\in\N$ el grado (en $t$) del coeficiente del monomio $x^iy^j$.%**
+						\item $f(x,y,t)$, un polinomio divisor (equivalente a $f(t)$ en CVA04), con $d^{(f)}_{ij}\in\N$ el grado (en $t$) del coeficiente del monomio $x^iy^j$.%**
+					\end{enumerate}%AQUI TERMINA LA MARCA **
+			\end{enumerate}%AQUI TERMINA LA MARCA *
+		
+			Para el proceso de cifrado/descifrado, es necesario que se cumplan las siguientes condiciones
+			\begin{eqnarray}
+				\Lambda_m\subset\Lambda_f\Lambda_X &=&\izq(i_1+i_2,j_1+j_2):(i_1,j_1)\in\Lambda_f,(i_2,j_2)\in\Lambda_X\der.\nonumber\\
+				\max\izq i:(i,j)\in\Lambda_X\der &<& \max\izq i:(i,j)\in\Lambda_m\der <\max\izq i:(i,j)\in\Lambda_f\der.\nonumber\\
+				\max\izq j:(i,j)\in\Lambda_X\der &<& \max\izq j:(i,j)\in\Lambda_m\der <\max\izq j:(i,j)\in\Lambda_f\der.\nonumber\\
+				\max\izq d_{i,j}^{(X)}\der_{(i,j)\in \Lambda_X}&<&\max\izq d_{i,j}^{(m)}\der_{(i,j)\in \Lambda_m} <\max\izq d_{i,j}^{(f)}\der_{(i,j)\in\Lambda_f}.\nonumber
+			\end{eqnarray}
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 4.1.2 (CVAFINAL)
+			\subsubsection{Criptosistema}
+			\label{412DesCVAFin}
+%-------------------------------------------------------------------------------------------------------------------
+				Igual que en su primera versi\'on, el criptosistema est\'a dividido en 3 etapas, como sigue:
+
+					\begin{description}%ESTOS ITEMS SE MARCARAN CON *
+						\item[1. Generaci\'on de Claves] Elegir dos polinomios%* 
+							$$
+								u_x(t)\text{ y } u_y(t)
+							$$
+							y construir la superficie $X(x,y,t)$ que los contenga como secciones.
+						\item[2. Cifrado]\textbf{.}%* 
+						\begin{enumerate}%ESTOS ITEMS SE MARCARAN CON **
+							\item Consideremos el texto plano $m$ introducido en un polinomio%** 
+								$$
+									m(x,y,t)=\sum_{(i,j)\in\Lambda_m} m_{i,j}(t)x^iy^j
+								$$
+							\item Elegir un polinomio irreducible%** 
+								$$
+									f(x,y,t)=\sum_{(i,j)\in\Lambda_f} f_{i,j}(t)x^iy^j
+								$$
+							\item Elegir 4 polinomios aleatorios $r_0,r_1,s_0,s_1$ de la forma:%**
+								$$
+									r_k(x,y,t)=\sum_{(i,j)\in\Lambda_f}r^{(k)}_{ij}(t)x^iy^i\text{ , }s_k(x,y,t)=\sum_{(i,j)\in\Lambda_X}s^{(k)}_{ij}(t)x^iy^i
+								$$
+								donde $k\in\izq 0,1\der$ y $\forall i,j$ se tiene que $\deg(r_{i,j}^{(k)}(t))=d^{(f)}_{i,j}$ y $\deg(s_{i,j}^{(k)}(t))=d^{(X)}_{i,j}$.
+							\item Establecer el polinomio cifrado $F(x,y,t)$ como%**
+								\begin{eqnarray}
+									F_0(x,y,t)=m(x,y,t)+f(x,y,t)s_0(x,y,t)+X(x,y,t)r_0(x,y,t)\label{Cif0}\\
+									F_1(x,y,t)=m(x,y,t)+f(x,y,t)s_1(x,y,t)+X(x,y,t)r_1(x,y,t)\label{Cif1}
+								\end{eqnarray}
+						\end{enumerate}%AQUI TERMINA LA MARCA **
+						\item[3. Decifrado]\textbf{.}%*
+						\begin{enumerate}%ESTOS ITEMS SE MARCARAN CON ***
+							\item Sustituir la secci\'on $D=(u_x(t),u_y(t),t)$ en el polinomio $F(x,y,t)$ obteniendo:%***
+								\begin{eqnarray}
+									h_0(t) &=& F_0(u_x(t),u_y(t),t) = m(u_x(t),u_y(t),t) + f(u_x(t),u_y(t),t) s_0(u_x(t),u_y(t),t) \nonumber\\
+									h_1(t) &=& F_1(u_x(t),u_y(t),t) = m(u_x(t),u_y(t),t) + f(u_x(t),u_y(t),t) s_1(u_x(t),u_y(t),t) \nonumber
+								\end{eqnarray}
+							\item Calcular $h_0(t)-h_1(t)$ para obtener%*** 
+									$$
+										f(u_x(t),u_y(t),t)s_0(u_x(t),u_y(t),t)-f(u_x(t),u_y(t),t)s_1(v_x(t),v_y(t),t).
+									$$
+							\item Factorizar $f(u_x(t),u_y(t),t)\izq s_0(u_x(t),u_y(t),t)-s_1(v_x(t),v_y(t),t)\der$ y encontrar $\tilde{f}(u_x(t),u_y(t),t)$ como un polinomio irreducible de grado $\deg(f(u_x(t),u_y(t),t))$.%***
+							\item Obtener $\tilde{m}(u_x(t),u_y(t),t)=h_0(t)$ $(\mod \tilde{f}(t))$ y recuperar $\tilde{m}(x,y,t)$ mediante el siguiente sistema lineal:%***
+									$$
+										\tilde{m}(u_x(t),u_y(t),t)=\sum \tilde{m}_{ijk} u_x(t)^i u_y(t)^j t^k
+									$$
+						\end{enumerate}%AQUI TERMINA LA MARCA ***
+					\end{description}%AQUI TERMINA LA MARCA *
+
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 4.1.3 (SEGURIDAD)
+			\subsubsection{Seguridad del Criptosistema}
+			\label{413Seg}
+%-------------------------------------------------------------------------------------------------------------------
+
+				Akiyama, Goto y Miyake proponen en \cite{AGM09}, los siguientes par\'ametros, para asegurar el criptosistema ante los ataques conocidos hasta la publicaci\'on de ese art\'iculo.
+				\begin{itemize}
+					\item $p=2$.
+					\item $d>50$.
+					\item $w>5$.
+					\item $k>3$.
+				\end{itemize}
+				En este caso, el tamaño de la clave privada ser\'ia de aproximadamente 100 bits y el tamaño de la clave p\'ublica ser\'ia cercano a 500 bits. Puesto que no se conoc\'ia, para esta versi\'on del criptosistema (y usando esos par\'ametros), un ataque m\'as r\'apido que la b\'usqueda exhaustiva, entonces el nivel de seguridad esperado vendr\'ia dado por $p^{2d+2}$.
+
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 4.2 (FAUGERE-SPAENLEHAUER)
+		\subsection{Ataque Faugere-Spaenlehauer}
+		\label{42FS}
+%-------------------------------------------------------------------------------------------------------------------
+
+			El punto principal del ataque es descomponer ideales, en lugar de factorizar los polinomios univariados obtenidos mediante la evaluaci\'on de $F_0-F_1$ en la secci\'on $(u_x(t), u_y(t),t)$. De esta manera, se puede manipular impl\'icitamente el llamado \textit{polinomio divisor} $f$ durante el proceso de descifrado. En consecuencia, se evita resolver el \textit{Problema de B\'usqueda de Secciones}.\\
+
+			En \cite{FS}, se presentan 3 versiones del ataque, una primera versi\'on determinista basada en dos lemas fundamentales, el primero, muestra que, una vez descompuesto el ideal $\langle F_0,F_1,X\rangle=\langle f(s_0-s_1),X\rangle$, se puede manipular $f$ impl\'icitamente, mediante $\langle f,X\rangle$, el segundo, muestra que se puede calcular expl\'icitamente un ideal multivariado que contenga a $m$.\\
+
+			La segunda versi\'on acelera el proceso considerando el campo de cocientes $\Fp(t)$. En efecto, los polinomios de CVA tienen un alto grado de $t$. Puesto que la complejidad de las bases de Gröbner es lineal en la complejidad de la aritm\'etica en el campo base, parece natural calcular en el campo de cocientes $\Fp (t)$.\\
+
+			Por \'ultimo, se utiliza un sistema modular para implementar eficazmente el ataque: se realizan c\'alculos en algunos campos finitos (bien elegidos) $\Fp [t] / (P)$ y se recuperan los resultados utilizando el Teorema Chino del Resto. Haciendo esto, el tamaño de los coeficientes de los valores intermedios est\'an acotados (estos coeficientes pueden ser enormes cuando los c\'alculos se realizan en el campo de cocientes). En particular, este ataque es capaz de romper el criptosistema con los par\'ametros recomendados en intervalos de $0,05$ segundos. Esto permite realizar un an\'alisis preciso de complejidad para demostrar que este ataque es casi lineal en el tamaño de la clave secreta. Experimentalmente, en \cite{FS} fueron capaces de romper con esta t\'ecnica algunos casos en que el tamaño de la clave secreta era mayor de 10000 bits.
+
+\newpage
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 4.2.1 (ALGORITMO FS)
+			\subsubsection{Algoritmo}
+			\label{421AlgFS}
+%-------------------------------------------------------------------------------------------------------------------
+
+				\begin{description}%ESTOS ITEMS SE MARCARAN CON *
+					\item[Ataque nivel 3] (con c\'a lculos en $\Fq$)%*
+					\begin{enumerate}%ESTOS ITEMS SE MARCARAN CON **
+						\item Elegir $n\approx \deg_t(m)\frac{\log(p)}{C}$ polinomios irreducibles $P_i$ tales que $\deg(P_i)\approx \frac{C}{\log(p)}$, $\forall i\in\izq 1,\ldots,n\der$ y $\sum_{i=1}^n \deg(P_i)>\deg_t(m)$.%**
+						\item Para $i$ desde $1$ hasta $n$:%**
+						\begin{enumerate}%ESTOS ITEMS SE MARCARAN CON ***
+							\item considerar $\mathbb{K}=\Fp[t]/(P_i)$.%***
+							\item calcular el resultante $R=\mathsf{Res}_x(F_0-F_1,X)\in\mathbb{K}[y]$.%***
+							\item Factorizar $R=\prod Q_i(y)$, tal que $Q_0(y)\in\mathbb{K}[y]$ denota el factor irreducible de mayor grado en $y$.%***
+							\item calcular una base de Gröbner de orden lexicogr\'a fico reverso del ideal $J=\langle F_0+z,F_1+z,X,Q_0\rangle\subset\mathbb{K}[x,y,z]$.%***
+							\item considerar el siguiente sistema lineal sobre $\mathbb{K}$:%***
+								$$
+									NF_J(z)+\sum_{(i,j)\in\Lambda_m}m_{ij}(t)NF_J(x^iy^j)=0
+								$$
+								Si el sistema no tiene soluci\'on, entonces regresar al paso $2$ y elegir otro factor del resultante.
+							\item Dada la soluci\'on del sistema $M_{ij}(t)$, calcular $m^\prime$ ($\mod P_i=\sum_{(i,j)\in\Lambda_m}m_{ij}(t)x^iy^j$) donde $(m_{ij}(t))$ es la soluci\'on del sistema lineal.%***
+						\end{enumerate}%AQUI TERMINA LA MARCA ***
+						\item Recuperar $m=m^\prime$ ($\mod \prod_{i=1}^n P_i$) usando el Teorema Chino del Resto.%**
+					\end{enumerate}%AQUI TERMINA LA MARCA **
+				\end{description}%AQUI TERMINA LA MARCA *
+
+				Note que, el sistema lineal, en el paso 7 tiene solamente $|\Lambda_m|$ inc\'ognitas y $\deg(J)\approx\deg_{xy}(m)\deg_{xy}(f)\deg_{xy}(X)$ ecuaciones. Luego, para par\'ametros pr\'acticos, $|\Lambda_m|\approx k$ es menor que $\deg(J)$, por lo que el sistema lineal esta sobredeterminado y tiene en general una soluci\'on \'unica. \\
+
+				Finalmente, el valor $\sum\deg(Pi)\approx\deg_t(m)$ depende solamente del tamaño del texto plano. Por lo tanto, el n\'umero de veces que se tiene que ejecutar el bucle principal del algoritmo  es lineal en el tamaño del mensaje. Dado que el coste de las operaciones aritm\'eticas en $\Fp[t] / (P)$ depende s\'olo de $C$ (que es una constante elegida por el atacante), se esper\'ia que este ataque sea lineal o casi lineal en el tamaño del texto plano. De hecho, esta expectativa se confirm\'o mediante un an\'alisis de complejidad y por resultados experimentales como se puede ver en \cite{FS}.
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 4.2.2 (COMPLEJIDAD FS)
+			\subsubsection{Una Cota Inferior de la Complejidad del Algoritmo de Descifrado}
+			\label{421CompFS}
+%-------------------------------------------------------------------------------------------------------------------
+
+				La complejidad de este ataque tiene que ser comparada con un l\'imite inferior del costo del proceso de descifrado. Durante el algoritmo de descifrado, se requiere factorizar $(F_0 - F_1) (u_x(t),u_y(t), t)$ sobre $\Fp[t]$. El grado de este polinomio es de al menos $dw$. Hasta donde saben los autores, los mejores algoritmos de factorizaci\'on probabil\'isticos tienen una complejidad aritm\'etica de $\tilde{\mathcal{O}}(d^2w^2 +dw \log (p))$. Por otra parte, tambi\'en hay un problema de mochila para resolver despu\'es de la factorizaci\'on. La complejidad de este paso es dif\'icil estimar por lo que no se considerar\'a$\text{ }$aqu\'i (ya que lo que se quiere es establecer una cota inferior). El \'ultimo paso del proceso de descifrado es la resoluci\'on de un sistema lineal con $\mathcal{O}(dw)$ variables: la complejidad aritm\'etica de este paso es $\mathcal{O}(w^3 d^3)$. Por \'ultimo, la complejidad binaria total del algoritmo de descifrado est\'a$\text{ }$acotada inferiormente por $\mathcal{O}(\log(p) (w^3 d^3 + dw\log(p)))$, que es c\'ubico en los par\'ametros $d$ y $w$, y cuadr\'atico en $\log (p)$. En comparaci\'on, el ataque Faugere-Spaenlehauer es casi lineal en $d$ y $\log (p)$, y polinomial de grado $7$ en $w$.
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+%      SECCION 5 (ECUACIONES DIOFANTICAS CRECIENTES)
+	\section{Criptosistema Basado en Ecuaciones Diof\'anticas de Tipo Grado Creciente}
+%-------------------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 5.2 (MAS PRELIMINARES)
+		\subsection{Preliminares Matem\'aticos}
+		\label{52Prel}
+%-------------------------------------------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 5.2.1 (POLINOMIOS DE TIPO GRADO CRECIENTE)
+			\subsubsection{Polinomios de Tipo Grado Creciente}
+			\label{521TGC}
+%-------------------------------------------------------------------------------------------------------------------
+
+				\begin{defi}
+					Un polinomio $X(x)\in\Z[x]\backslash \izq 0\der$ es de \textbf{Tipo Grado Creciente} si la relaci\'on
+					$$
+						\Lambda_X\rightarrow \Z_{\geq 0}; i\mapsto \sum i
+					$$
+					es inyectiva.
+				\end{defi}
+		
+				\begin{obs}
+					Sea $X(x)\in\Z[x]\backslash\izq 0\der$, las siguientes afirmaciones son v\'alidas:
+					\begin{enumerate}
+						\item El polinomio $X[x]$ es de tipo grado creciente si, y s\'olo si, el grado total de todos los monomios de $X(x)$ difiere.
+						\item Si $X$ es de tipo grado creciente, $\Lambda_X$ es un conjunto totalmente ordenado por el siguiente orden $\succ$: dados dos elementos $i=(i_1,\ldots,i_n)$, $i=(j_1,\ldots,j_n)$ en $\Lambda_X$, tenemos que $i\succ j$ si $i_1+\cdots+i_n>j_1+\cdots+j_n$ 
+					\end{enumerate}
+				\end{obs}	
+				
+				En adelante, dado un polinomio $X$ de tipo grado creciente, asumiremos que $\Lambda_X$, est\'a dotada del orden descritos en la observaci\'on anterior.	
+	
+	%-------------------------------------------------------------------------------------------------------------------
+			%SUBSUBSECCION 5.2.2 (NORMA PONDERADA Y LLL)
+			\subsubsection{Peso Ponderado y Reducci\'on LLL}
+			\label{522MPre}
+%-------------------------------------------------------------------------------------------------------------------
+
+				Cuando nos referimos a una norma sobre $\R^m$ en general nos referimos a la norma euclidiana o una norma $\ell_p$ para alg\'un $p> 0$ (note que la norma $\ell_2$ es la misma que la norma euclidiana). Por otro lado, un espacio ponderado se define como una espacio normado dotado de una norma especial que llamamos una norma ponderada. formalmente:
+						\begin{defi}
+							Para un vector $\mathbf{w}=(w_1,\ldots,w_m)\in(\R^+)^m$ se define una funci\'on $||\cdot||_\mathbf{w}:\R^m\rightarrow \R$ como sigue:
+							$$
+								||a||_\mathbf{w}:=\sqrt{(a_1w_1)^2+\cdots+(a_mw_m)^2}\text{ donde } a=(a_1\ldots,a_m)\in\R.
+							$$
+							No es complejo probar que $||\cdot||_\mathbf{w}$ es una norma en $\R^m$, m\'as a\'un, definiremos $||\cdot||_\mathbf{w}$ como la \textbf{Norma Ponderada} de peso $\mathbf{w}$.
+						\end{defi}
+		
+						\begin{obs}
+							Para cualesquiera $\mathcal{L}\subset \R^m$ (subespacio) y $\mathbf{w}=(w_1,\ldots,w_m)\in(\R^+)^m$ se tiene que, el espacio $\mathcal{L}$ dotado de la norma ponderada de peso \textbf{w}, forma un espacio ponderado de peso \textbf{w} al que denotaremos por $\mathcal{L}^\mathbf{w}$. 
+						\end{obs}
+			
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 5.3 (CRIPTOSISTEMA)
+		\subsection{Descripci\'on del Criptosistema}
+		\label{53cripDiof}
+%-------------------------------------------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------------------------------------------
+		%SUBSECCION 5.4 (ATAQUE)
+		\subsection{Descripci\'on del Ataque}
+		\label{54AtaqDiof}
+%-------------------------------------------------------------------------------------------------------------------
+
+
+%                    BIBLIOGRAF\'iA
+%-----------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{AG04} Akiyama K., and Goto Y. (2004). Algebraic surfaces a new public key encryption. Electronics, Information and Communication Engineers Technical report. OIS, Office Information Systems, 104 (423), 13-20.
+
+\bibitem{AG08} Akiyama, K., and Goto, Y. (2008). An improvement of the algebraic surface public-key cryptosystem. In Proceedings of SCIS.
+
+\bibitem{AGM09} Akiyama, K., Goto, Y., and Miyake, H. (2009). An algebraic surface cryptosystem. In Public Key Cryptography–PKC 2009 (pp. 425-442). Springer Berlin Heidelberg.
+
+\bibitem{Con15} Contreras, J. (2015). Implementaci\'on de un Criptosistema de Clave P\'ublica Basado en una Variedad Algebraica y un Estudio de su Espacio de Clave.%FALTA EN DONDE FUE PUBLICADO
+
+\bibitem{DKOTT}Ding, J., Kudo, M., Okumura, S., Takagi, T., and Tao, C. (2015). Cryptanalysis of a public key cryptosystem based on Diophantine equations via weighted LLL reduction.
+
+\bibitem{FS} Faugere, J. C., and Spaenlehauer, P. J. (2010). Algebraic cryptanalysis of the PKC’2009 algebraic surface cryptosystem. In Public Key Cryptography–PKC 2010 (pp. 35-52). Springer Berlin Heidelberg.
+
+\bibitem{Iw08} Iwami, M. (2008). A reduction attack on Algebraic Surface public-key Cryptosystems. In Computer Mathematics (pp. 323-332). Springer Berlin Heidelberg.
+
+\bibitem{Oku15}Okumura, S. (2015). A public key cryptosystem based on diophantine equations of degree increasing type. Pacific Journal of Mathematics for Industry, 7(1), 1-13.
+
+\bibitem{Shor} Shor, P. W. (1994, November). Algorithms for quantum computation: Discrete logarithms and factoring. In Foundations of Computer Science, 1994 Proceedings., 35th Annual Symposium on (pp. 124-134). IEEE.
+
+\bibitem{Vol07} Voloch, F. (2007). Breaking the Akiyama-Goto algebraic surface cryptosystem. In Arithmetic, Geometry, Cryptography and Coding Theory, CIRM meeting.
+
+\bibitem{UT} Uchiyama, S., and Tokunaga, H. (2007, January). On the security of the Algebraic Surface public-key Cryptosystems. In Proceedings of SCIS.
+
+
+
+\end{thebibliography}
+\end{document} 

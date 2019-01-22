@@ -1,0 +1,600 @@
+\documentclass[11pt]{article}
+\usepackage [spanish] {babel}
+\usepackage [T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} %paquete para incluir gráficos
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel}%paquete para simbología matemática
+
+\usepackage{fancyvrb} % Permite customizar entornos
+\usepackage{hyperref} % Para hacer un Hyperbook
+
+\usepackage{vmargin}
+
+%\setpapersize{letter}
+%\setmargins{2.5cm}       % margen izquierdo
+
+\newcommand{\dem}{\textbf{Demostración:\\}}
+\newcommand\qed{%
+ \begin{flushright}
+   $\blacksquare$
+ \end{flushright} }
+
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\Fq}{\mathbb{F}_q}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\Fm}{\F_{2^m}}
+\newcommand{\izq}{\left\{ }
+\newcommand{\der}{\right\} }
+
+
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\newtheorem{ejem}{{\bf Ejemplo }}[section]
+\newtheorem{defi}{{\bf Definición }}[subsection]
+\newtheorem{prop}{{\bf Proposición }}[section]
+\newtheorem{coro}{{\bf Corolario }}
+
+\title{Algoritmo de Firma Digital Basado en Curvas Elípticas}
+\author{Contreras G., José A.\footnote{jancontreras@cenditel.gob.ve}\\ Londoño R., Anastacia\footnote{anas.2720@gmail.com}}
+
+\begin{document}
+%                        TÍTULO
+%----------------------------------------------------------------------------------------------------------------
+\maketitle
+%----------------------------------------------------------------------------------------------------------------
+
+
+
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+%      SECCIÓN 1 (PRELIMINARES MATEMÁTICOS) - JA
+\section{Preliminares Matemáticos}
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+
+
+
+%INSERTAR CONTENIDO%
+
+
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+%      SECCIÓN 2 (ALGORITMOS) - AL
+\section{Algoritmos}
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+
+En esta sección se describiran los requerimientos para generar un esquema seguro de firma digital basado en curvas elípticas, y se presentaran los algoritmos que completan dicho proceso en un cuerpo finito de característica $2$. En general nuestro proceso se puede extender a un cuerpo finito de cardinal primo pero se debe implementar un método para calcular la traza de una la curva en ese caso.
+
+%----------------------------------------------------------------------------------------------------------------
+	% SUBSECCIÓN 2.1 (PARAMETROS DE DOMINIO)
+	\subsection{Parámetros de Dominio}
+%----------------------------------------------------------------------------------------------------------------
+
+	Los parámetros de dominio de un esquema de firma digital basado en curvas elípticas constituyen un conjunto de datos que definen de manera biunívoca una curva elíptica sin necesidad de almacenar todos los puntos de esta.\\
+
+	A continuación se describirá cada uno de los parámetros de dominio, junto con los requerimientos de estos, que permiten confirmar la seguridad del sistema ante los ataques conocidos hasta ahora:\\
+
+	\begin{description}
+
+		\item[q :] el cardinal del cuerpo finito sobre el que se definirá la curva elíptica. $q$ debe ser o número primo impar o bien una potencia de $2$. $q$ será ingresado por el usuario del criptosistema.%obs a valores grandes de q mayor seguridad y mayor costo computacional.
+
+		\item[FR :] una indicación de la representación usada en los elementos del cuerpo $\Fq$ en el caso en el que $q=2^m$. Debe indicar si se usa una base $T$-Gaussiana (y en ese caso el valor de $T$) o bien una base polinómica (y en ese caso el polinomio irreducible $f(x)$). FR será ingresado por el usuario del criptosistema.
+
+		\item[seedE :] una cadena de longitud mínima 160 bits que facilita el proceso de generación de cadenas aleatorias de mayor longitud. seedE será generado por el Algoritmo Auxiliar 1 o Algoritmo Auxiliar 2 según el cuerpo finito en el que  se trabaje (ver ~\ref{AA}).
+
+		\item[a,b :] Elementos pertenecientes a $\Fq$ que definen la curva elíptica mediante la ecuación $y^2=x^3+ax+b$ (si $q$ es un número primo) o $y^2+xy=x^3+ax^2+b$ (si $q=2^m$). En nuestro caso, $a,b\in\Fm$ serán generados por el Algoritmo Auxiliar 1 (ver ~\ref{AA}).
+
+		\item[G :] $G=(x_G,y_G)\in E(\Fq)$ es un punto base de orden primo. $G$ será generado por el Algoritmo 1 (ver ~\ref{AP}).
+
+		\item[n :]  el orden de $G$. Debe cumplirse que $n|q$, $n>2^{160}$ (recomendación de ANSI X9.62) y $n>4\sqrt{q}$. $n$ será generado por el Algoritmo 1 (ver ~\ref{AP}).
+
+		\item[h :] el cofactor $h=\frac{|E(\Fq)|}{n}$. Será generado por el Algoritmo 1 (ver ~\ref{AP}).
+	\end{description}
+
+
+%----------------------------------------------------------------------------------------------------------------
+	% SUBSECCION 2.2 (ALGORITMOS AUXILIARES)
+	\subsection{Algoritmos Auxiliares}
+	\label{AA}
+%----------------------------------------------------------------------------------------------------------------
+		Se desea presentar una sección previa a aquella donde se detalla el proceso, en la que se describan algunos algoritmos, (que llamaremos auxiliares) que serán usados dentro de la construcción del sistema, pero que no forman parte de un orden lineal dentro de este.
+
+%----------------------------------------------------------------------------------------------------------------
+		\begin{description}%Para no perder la pista, marcaremos los items de esta lista con un *
+		
+		
+			\item[Algoritmo Auxiliar 1 (AA1)] Genera una curva aleatoria sobre $\F_q^2$:%*
+			\begin{itemize}
+				\item Notación : $s=\lfloor\frac{m -1}{160}\rfloor$ y $v=m-160\times s$
+				\item Entradas : $m$
+				\item Salidas : $(\text{seedE},a,b)$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Elegir una cadena aleatoria seedE de longitud $g\geq160$ bits.
+				\item Calcular H=SHA-1(seedE) y definir $b_0$ la cadena de bits de longitud $v$ obtenida al tomar los $v$ bits más a la derecha de H.
+				\item Calcular $z\in \Z$ como el entero cuya representación binaria está dada por seedE.
+				\item Para $i$ desde $1$ hasta $s$:
+				\begin{enumerate}
+					\item Definir $s_i$ como la cadena de bits de longitud $g$ que es la expansión binaria del entero $z+i\text{ }(\mod\text{ }2^g)$.
+					\item Calcular $b_i=\text{SHA-1}(s_i)$.
+				\end{enumerate}
+				\item Construir la cadena de bits $b$ mediante la concatenación ordenada de las cadenas $b_0,b_1,\ldots,b_s$.
+				\item Si $b=0$ volver al paso 1.
+				\item Tomar una cadena de bits arbitraria $a\in \F_{2^m}$.
+				\item Imprimir $(\text{seedE},a,b)$
+			\end{enumerate}
+			FIN
+			
+%----------------------------------------------------------------------------------------------------------------
+
+	Presentaremos ahora una serie de algoritmos siguiendo \cite{FGH} (y usando el teorema de Hasse), para calcular el cardinal del conjunto de puntos de una curva elíptica sobre un cuerpo finito de característica $2$.
+
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo Auxiliar 2 (AA2)] Actualizacion de J:%*
+			\begin{itemize}
+				\item Entradas : $n\in\Z$ un grado de precision, y un ciclo $J_i\in\Z_{2^d}$ tal que $\Phi_p(J-i,J_{i+1})\equiv 0$ $(\mod p^{\lceil\frac{n}{2}\rceil})$, $\forall i\in[0,d)$
+				\item Salidas : un ciclo $\mathfrak{J}_i\in\Z_q$ tal que $\Phi(\mathfrak{J}_i,\mathfrak{J}_{i+1})\equiv 0$ $(\mod p^n)$ y $\mathfrak{J}_i\equiv J_i$ $(\mod p^{\lceil\frac{n}{2}\rceil})$, $\forall i\in[0,d)$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Establecer arreglos $D[0:d-2]$, $P[0:d-1]$ y $\mathfrak{J}[0:d-1]$ de elementos de $\Z_q$.
+				\item Para $i$, desde $0$ hasta $d-2$:
+				\begin{enumerate}
+					\item calcular $t=\frac{1}{\Phi\prime(J_i,J_{i+1})}$.
+					\item calcular $D_i=t\times\Phi\prime(J_{i+1},J_i)$.
+					\item calcular $P_i=t\times\Phi(J_{i+1},J_i)$. 
+				\end{enumerate}
+				\item Calcular $m=\Phi\prime(J_{0},J_{d-1})$ y $f=\Phi(J_{d-1},J_{0})$.
+				\item Para $i$, desde $0$ hasta $d-2$:
+				\begin{enumerate}
+					\item calcular $f=f-m\times P_i$.
+					\item calcular $m=-m\times D_i$.
+					\item si $m\equiv 0$ $(\mod p^n)$, entonces PARAR.
+				\end{enumerate}
+				\item Calcular $m=m+\Phi\prime(J_{d-1},J_0)$.
+				\item Calcular $P_{d-1}=\frac{f}{m}$.
+				\item Para $i$, desde $d-2$ hasta $0$:
+				\begin{enumerate}
+					\item calcular $P_i=P_i-D_i\times P_{i+1}$.
+				\end{enumerate}
+				\item Para $i$, desde $0$ hasta $d-1$:
+				\begin{enumerate}
+					\item calcular $\mathfrak{J}_i=J_i-P_i$.
+				\end{enumerate}
+				\item Borrar los arreglos $D$ y $P$.
+				\item Imprimir $(\mathfrak{J}_0,\mathfrak{J}_1,\ldots,\mathfrak{J}_{d-1})$.
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo Auxiliar 3 (AA3)] Levantamiento de $J$ invariante:%*
+			\begin{itemize}
+				\item Entradas : $n\in\Z$ un grado de precisión y un ciclo $j_{i}\in\F_{2^d}\backslash\F_{4}$ tal que $\Phi_p(j_i,j_{i+1})\equiv 0$ $(\mod p)$, $\forall i\in[0,d)$
+				\item Salidas : Un ciclo $J_i\in\Z_q$ tal que $\pi(J_i)=j_i$ y $\Phi(J_i,J_{i+1})\equiv 0$ $(\mod p^n)$ $\forall i\in[0,d)$ 
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Si $n=1$, entonces, elegir un $J_i$ arbitrario tal que $\pi(J_i)=j_i$, e ir al paso 5.
+				\item Calcular $n\prime = \lceil\frac{n+1}{2}\rceil$.
+				\item Calcular $(J_0,J_1,\ldots,J_{d-1})=AA3(n\prime,(j_0,j_1,\ldots,j_{d-1}))$.
+				\item Calcular $(J_0,J_1,\ldots,J_{d-1})=AA2(n,(J_0,J_1,\ldots,J_{d-1}))$.
+				\item Imprimir $(J_0,J_1,\ldots,J_{d-1})$
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo Auxiliar 4 (AA4)] Levantamiento de $A$:%*
+			\begin{itemize}
+				\item Entradas : $n\in\Z$, $J$ de precisión $n$
+				\item Salidas : El coeficiente $A$ 
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Si $n\leq 4$, entonces, calcular $A=\frac{-1}{J}$, e ir al paso 5. 
+				\item Calcular $n\prime = \lceil\frac{n-4}{2}\rceil$.
+				\item Calcular $A=AA4(n\prime,J)$.
+				\item Calcular $A=A-\frac{1+J(A+432A^2)}{J(1+864A)}$.
+				\item Imprimir $A$. 
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+	
+			\item[Algoritmo Auxiliar 5 (AA5)] Levantamiento de $Z$:%*
+			\begin{itemize}
+				\item Entradas : $n\in\Z$, $J_{i+1}$ de precisión 2 y el coeficiente $A$ de precisión $n+1$
+				\item Salidas : El punto $Z$ con precisión $n$ 
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Si $n\leq 2$, entonces, calcular $Z=\frac{1}{J_{i+1}}$, e ir al paso 5. 
+				\item Calcular $n\prime = \lceil\frac{n+1}{2}\rceil$.
+				\item Calcular $Z=AA5(n\prime,J_{i+1},A)$.
+				\item Calcular $Z=Z-\frac{8Z^3+Z^2+A}{2(12Z^2+Z)}$.
+				\item Imprimir $Z$. 
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo Auxiliar 6 (AA6)] Cuenta los puntos de un curva elíptica sobre $\Fm$:%*
+			\begin{itemize}
+				\item Entradas : una curva elíptica $E(\F_{2^d})$ tal que $j(E)\not\in\F_4$ 
+				\item Salidas : $C=|E(\F_{2^d})|$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Definir $j_0=j(E)$ y para $i$ desde $d-1$ hasta $1$, definir $j_i=j^2_{i+1}$.
+				\item Definir $n=\lceil\frac{d}{2}\rceil+1$, $N=1$ y $D=1$.
+				\item Para $i$ desde $0$ hasta $d$ calcular $J_i=\textsf{AA2}(n,j_i)$.
+				\item Para $i$ desde $0$ hasta $d-1$
+				\begin{itemize}
+					\item calcular $A=\textsf{AA4}(n,J_i)$.
+					\item calcular $Z=\textsf{AA5}(n-1,J_{i+1},A)$.
+					\item calcular $A=864A$.
+					\item calcular $N=N(1-504Z+22A)$.
+					\item calcular $D=D(1+240(Z+12Z^2))(1+A)$.
+				\end{itemize}
+				\item Calcular $c=\sqrt{\frac{N}{D}}$.
+				\item Si $c\not\equiv 1$ $(\mod 4)$, entonces, definir $c=-c$.
+				\item Si $c>2\sqrt{q}$, entonces, calcular $c=c-2^{n+1}$.
+				\item Calcular $C=q+1-c$.
+				\item Imprimir $C$.  
+			\end{enumerate}
+			FIN
+
+\end{description}%Fin de la lista marcada con *
+
+%----------------------------------------------------------------------------------------------------------------
+	% SUBSECCIÓN 3 (ALGORITMOS PRINCIPALES)
+	\subsection{Generación de Esquema de Firma Digital Sobre $\F_{2^m}$}
+	\label{AP}
+%----------------------------------------------------------------------------------------------------------------
+
+		Ahora estamos listos para generar un esquema de firma digital basado en curvas elípticas sobre un cuerpo finito $\Fm$.
+
+		%----------------------------------------------------------------------------------------------------------------
+		\begin{description}%Para no perder la pista, marcaremos los items de esta lista con un *
+		
+		
+			\item[Algoritmo 1] Genera los parámetros de dominio:%*
+			\begin{itemize}
+				\item Entradas : $(a,b)$
+				\item Salidas : $(G,n,h)$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Generar coeficientes $a,b\in\Fq$ usando AA1 y construir la curva $E(\Fm)$ $:$ $y^2+xy=x^3+ax^2+b$.
+				\item Calcular $N=|E(\Fm)|$ usando AA6.
+				\item Verificar que $N$ es divisible por un primo "grande" $n$  ($n>2^{160}$ y $n>4\sqrt{2^m}$). Si no, volver al paso 1.
+				\item Verificar que $n \not|2^mk-1$ para todo $k\in\Z : 1\leq k\leq 20$. Si no, volver al paso 1.
+				\item Verificar que $n\neq 2^m$. Si no, volver al paso 1.
+				\item Calcular $h=\frac{N}{n}$
+				\item Seleccionar un punto $G\prime\in E(\Fm)$ y establecer $G=\left(\frac{N}{n}\right)\times G\prime$. Repetir hasta que $G\neq \mathcal{O}$.
+				\item Imprimir $(G,n,h)$
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo 2] Validación explícita de los parámetros de dominio de una curva elíptica $E(\Fm)$:%*
+			\begin{itemize}
+				\item Entradas : $D=(m,a,b,G,n,h)$
+				\item Salidas : Acepta o rechaza $D$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Verificar que FR es una representación válida, esto es, si se considera una base $T$-Gaussiana que:
+				\begin{itemize}
+					\item $8\not| m$.
+					\item $p=T\times m + 1$ sea un número primo.
+					\item $\gcd(\frac{T\times m}{k},m)=1$, donde $k$ es el orden multiplicativo de $2$ $(\mod\text{ }p)$.
+					\item la base dada genere al cuerpo.
+				\end{itemize}
+				y si se considera una base polinómica que:
+				\begin{itemize}
+					\item el polinomio base $f(x)$ sea irreducible en $\F_2$.
+				\end{itemize}
+				\item Verificar que $b\neq 0$.
+				\item Verificar que $G\in E(\Fm)$, es decir, que ${y_G}^2+x_G y_G={x_G}^3+a{x_G}^2+b$.
+				\item Verificar que $n$ es un entero primo.
+				\item Verificar que $nG=\mathcal{O}$.
+				\item Calcular $h\prime =\lfloor\frac{(\sqrt{2^m}+1)^2}{n}\rfloor$ y verificar que $h=h\prime$.
+				\item Si alguna verificación falla, Imprimir $D$ - Inválido. De lo contrario, Imprimir $D$ - Válido.
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo 3] Genera las claves pública y privada para el firmado digital:%*
+			\begin{itemize}
+				\item Entradas : $D$
+				\item Salidas : $(Q,d)$, donde $Q$ es la clave pública y $d$ la clave privada
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Seleccionar de manera aleatoria (o pseudoaleatoria) un entero $d\in[1,n-1]$.
+				\item Calcular $Q=d\times G$.
+				\item Imprimir $(Q,d)$
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+			\item[Algoritmo 4] Validación de clave pública:%*
+			\begin{itemize}
+				\item Entradas : $Q=(x_Q,y_Q)$ y $D$
+				\item Salidas : Acepta o Rechaza $Q$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Verificar que $Q\neq \mathcal{O}$.
+				\item Verificar que $x_Q,y_Q\in\Fm$.
+				\item Verificar que $Q\in E(\Fm)$, es decir, que ${y_Q}^2+x_Q y_Q={x_Q}^3+a{x_Q}^2+b$.
+				\item Verificar que $nQ=\mathcal{O}$
+				\item Si alguna verificación falla, Imprimir $Q$ - Inválido. De lo contrario, Imprimir $Q$ - Válido.
+			\end{enumerate}
+			FIN
+
+\end{description}%Fin de la lista marcada con *
+
+%----------------------------------------------------------------------------------------------------------------
+
+		Finalmente, se ha obtenido un conjunto $D=(q,a,b,G,n,h)$ de parámetros de dominio de la curva, junto con un juegos de claves $(Q,d)$ pública y privada (resp.) que permitirán a una entidad A firmar un mensaje $M$, y a una entidad B, recibido el mensaje firmado, autenticar dicha firma.
+
+%----------------------------------------------------------------------------------------------------------------
+	% SUBSECCIÓN 4 (FIRMA)
+	\subsection{Proceso de Firmado Digital y Verificación de Firma}
+	\label{PF}
+%----------------------------------------------------------------------------------------------------------------
+
+		Siguiendo la idea que cierra el apartado anterior y usando el esquema allí presentado, basta con que una entidad A con un mensaje $M$ a transmitir, utilice el algoritmo siguiente para obtener una firma digital del mismo:
+
+		%----------------------------------------------------------------------------------------------------------------
+		\begin{description}%Para no perder la pista, marcaremos los items de esta lista con un *
+		
+		
+			\item[Algoritmo 5] Genera la firma digital:%*
+			\begin{itemize}
+				\item Entradas : $(D,Q,d,M)$, donde $M$ es el mensaje que se quiere firmar
+				\item Salidas $(r,s)$, (la firma digital)
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Seleccionar de manera aleatoria (o pseudoaleatoria) un entero $k$ tal que $1\geq k\geq n-1$.
+				\item Calcular $k\times G=(x_1,y_1)$ y considere el entero $x$ representado por la expresión binaria $x_1$.
+				\item Calcular $r=x$ $(\mod\text{ }n)$. Si $r=0$, volver al paso 1.
+				\item Calcular $k^{-1}$ $(\mod\text{ }n)$.
+				\item Calcular $e\in \Z$ como el entero cuya representación binaria está dada por $\mathrm{SHA-1}(m)$.
+				\item Calcular $s=k^{-1}(e+dr)$ $(\mod\text{ } n)$. Si $s=0$, volver al paso 1.
+				\item Imprimir (r,s).
+			\end{enumerate}
+			FIN
+%----------------------------------------------------------------------------------------------------------------
+
+		Por otra parte, recibido un mensaje $M$, junto a su firma digital $(r,s)$ y los parámetros de validación correspondientes $(Q,D)$. Una entidad B puede autenticar la veracidad de la firma digital $(r,s)$ mediante el siguiente algoritmo:
+
+%----------------------------------------------------------------------------------------------------------------
+		
+			\item[Algoritmo 6] Verifica la firma digital:%*
+			\begin{itemize}
+				\item Entradas : $(r,s,M,Q,D)$
+				\item Salidas : Acepta o rechaza $(r,s)$
+			\end{itemize}
+			INICIO
+			\begin{enumerate}
+				\item Verificar que $r,s\in [1,n-1]\bigcap\Z$.
+				\item Calcular $e\in \Z$ como el entero cuya representación binaria está dada por SHA-1$(M)$.
+				\item Calcular $w=s^{-1}$ $(\mod \text{ } n)$.
+				\item Calcular $u_1=ew$ $(\mod\text{ }n)$ y $u_2=rw$ $(\mod\text{ }n)$.
+				\item Calcular $X=u_1G+u_2Q$.
+				\item Si $X=\mathbf{0}$, entonces rechazar la firma, De lo contrario, convertir $x_1$ en un entero $x$, y calcular $v=x$ $(\mod\text{ }n)$.
+				\item Aceptar la firma si, y sólo si, $v=r$.
+			\end{enumerate}
+			FIN
+
+\end{description}%Fin de la lista marcada con *
+
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+%      SECCIÓN 3 (OTROS PROTOCOLOS BASADOS EN CURVAS ELIPTICAS) - JA
+\section{Otros Protocolos Basados en curvas Elípticas}
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+
+%INSERTAR CONTENIDO%
+
+
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+%      SECCIÓN 4 (ASPECTOS DE SEGURIDAD) - AL-JA
+\section{Aspectos de Seguridad}
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+
+	El objetivo de la seguridad del esquema es ser existencialmente infalsificable contra el ataque por mensaje elegido. El objetivo de un adversario que lanza un ataque tal, es la obtención de una firma válida en un mensaje $F$, después haber obtenido una colección de mensajes (que no incluya a $F$) con una firma válida.
+
+	Pointcheval y Stern \cite{PS} (ver también \cite{BPVY}), han demostrado que ligeras variantes del esquema son existencialmente infalsificable contra el ataque por mensaje elegido bajo ciertas supociciones.
+
+	Brown \cite{Br} demostró que AFDCE es seguro bajo la supocición de que la función hash empleada es resistente a colisiones.
+
+	En esta sección se describirán brevemente, los ataques conocidos a esquemas de firma digital basados en curvas elípticas sobre cuerpos finitos, enfocándonos en su rendimiento. En general, estos se pueden clasificar en tres grupos como sigue:
+
+%----------------------------------------------------------------------------------------------------------------
+	%SUBSECCION 4.1 (ATAQUES AL PLD)
+	\subsection{Ataques Contra el Problema de Logaritmo Discreto en Curvas Elípticas}
+%----------------------------------------------------------------------------------------------------------------
+
+		\begin{defi}
+			Dada una curva elíptica $E(\Fq)$, un punto $P\in E(\Fq)$ de orden $n$ y un punto $Q\in E(\Fq)$ tal que $Q=k\times P$ para algún $k\in\Fq$ el objetivo del \textbf{Problema de Logaritmo Discreto sobre Curvas Elípticas (PLDCE)} es hallar $k$.
+		\end{defi}
+
+		El atacante tiene como objetivo obtenerla clave privada $d$ a partir de los parámetros de dominio y la clave pública. Lo ataques conocidos de este tipo son:
+
+		\begin{description}
+
+			\item[Busqueda Exhaustiva](o de fuerza bruta) Calcula $P,2P,\ldots$ hasta obtener $Q$. Ocupa, en el peor de los casos, $n$ pasos.
+
+			\item[Algoritmo Pohlig-Hellman] Usando la factorización de $n$, reduce el problema a recuperar $d$ módulo un factor primo de $n$ y luego recuperar el valor original mediante el Teorema Chino del Resto (ver \cite{PH}). Las implicaciones de este algoritmo son los siguientes: Para construir un esquema seguro de firma digital basado en curvas elípticas, se debe seleccionar una curva cuyo orden sea divisible por un número primo grande. Preferiblemente, este orden debe ser un número primo o casi un primo (es decir, un número primo grande, multiplicado por un entero pequeño). Para el resto de esta sección, supondremos que el orden de la curva es primo.
+
+			\item[Paso de Bebe - Paso de Gigante] Este algoritmo se basa en el equilibrio tiempo-memoria del método de búsqueda exhaustiva. Requiere almacenamiento de alrededor de $\sqrt{n}$ puntos, y $\sqrt{n}$ pasos en el peor de los casos.
+
+			\item[Algoritmo $\rho$ - de Pollard (*)]\label{rhodeP} Versión aleatoria del ataque anterior. Tiene aproximadamente, la misma cantidad de pasos esperados ($\sqrt{\frac{\pi n}{2}}$)  pero requiere una cantidad insignificante de almacenamiento (ver \cite{Pol78}). Gallant, Lambert y Vanstone \cite{GLV}, y Wiener y Zuccherato \cite{WZ} demostraron que el algoritmo $\rho$ - de Pollard se puede acelerar por un factor de $\sqrt{2}$. Así, el tiempo esperado del método  es de $\frac{\sqrt{\pi n}}{2}$ pasos.
+
+			\item[Algoritmo $\rho$ - de Pollard paralelizado (**)]\label{rhodePp} Van Oorschot y Wiener \cite{VW} demostraron que el algoritmo $\rho$ - de Pollard puede ser paralelizado, de modo que cuando el algoritmo se ejecuta $r$ en procesadores en paralelo, el tiempo de funcionamiento previsto es de $\sqrt{\frac{\pi n}{2r}}$ pasos.
+     
+\item[Algoritmo $\lambda$ - de Pollard] Este es otro algoritmo aleatorio debido a Pollard \cite{PH}. Al igual que el método \textbf{(*)}, el método $\lambda$ - de Pollard también puede ser paralelizado con un aumento de velocidad lineal. El método $\lambda$ - paralelizado es ligeramente más lento que el método \textbf{(**)} (ver \cite{PH}). Sin embargo, puede ser más rápido en situaciones en las que se sabe que el logaritmo que se busca pertenece a un subintervalo $\left[ 0,b\right]$ de $\left[0,n-1\right]$ donde $b<0.39n$.
+
+			\item[Logaritmo Multiplicativo] R. Silverman y Stapleton \cite{SS97} observaron que si una sola instancia de este esquema es resuelta utilizando el método \textbf{(**)}, entonces el trabajo realizado en la solución de este caso se puede utilizar para acelerar la solución de los otros casos del algoritmo de firma digital. De esta manera subsecuentes instancias del algoritmo de firma digital de una curva elíptica particular, se vuelven progresivamente más fáciles. La idea para evitar este tipo de ataques es construir una curva tal que la primera instancia del esquema en ella no sea factible de resolver.
+
+			\item[Curvas Supersingulares] Menezes, Okamoto y Vanstone \cite{Men12} y Frey y Ruck \cite{FR94} mostraron cómo, bajo supuestos leves, el PLDCE en una curva elíptica definida sobre un campo finito $\Fq$ se puede reducir al Problema de Logaritmo Discreto ordinario en el grupo multiplicativo de algún campo de extensión $\F_{q^k}$. El algoritmo de reducción sólo es práctico si $k$ es pequeño (este no es el caso para las curvas elípticas más comunes, como se muestra por Balasubramanian y Koblitz \cite{BK}). Para asegurarse de que el algoritmo de reducción no se aplica a una curva particular, sólo se necesita comprobar que $n$, el orden del punto $G$, no divide a $q^k-1$ con $k$ pequeño, en la práctica, cuando $n>2^{160}$, es suficiente verificar lo anterior para $1\leq k\leq 20$.
+
+			\item[Curvas Anomalas sobre $\Fp$] Una curva elíptica sobre $\Fp$ se dice anómala si $|E(\Fp)|=p$. Semaev \cite{S98}, Smart \cite{Sma99}, y Satoh y Araki \cite{SA98} mostraron cómo resolver eficazmente el PLDCE de estas curvas. El ataque no se extiende a ninguna otra clase de curvas elípticas. En consecuencia, mediante la verificación de que el número de puntos en una curva elíptica no es igual a la cardinalidad de el campo subyacente, puede asegurarse fácilmente de que el ataque no se aplica.
+
+			\item[Curvas Sobre Cuerpos Pequeños] Sea $E$ una curva elíptica definida sobre el campo finito $\F_{2^e}$. Gallant, Lambert y Vanstone \cite{GLV}, y Wiener y Zuccherato \cite{WZ} mostraron cómo el algoritmo \textbf{(**)} puede acelerarse aún más en un factor de $\sqrt{d}$ en una curva $E(\F_{2^{ed}})$ por lo tanto el tiempo de ejecución previsto del método para estas curvas es de $\frac{1}{2}\sqrt{\frac{\pi n}{d}}$ pasos. 
+
+			\item[Curvas Sobre $\Fm$] en \cite{GS99} Galbraith y Smart discuten cómo se puede utilizar el descenso Weil para resolver el PLDCE para curvas elípticas definidas sobre $\Fm$ donde $m$ es un entero compuesto. Posteriormente, Gaudry, Hess y Smart \cite{GHS} refinaron estas ideas para proporcionar alguna evidencia de que cuando $m$ tiene un pequeño divisor $U$, el PLDCE para curvas elípticas definidas sobre $\Fm$ se puede resolver más rápido que con el algoritmo \textbf{(**)}. A la luz de estos resultados, parece prudente no utilizar las curvas elípticas sobre cuerpos de este tipo.
+
+			\item[Ataque de XEDNI-Cálculo] J. Silverman \cite{Sil00} propuso un ataque que se puede adaptar para resolver tanto el logaritmo discreto ordinario como los problemas de factorización de enteros. Sin embargo, posteriormente Jacobson et al. \cite{Jetal}, demostraron que el ataque es poco viable en la práctica.
+
+			\item[Curvas Hiper-Elípticas] Las curvas hiper-elípticas son una familia de curvas algebraicas de género arbitrario que incluyen a las curvas elípticas. Por lo tanto, una curva elíptica puede ser vista como una curva hiperelíptica de género $1$. Adleman, DeMarrais y Huang \cite{ADH} presentaron un algoritmo de tiempo subexponencial para el problema del logaritmo discreto en el jacobiano de una curva hiper-elípticas de género grande sobre un cuerpo finito. Sin embargo, en el caso de curvas elípticas el algoritmo tiene peores resultados que el de búsqueda exhaustiva.
+   
+\end{description}
+
+%----------------------------------------------------------------------------------------------------------------
+	%SUBSECCION 4.2 (ATAQUES CONTRA SHA-1)
+	\subsection{Ataques Contra la Función Hash}
+%----------------------------------------------------------------------------------------------------------------
+
+		\begin{defi}
+			Una \textbf{Función Hash $H$ (criptográfica)} es una función, que envía cadenas de bits de longitud arbitraria, en cadenas de bits de una longitud fija $t$, tal que:
+			\begin{enumerate}
+				\item $H$ puede ser calculada eficientemente.
+				\item $H$ es una función trapdoor.\label{hashtrap}
+				\item $H$ tiene resistencia a colisiones.\label{hashcol}
+			\end{enumerate}
+		\end{defi}
+
+		En el esquema presentado en este artículo, los autores usan como función hash, la familia de funciones SHA-1 publicada por NIST en 1995 la cual ha sido examinada muy de cerca por la comunidad criptográfica, sin haber hallado hasta ahora, ataques efectivos.\\
+
+		En lo sucesivo, se explicará como pueden completarse ataques al protocolo si la función hash no cumple con los apartados \ref{hashtrap} y \ref{hashcol} de la definición:
+
+		\begin{description}
+			\item[Si $H$ no es una función trapdoor] El adversario puede crear una firma digital auténtica como sigue, primero selecciona un entero arbitrario $l$ y calcula $r$ como la primera coordenada de $\mathit{Q}+l\times G$ ($\mod$ $n$). Luego, Establece $s=r$ y calcula $e=rl$ ($\mod$ $n$). Si el adversario puebe encontrar un mensaje $M$ tal que $H(M)=e$ entonces $(r,s)$ es una firma válida para $M$.
+
+			\item[Si $H$ no es resistente a colisiones] Una entidad que firme un mensaje $M$, puede repudiarlo afirmando que había firmado en su lugar un mensaje $M\prime$ tal que $H(M)=H(M\prime)$.
+		\end{description}
+
+		\textbf{Seguridad Ideal}. Se dice que una función $t$ - hash, tiene seguridad ideal [65] si 
+			\begin{enumerate}
+				\item Dado un elemento del rango, encontrar el elemento del dominio que lo genera requiere aproximadamente $2^t$ operaciones.
+				\item Generar una colisión requiere $2^{\frac{t}{2}}$ operaciones.
+			\end{enumerate}
+
+%----------------------------------------------------------------------------------------------------------------
+	%SUBSECCION 4.3 (OTROS ATAQUES)
+	\subsection{Otros Ataques}
+%----------------------------------------------------------------------------------------------------------------
+
+		\textbf{Requisitos de Seguridad Extra} LLamaremos secreto por mensaje, al entero aleatorio $k$ generado en el paso $1$ del Algoritmo 5 (ver \ref{PF}). El secreto por mensaje tienen los mismos requisitos de seguridad que la clave privada. Esto es porque si un adversario obtiene el secreto por mensaje $k$ que fue utilizado por para generar una firma digital $(r,s)$ en algún mensaje $m$, entonces este puede recuperar la clave privada $d=r^{-1}(ks-e)$ $(\mod n)$, donde $e=\mathtt{SHA-}1(m)$; (ver el paso 6 del Algoritmo 5). Por lo tanto el secreto por mensaje ha de ser generado de manera segura, almacenado de manera segura, y destruidos después de que haya sido usado.
+
+
+		\textbf{Ataque de Vaudenay} Vaudenay \cite{Vau96} demostró una debilidad teórica en DSA basada en que la función hash utilizada en DSA, no es SHA$-1$, sino SHA$-1$ $(\mod q)$, donde $q$ es un número primo de $160$ bits. Esta debilidad permite la falsificación selectiva de un mensaje si el adversario puede seleccionar los parámetros de dominio. Esta debilidad no es presente en AFDCE debido a la exigencia de que $n$ (la cantidad análoga a $q$ en la DSA) sea mayor que $2^{160}$.
+
+
+		\textbf{Ataques de Implementación} ANSI X9.62 no atiende los posibles ataques contra las implementaciones del AFDCE tales como ataques de temporización (Kocher \cite{Koc96}), análisis de fallos diferencial (Boneh, DeMillo y Lipton \cite{BDL}), una diferencia de poder análisis (Kocher, Jaffe y Jun \cite{KJJ}), y ataques que explotan debilidades de la generación pseudoaleatoria de números (Kelsey et al. \cite{KSWH}).
+
+
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+%                    BIBLIOGRAFÍA
+%----------------------------------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+%----------------------------------------------------------------------------------------------------------------
+%AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+	\bibitem{ADH}Adleman, L. M., DeMarrais, J., and Huang, M. D. (1994). A subexponential algorithm for discrete logarithms over the rational subgroup of the Jacobians of large genus hyperelliptic curves over finite fields. In Algorithmic number theory (pp. 28-40). Springer Berlin Heidelberg.
+%----------------------------------------------------------------------------------------------------------------
+%BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+	\bibitem{BK}Balasubramanian, R., and Koblitz, N. (1998). The improbability that an elliptic curve has subexponential discrete log problem under the Menezes—Okamoto—Vanstone algorithm. Journal of cryptology, 11(2), 141-145.
+
+	\bibitem{BDL}Boneh, D., DeMillo, R. A., and Lipton, R. J. (1997, May). On the importance of checking cryptographic protocols for faults. In Advances in Cryptology—EUROCRYPT’97 (pp. 37-51). Springer Berlin Heidelberg.
+	
+	\bibitem{BPVY}Brickell, E., Pointcheval, D., Vaudenay, S., and Yung, M. (2000, January). Design validations for discrete logarithm based signature schemes. In Public Key Cryptography (pp. 276-292). Springer Berlin Heidelberg.
+
+	\bibitem{Br}Brown, D.(2000). The exact security of ECDSA. Technical report CORR 2000-54, Dept. of CO, University of Waterloo.
+%----------------------------------------------------------------------------------------------------------------
+%FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+
+	\bibitem{FGH}Fouquet, M., Gaudry, P., and Harley, R. (2000). An extension of Satoh's algorithm and its implementation. Journal of the Ramanujan Mathematical Society, 15, 281-318.
+
+	\bibitem{FR94}Frey, G., and Rück, H. G. (1994). A remark concerning $m$-divisibility and the discrete logarithm in the divisor class group of curves. Mathematics of computation, 62(206), 865-874.
+%----------------------------------------------------------------------------------------------------------------
+%GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
+
+	\bibitem{GS99}Galbraith, S. D., and Smart, N. P. (1999). A cryptographic application of Weil descent. In Cryptography and coding (pp. 191-200). Springer Berlin Heidelberg.
+
+	\bibitem{GLV}Gallant, R., Lambert, R., and Vanstone, S. (2000). Improving the parallelized Pollard lambda search on anomalous binary curves. Mathematics of Computation of the American Mathematical Society, 69(232), 1699-1705. 
+
+	\bibitem{GHS}Gaudry, P., Hess, F., and Smart, N. P. (2002). Constructive and destructive facets of Weil descent on elliptic curves. Journal of Cryptology, 15(1), 19-46.
+%----------------------------------------------------------------------------------------------------------------
+%JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ
+
+	\bibitem{Jetal}Jacobson M., Koblitz N., Silverman J.,Stein A. and Teske E. (2000). Analysis of the xedni calculus
+attack. Designs, Codes and Cryptography, 20, 41-64.
+
+	\bibitem{JMV} Johnson, D., Menezes, A., and Vanstone, S. (2001). The elliptic curve digital signature algorithm (ECDSA). International Journal of Information Security, 1(1), 36-63.
+%----------------------------------------------------------------------------------------------------------------
+%KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+
+	\bibitem{KSWH}Kelsey, J., Schneier, B., Wagner, D., and Hall, C. (1998, March). Cryptanalytic attacks on pseudorandom number generators. In Fast Software Encryption (pp. 168-188). Springer Berlin Heidelberg.
+
+	\bibitem{Koc96}Kocher, P. C. (1996, August). Timing attacks on implementations of Diffie-Hellman, RSA, DSS, and other systems. In Advances in Cryptology—CRYPTO’96 (pp. 104-113). Springer Berlin Heidelberg.
+
+	\bibitem{KJJ}Kocher, P., Jaffe, J., and Jun, B. (1999, August). Differential power analysis. In Advances in Cryptology—CRYPTO’99 (pp. 388-397). Springer Berlin Heidelberg.
+%----------------------------------------------------------------------------------------------------------------
+%MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+
+	\bibitem{Men12}Menezes, A. J. (2012). Elliptic curve public key cryptosystems (Vol. 234). Springer Science and Business Media.
+%----------------------------------------------------------------------------------------------------------------
+%PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+	\bibitem{PH}Pohlig, S. C., and Hellman, M. E. (1978). An improved algorithm for computing logarithms over $GF(p)$ and its cryptographic significance (Corresp.). Information Theory, IEEE Transactions on, 24(1), 106-110.
+
+	\bibitem{PS}Pointcheval, D., and Stern, J. (1996, May). Security proofs for signature schemes. In Advances in Cryptology—EUROCRYPT’96 (pp. 387-398). Springer Berlin Heidelberg.
+
+	\bibitem{Pol78}Pollard, J. M. (1978). Monte Carlo methods for index computation $(\mod p)$. Mathematics of computation, 32(143), 918-924.
+%----------------------------------------------------------------------------------------------------------------
+%SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+	\bibitem{SA98}Satoh, T., and Araki, K. (1998). Fermat quotients and the polynomial time discrete log algorithm for anomalous elliptic curves. Commentarii Mathematici Universitatis Sancti Pauli, 47(1), 81-92.
+
+	\bibitem{S98}Semaev, I. (1998). Evaluation of discrete logarithms in a group of $p$-torsion points of an elliptic curve in characteristic $p$. Mathematics of Computation of the American Mathematical Society, 67(221), 353-356.
+
+	\bibitem{Sil00}Silverman, J. H. (2000). The xedni calculus and the elliptic curve discrete logarithm problem. Designs, Codes and Cryptography, 20(1), 5-40.
+
+	\bibitem{SS97}Silverman R. and Stapleton J., Contribution to ANSI X9F1 working group, 1997.
+
+	\bibitem{Sma99}Smart, N. P. (1999). The discrete logarithm problem on elliptic curves of trace one. Journal of cryptology, 12(3), 193-196.
+%----------------------------------------------------------------------------------------------------------------
+%VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+
+	\bibitem{VW}Van Oorschot, P. C., and Wiener, M. J. (1999). Parallel collision search with cryptanalytic applications. Journal of cryptology, 12(1), 1-28.
+
+	\bibitem{Vau96} Vaudenay, S. (1996, August). Hidden collisions on DSS. In Advances in Cryptology—CRYPTO’96 (pp. 83-88). Springer Berlin Heidelberg.
+%----------------------------------------------------------------------------------------------------------------
+%WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+
+	\bibitem{WZ}Wiener, M. J., and Zuccherato, R. J. (1998, August). Faster attacks on elliptic curve cryptosystems. In Selected areas in Cryptography (pp. 190-200). Springer Berlin Heidelberg.
+
+\end{thebibliography}
+%----------------------------------------------------------------------------------------------------------------
+\end{document}
